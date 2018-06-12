@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    android:orientation="vertical"
+    tools:context="com.encuestando.salmeron.facundo.encuestandofcm.RegisterActivity">
+
+    <TextView
+        android:id="@+id/registro_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Registro de Usuario"
+        android:layout_marginTop="15dp"
+        android:textColor="?android:attr/colorPressedHighlight"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/nombre_register_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="Nombre de Usuario"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/password1_register_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="Contraseña"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/password2_register_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Repita Contraseña"
+        android:inputType="textPassword"
+        android:textSize="24sp" />
+    <EditText
+        android:id="@+id/mail_register_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="E-Mail"
+        android:textSize="24sp" />
+
+
+
+</LinearLayout>
