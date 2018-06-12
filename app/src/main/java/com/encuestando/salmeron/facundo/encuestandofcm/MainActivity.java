@@ -8,7 +8,7 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    CardView boton_registrar;
+    private CardView boton_registrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

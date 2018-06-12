@@ -25,6 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="Nombre de Usuario"
+        android:drawableLeft="@drawable/ic_action_nombreusuario"
+        android:inputType="textPersonName"
         android:textSize="24sp" />
 
     <EditText
@@ -32,6 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
+        android:drawableLeft="@drawable/ic_action_pass"
         android:hint="Contraseña"
         android:textSize="24sp" />
 
@@ -40,15 +43,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Repita Contraseña"
+        android:drawableLeft="@drawable/ic_action_pass"
         android:inputType="textPassword"
         android:textSize="24sp" />
     <EditText
         android:id="@+id/mail_register_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:drawableLeft="@drawable/ic_action_mail"
         android:hint="E-Mail"
         android:textSize="24sp" />
 
+    <EditText
+        android:id="@+id/fecha_nacimiento_text"
+        android:layout_width="match_parent"
+        android:editable="false"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_action_fecha"
+        android:hint="Fecha de Nacimiento"
+        android:textSize="24sp" />
 
 
 </LinearLayout>
