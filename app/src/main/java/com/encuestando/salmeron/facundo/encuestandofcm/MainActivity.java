@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
+/**
+ * Created by Facundo Salmerón on 14/6/2018.
+ */
 
 public class MainActivity extends AppCompatActivity {
 
