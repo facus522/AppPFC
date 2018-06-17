@@ -7,6 +7,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,9 +22,11 @@ import java.io.InputStreamReader;
 public class HttpAsyncTask extends AsyncTask<String, Void, String> {
 
     private Integer numeroWebService;
+    private Object object;
 
-    public HttpAsyncTask(Integer numeroWebService) {
+    public HttpAsyncTask(Integer numeroWebService, Object object) {
         this.numeroWebService = numeroWebService;
+        this.object = object;
     }
 
     @Override
@@ -66,5 +70,49 @@ public class HttpAsyncTask extends AsyncTask<String, Void, String> {
 
         inputStream.close();
         return result;
+    }
+
+    // onPostExecute displays the results of the AsyncTask.
+    @Override
+    protected void onPostExecute(String result) {
+        switch (numeroWebService){
+            case 1:
+                try {
+                    JSONObject json = new JSONObject(result); //Convierte String a JSONObject
+
+                    String diaSemana = json.getJSONObject("forecast").
+                            getJSONObject("simpleforecast").
+                            getJSONArray("forecastday").
+                            getJSONObject(0).
+                            getJSONObject("date").getString("weekday_short");
+
+                    String dia = json.getJSONObject("forecast").
+                            getJSONObject("simpleforecast").
+                            getJSONArray("forecastday").
+                            getJSONObject(0).
+                            getJSONObject("date").getString("day");
+
+                    String mes = json.getJSONObject("forecast").
+                            getJSONObject("simpleforecast").
+                            getJSONArray("forecastday").
+                            getJSONObject(0).
+                            getJSONObject("date").getString("monthname_short");
+
+                    String temperatura = json.getJSONObject("forecast").
+                            getJSONObject("simpleforecast").
+                            getJSONArray("forecastday").getJSONObject(0).getJSONObject("high").getString("celsius");
+
+                    String ubicacion = json.getJSONObject("location").
+                            getJSONObject("nearby_weather_stations").
+                            getJSONObject("pws").
+                            getJSONArray("station").getJSONObject(0).getString("city");
+                    json.getJSONArray(String.valueOf(1)).getString(1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+        }
+
+
+
     }
 }
