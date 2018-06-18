@@ -44,12 +44,23 @@ public class MainActivity extends AppCompatActivity {
                 if (campo_usuario.getText().toString().equals("") || campo_password.getText().toString().equals("")){
                     Toast.makeText(MainActivity.this, "ERROR: Existen campos incompletos",Toast.LENGTH_LONG).show();
                 } else{
+                    usuarioDto = new UsuarioDto();
+                    String url = "http://192.168.0.105:8080/EncuestasFCM/usuarios/loginUser?nombre=" + campo_usuario.getText().toString() + "&password=" + campo_password.getText().toString();
                     HttpAsyncTask request = new HttpAsyncTask(1, usuarioDto);
-                    request.execute("http://192.168.0.105:8080/EncuestasFCM/usuarios/loginUser?nombre=" + campo_usuario.getText().toString() + "&password=" + campo_password.getText().toString());
+                    request.execute(url);
                     Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class);
                     MainActivity.this.startActivity(userNormal_intent);
                 }
             }
         });
+    }
+
+
+    public UsuarioDto getUsuarioDto() {
+        return usuarioDto;
+    }
+
+    public void setUsuarioDto(UsuarioDto usuarioDto) {
+        this.usuarioDto = usuarioDto;
     }
 }

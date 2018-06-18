@@ -75,41 +75,13 @@ public class HttpAsyncTask extends AsyncTask<String, Void, String> {
     // onPostExecute displays the results of the AsyncTask.
     @Override
     protected void onPostExecute(String result) {
+        JSONConverter jsonConverter = new JSONConverter();
         switch (numeroWebService){
             case 1:
-                try {
-                    JSONObject json = new JSONObject(result); //Convierte String a JSONObject
-
-                    String diaSemana = json.getJSONObject("forecast").
-                            getJSONObject("simpleforecast").
-                            getJSONArray("forecastday").
-                            getJSONObject(0).
-                            getJSONObject("date").getString("weekday_short");
-
-                    String dia = json.getJSONObject("forecast").
-                            getJSONObject("simpleforecast").
-                            getJSONArray("forecastday").
-                            getJSONObject(0).
-                            getJSONObject("date").getString("day");
-
-                    String mes = json.getJSONObject("forecast").
-                            getJSONObject("simpleforecast").
-                            getJSONArray("forecastday").
-                            getJSONObject(0).
-                            getJSONObject("date").getString("monthname_short");
-
-                    String temperatura = json.getJSONObject("forecast").
-                            getJSONObject("simpleforecast").
-                            getJSONArray("forecastday").getJSONObject(0).getJSONObject("high").getString("celsius");
-
-                    String ubicacion = json.getJSONObject("location").
-                            getJSONObject("nearby_weather_stations").
-                            getJSONObject("pws").
-                            getJSONArray("station").getJSONObject(0).getString("city");
-                    json.getJSONArray(String.valueOf(1)).getString(1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                jsonConverter.loginUsuario(result, object);
+                break;
+            default:
+                break;
         }
 
 
