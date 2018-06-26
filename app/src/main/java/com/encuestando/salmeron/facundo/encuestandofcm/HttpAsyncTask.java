@@ -1,90 +1,106 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
+import android.util.Log;
 
-import org.json.JSONObject;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Iterator;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 
 /**
  * Created by Facundo Salmerón on 14/6/2018.
  */
 
-public class HttpAsyncTask extends AsyncTask<String, Void, String> {
+public class HttpAsyncTask extends AsyncTask<String,Void,String> {
 
+    private JSONConverter jsonConverter;
     private Integer nroWebService;
     private Object object;
 
-    private Context httpContext;
-    private ProgressDialog progressDialog;
-    private String resultadoApi="";
-    private String linkRequestAPI="";
-
-    public HttpAsyncTask(Context httpContext, String linkRequestAPI) {
-        this.httpContext = httpContext;
-        this.linkRequestAPI = linkRequestAPI;
+    public HttpAsyncTask(Integer nroWebService, Object object) {
+        this.jsonConverter = new JSONConverter();
+        this.nroWebService = nroWebService;
+        this.object = object;
     }
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        progressDialog = ProgressDialog.show(httpContext, "Procesando Solicitud", "Por favor, espere");
+    protected String doInBackground(String... url) {
+        return GET(url[0]);
     }
 
     @Override
-    protected String doInBackground(String... strings) {
-        String result = null;
-        String wsURL = linkRequestAPI;
-        JSONConverter jsonConverter = new JSONConverter();
-        URL url = null;
+    protected void onPostExecute(String result){
+        if(nroWebService.equals(0)){
+            jsonConverter.loginUsuario(result, object);
+        }
+        try {
+            this.finalize();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    public static String GET (String url) {
+        InputStream inputStream = null;
+        String result = "";
 
         try {
-            url = new URL(wsURL);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            JSONObject jsonObject = new JSONObject();
-            jsonConverter.loginUsuario();
-        } catch (MalformedURLException e){
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
-        return  result;
-    }
-
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        progressDialog.dismiss();
-        resultadoApi=s;
-        Toast.makeText(httpContext, resultadoApi, Toast.LENGTH_LONG);
-    }
-
-    public String getPostDataString(JSONObject params) throws Exception{
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-        Iterator<String> itr = params.keys();
-        while(itr.hasNext()){
-            String key = itr.next();
-            Object value = params.get(key);
-
-            if (first)
-                first = false;
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpResponse httpResponse = httpClient.execute(new HttpGet(url));
+            inputStream = httpResponse.getEntity().getContent();
+            if(inputStream != null)
+                result = convertInputStreamToString(inputStream);
             else
-                result.append("&");
-
-            result.append(URLEncoder.encode(key, "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(value.toString(), "UTF-8"));
+                result = "No funciona!";
         }
+        catch(Exception e){
+            Log.d("InputStream",e.getLocalizedMessage());
+        }
+        return result;
     }
+
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+        String line = "";
+        String result = "";
+        while((line = bufferedReader.readLine()) != null)
+            result += line;
+        inputStream.close();
+        return result;
+    }
+
+    public JSONConverter getJsonConverter() {
+        return jsonConverter;
+    }
+
+    public void setJsonConverter(JSONConverter jsonConverter) {
+        this.jsonConverter = jsonConverter;
+    }
+
+    public Integer getNroWebService() {
+        return nroWebService;
+    }
+
+    public void setNroWebService(Integer nroWebService) {
+        this.nroWebService = nroWebService;
+    }
+
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
+
+
+
 }

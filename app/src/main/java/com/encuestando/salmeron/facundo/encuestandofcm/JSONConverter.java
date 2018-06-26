@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by fsalmeron on 18/6/2018.
+ * Created by Facundo Salmerón on 18/6/2018.
  */
 
 public class JSONConverter {
@@ -13,7 +13,8 @@ public class JSONConverter {
         try {
             JSONObject json = new JSONObject(jsonString);
             UsuarioDto usuarioDto = new UsuarioDto();
-            Boolean exito = Boolean.valueOf(json.getString("nombre"));
+            Boolean exito = Boolean.valueOf(json.getString("exito"));
+            usuarioDto.setExito(exito);
             object = usuarioDto;
         } catch (JSONException e) {
             e.printStackTrace();

@@ -1,6 +1,10 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -18,16 +22,16 @@ public class MainActivity extends AppCompatActivity {
 
     private CardView boton_registrar;
     private CardView boton_login;
-    private EditText campo_usuario;
-    private EditText campo_password;
+    private TextInputLayout campo_usuario;
+    private TextInputLayout campo_password;
     private UsuarioDto usuarioDto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-        campo_usuario = (EditText) findViewById(R.id.usuario_texto);
-        campo_password = (EditText) findViewById(R.id.password_texto);
+        campo_usuario = (TextInputLayout) findViewById(R.id.usuario_texto);
+        campo_password = (TextInputLayout) findViewById(R.id.password_texto);
         boton_registrar = (CardView) findViewById(R.id.register_button);
         boton_registrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,15 +45,47 @@ public class MainActivity extends AppCompatActivity {
         boton_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (campo_usuario.getText().toString().equals("") || campo_password.getText().toString().equals("")){
-                    Toast.makeText(MainActivity.this, "ERROR: Existen campos incompletos",Toast.LENGTH_LONG).show();
-                } else{
+                String usuario = campo_usuario.getEditText().getText().toString().trim();
+                String contrasenia = campo_password.getEditText().getText().toString().trim();
+
+                 if (usuario.isEmpty()){
+                     campo_usuario.setError("El campo usuario no puede estar vacío.");
+                 } else{
+                     campo_usuario.setError(null);
+                 }
+                 if (contrasenia.isEmpty()){
+                     campo_password.setError("La contraseña no puede estar vacía.");
+                 } else{
+                     campo_password.setError(null);
+                 }
+
+                if (!(usuario.isEmpty() || contrasenia.isEmpty())){
+                    campo_usuario.setError(null);
+                    campo_password.setError(null);
                     usuarioDto = new UsuarioDto();
-                    String url = "http://192.168.0.105:8080/EncuestasFCM/usuarios/loginUser?nombre=" + campo_usuario.getText().toString() + "&password=" + campo_password.getText().toString();
-                    HttpAsyncTask request = new HttpAsyncTask(1, usuarioDto);
+                    String url = "http://192.168.0.105:8080/EncuestasFCM/usuarios/loginUser?nombre=" + campo_usuario.getEditText().getText().toString() + "&password=" + campo_password.getEditText().getText().toString();
+                    HttpAsyncTask request = new HttpAsyncTask(0, usuarioDto);
                     request.execute(url);
-                    Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class);
-                    MainActivity.this.startActivity(userNormal_intent);
+                    if (usuarioDto.isExito() != null){
+                        if (usuarioDto.isExito()){
+                            Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class);
+                            MainActivity.this.startActivity(userNormal_intent);
+                        } else{
+                            Toast.makeText(MainActivity.this, "ERROR EN DATOS",Toast.LENGTH_LONG).show();
+                        }
+                    } else{
+                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                        alertDialog.setTitle("Error de Conexión");
+                        alertDialog.setMessage("Verifique su conexión a Internet!");
+                        alertDialog.setIcon(R.drawable.ic_action_error);
+                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        alertDialog.show();
+                    }
                 }
             }
         });
