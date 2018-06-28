@@ -9,13 +9,13 @@ import org.json.JSONObject;
 
 public class JSONConverter {
 
-    public void loginUsuario(String jsonString, Object object){
+    public void loginUsuario(String jsonString, MainActivity mainActivity){
         try {
             JSONObject json = new JSONObject(jsonString);
             UsuarioDto usuarioDto = new UsuarioDto();
             Boolean exito = Boolean.valueOf(json.getString("exito"));
             usuarioDto.setExito(exito);
-            object = usuarioDto;
+            mainActivity.setUsuarioDto(usuarioDto);
         } catch (JSONException e) {
             e.printStackTrace();
         }

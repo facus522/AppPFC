@@ -1,5 +1,6 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -19,16 +20,25 @@ import java.nio.charset.StandardCharsets;
  * Created by Facundo Salmerón on 14/6/2018.
  */
 
-public class HttpAsyncTask extends AsyncTask<String,Void,String> {
+public class HttpAsyncTask extends AsyncTask<String,String,String> {
 
     private JSONConverter jsonConverter;
     private Integer nroWebService;
-    private Object object;
+    private MainActivity mainActivity;
+    private ProgressDialog progressDialog;
 
-    public HttpAsyncTask(Integer nroWebService, Object object) {
+    public HttpAsyncTask(Integer nroWebService, MainActivity mainActivity) {
         this.jsonConverter = new JSONConverter();
         this.nroWebService = nroWebService;
-        this.object = object;
+        this.mainActivity = mainActivity;
+        progressDialog = new ProgressDialog(mainActivity);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progressDialog.setMessage("Aguarde...");
+        progressDialog.show();
     }
 
     @Override
@@ -38,8 +48,11 @@ public class HttpAsyncTask extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPostExecute(String result){
+        if (progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
         if(nroWebService.equals(0)){
-            jsonConverter.loginUsuario(result, object);
+            jsonConverter.loginUsuario(result, mainActivity);
         }
         try {
             this.finalize();
@@ -93,14 +106,12 @@ public class HttpAsyncTask extends AsyncTask<String,Void,String> {
         this.nroWebService = nroWebService;
     }
 
-    public Object getObject() {
-        return object;
+    public MainActivity getMainActivity() {
+        return mainActivity;
     }
 
-    public void setObject(Object object) {
-        this.object = object;
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
-
-
 
 }

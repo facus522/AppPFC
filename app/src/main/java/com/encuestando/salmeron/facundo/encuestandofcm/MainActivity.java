@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.nio.file.attribute.UserPrincipal;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Facundo Salmerón on 14/6/2018.
@@ -62,11 +65,9 @@ public class MainActivity extends AppCompatActivity {
                 if (!(usuario.isEmpty() || contrasenia.isEmpty())){
                     campo_usuario.setError(null);
                     campo_password.setError(null);
-                    usuarioDto = new UsuarioDto();
                     String url = "http://192.168.0.105:8080/EncuestasFCM/usuarios/loginUser?nombre=" + campo_usuario.getEditText().getText().toString() + "&password=" + campo_password.getEditText().getText().toString();
-                    HttpAsyncTask request = new HttpAsyncTask(0, usuarioDto);
-                    request.execute(url);
-                    if (usuarioDto.isExito() != null){
+                    new HttpAsyncTask(0, MainActivity.this).execute(url);
+                    if (usuarioDto != null){
                         if (usuarioDto.isExito()){
                             Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class);
                             MainActivity.this.startActivity(userNormal_intent);

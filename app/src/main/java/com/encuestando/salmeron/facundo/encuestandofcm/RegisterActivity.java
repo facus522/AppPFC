@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -20,7 +21,7 @@ import java.util.Calendar;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText fechaNacimiento;
+    private TextInputLayout fechaNacimiento;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private CardView boton_volver;
 
@@ -28,8 +29,8 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
-        fechaNacimiento = (EditText) findViewById(R.id.fecha_nacimiento_text);
-        fechaNacimiento.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        fechaNacimiento = (TextInputLayout) findViewById(R.id.fecha_nacimiento_text);
+        fechaNacimiento.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus){
@@ -47,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        fechaNacimiento.setOnClickListener(new View.OnClickListener(){
+        fechaNacimiento.getEditText().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
@@ -79,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                 else
                     date += month;
                 date += "/" + year;
-                fechaNacimiento.setText(date);
+                fechaNacimiento.getEditText().setText(date);
             }
         };
 
