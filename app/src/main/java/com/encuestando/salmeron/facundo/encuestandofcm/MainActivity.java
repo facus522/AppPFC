@@ -1,37 +1,35 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import java.nio.file.attribute.UserPrincipal;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Facundo Salmerón on 14/6/2018.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInterface{
 
     private CardView boton_registrar;
     private CardView boton_login;
     private TextInputLayout campo_usuario;
     private TextInputLayout campo_password;
-    private UsuarioDto usuarioDto;
+    private UsuarioDto usuarioDto = new UsuarioDto();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.login_activity);
         campo_usuario = (TextInputLayout) findViewById(R.id.usuario_texto);
         campo_password = (TextInputLayout) findViewById(R.id.password_texto);
@@ -65,9 +63,9 @@ public class MainActivity extends AppCompatActivity {
                 if (!(usuario.isEmpty() || contrasenia.isEmpty())){
                     campo_usuario.setError(null);
                     campo_password.setError(null);
-                    String url = "http://192.168.0.105:8080/EncuestasFCM/usuarios/loginUser?nombre=" + campo_usuario.getEditText().getText().toString() + "&password=" + campo_password.getEditText().getText().toString();
-                    new HttpAsyncTask(0, MainActivity.this).execute(url);
-                    if (usuarioDto != null){
+                    String url = "http://192.168.0.106:8080/EncuestasFCM/usuarios/loginUser?nombre=" + campo_usuario.getEditText().getText().toString() + "&password=" + campo_password.getEditText().getText().toString();
+                    new HttpAsyncTask(0, MainActivity.this, new ProgressDialog(MainActivity.this)).execute(url);
+                    if (usuarioDto != null && usuarioDto.isExito() != null){
                         if (usuarioDto.isExito()){
                             Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class);
                             MainActivity.this.startActivity(userNormal_intent);
@@ -92,6 +90,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void loginUsuario(String result) {
+        try {
+            JSONObject json = new JSONObject(result);
+            Boolean exito = Boolean.valueOf(json.getString("exito"));
+            usuarioDto.setExito(exito);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     public UsuarioDto getUsuarioDto() {
         return usuarioDto;

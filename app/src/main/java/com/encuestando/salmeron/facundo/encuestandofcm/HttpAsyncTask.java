@@ -20,24 +20,23 @@ import java.nio.charset.StandardCharsets;
  * Created by Facundo Salmerón on 14/6/2018.
  */
 
-public class HttpAsyncTask extends AsyncTask<String,String,String> {
+public class HttpAsyncTask extends AsyncTask<String,Void,String> {
 
-    private JSONConverter jsonConverter;
     private Integer nroWebService;
-    private MainActivity mainActivity;
+    public HttpAsyncTaskInterface httpAsyncTaskInterface = null;
     private ProgressDialog progressDialog;
 
-    public HttpAsyncTask(Integer nroWebService, MainActivity mainActivity) {
-        this.jsonConverter = new JSONConverter();
+    public HttpAsyncTask(Integer nroWebService, HttpAsyncTaskInterface httpAsyncTaskInterface, ProgressDialog progressDialog) {
+        this.progressDialog = progressDialog;
         this.nroWebService = nroWebService;
-        this.mainActivity = mainActivity;
-        progressDialog = new ProgressDialog(mainActivity);
+        this.httpAsyncTaskInterface = httpAsyncTaskInterface;
     }
+
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog.setMessage("Aguarde...");
+        progressDialog.setMessage("Aguarde por favor...");
         progressDialog.show();
     }
 
@@ -48,11 +47,13 @@ public class HttpAsyncTask extends AsyncTask<String,String,String> {
 
     @Override
     protected void onPostExecute(String result){
+
         if (progressDialog.isShowing()){
             progressDialog.dismiss();
         }
+
         if(nroWebService.equals(0)){
-            jsonConverter.loginUsuario(result, mainActivity);
+            httpAsyncTaskInterface.loginUsuario(result);
         }
         try {
             this.finalize();
@@ -90,14 +91,6 @@ public class HttpAsyncTask extends AsyncTask<String,String,String> {
         return result;
     }
 
-    public JSONConverter getJsonConverter() {
-        return jsonConverter;
-    }
-
-    public void setJsonConverter(JSONConverter jsonConverter) {
-        this.jsonConverter = jsonConverter;
-    }
-
     public Integer getNroWebService() {
         return nroWebService;
     }
@@ -106,12 +99,20 @@ public class HttpAsyncTask extends AsyncTask<String,String,String> {
         this.nroWebService = nroWebService;
     }
 
-    public MainActivity getMainActivity() {
-        return mainActivity;
+    public HttpAsyncTaskInterface getHttpAsyncTaskInterface() {
+        return httpAsyncTaskInterface;
     }
 
-    public void setMainActivity(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    public void setHttpAsyncTaskInterface(HttpAsyncTaskInterface httpAsyncTaskInterface) {
+        this.httpAsyncTaskInterface = httpAsyncTaskInterface;
+    }
+
+    public ProgressDialog getProgressDialog() {
+        return progressDialog;
+    }
+
+    public void setProgressDialog(ProgressDialog progressDialog) {
+        this.progressDialog = progressDialog;
     }
 
 }
