@@ -14,6 +14,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * Created by Facundo Salmerón on 14/6/2018.
  */
@@ -24,12 +26,13 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
     private CardView boton_login;
     private TextInputLayout campo_usuario;
     private TextInputLayout campo_password;
-    private UsuarioDto usuarioDto = new UsuarioDto();
+    private UsuarioDto usuarioDto;
+    private HttpAsyncTask httpAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        usuarioDto = new UsuarioDto();
         setContentView(R.layout.login_activity);
         campo_usuario = (TextInputLayout) findViewById(R.id.usuario_texto);
         campo_password = (TextInputLayout) findViewById(R.id.password_texto);
@@ -64,7 +67,15 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                     campo_usuario.setError(null);
                     campo_password.setError(null);
                     String url = "http://192.168.0.106:8080/EncuestasFCM/usuarios/loginUser?nombre=" + campo_usuario.getEditText().getText().toString() + "&password=" + campo_password.getEditText().getText().toString();
-                    new HttpAsyncTask(0, MainActivity.this, new ProgressDialog(MainActivity.this)).execute(url);
+                    httpAsyncTask = new HttpAsyncTask(0);
+                    httpAsyncTask.setHttpAsyncTaskInterface(MainActivity.this);
+                    try{
+                        String receivedData = httpAsyncTask.execute(url).get();
+                    }
+                    catch (ExecutionException | InterruptedException ei){
+                        ei.printStackTrace();
+                    }
+                    //httpAsyncTask.execute(url);
                     if (usuarioDto != null && usuarioDto.isExito() != null){
                         if (usuarioDto.isExito()){
                             Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class);
@@ -92,12 +103,10 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
 
     @Override
     public void loginUsuario(String result) {
-        try {
-            JSONObject json = new JSONObject(result);
-            Boolean exito = Boolean.valueOf(json.getString("exito"));
-            usuarioDto.setExito(exito);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        String loginUsuarioJSON = result;
+        if (loginUsuarioJSON != null && !loginUsuarioJSON.isEmpty()) {
+            usuarioDto = JSONConverterUtils.JSONUsuarioLoginConverter(result);
+
         }
     }
 

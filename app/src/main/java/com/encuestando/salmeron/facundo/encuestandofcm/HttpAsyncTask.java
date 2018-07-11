@@ -23,35 +23,16 @@ import java.nio.charset.StandardCharsets;
 public class HttpAsyncTask extends AsyncTask<String,Void,String> {
 
     private Integer nroWebService;
-    public HttpAsyncTaskInterface httpAsyncTaskInterface = null;
-    private ProgressDialog progressDialog;
+    public HttpAsyncTaskInterface httpAsyncTaskInterface;
 
-    public HttpAsyncTask(Integer nroWebService, HttpAsyncTaskInterface httpAsyncTaskInterface, ProgressDialog progressDialog) {
-        this.progressDialog = progressDialog;
+    public HttpAsyncTask(Integer nroWebService) {
+        this.httpAsyncTaskInterface = null;
         this.nroWebService = nroWebService;
-        this.httpAsyncTaskInterface = httpAsyncTaskInterface;
-    }
-
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        progressDialog.setMessage("Aguarde por favor...");
-        progressDialog.show();
     }
 
     @Override
     protected String doInBackground(String... url) {
-        return GET(url[0]);
-    }
-
-    @Override
-    protected void onPostExecute(String result){
-
-        if (progressDialog.isShowing()){
-            progressDialog.dismiss();
-        }
-
+        String result = GET(url[0]);
         if(nroWebService.equals(0)){
             httpAsyncTaskInterface.loginUsuario(result);
         }
@@ -60,12 +41,12 @@ public class HttpAsyncTask extends AsyncTask<String,Void,String> {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
+        return result;
     }
 
     public static String GET (String url) {
         InputStream inputStream = null;
         String result = "";
-
         try {
             HttpClient httpClient = new DefaultHttpClient();
             HttpResponse httpResponse = httpClient.execute(new HttpGet(url));
@@ -105,14 +86,6 @@ public class HttpAsyncTask extends AsyncTask<String,Void,String> {
 
     public void setHttpAsyncTaskInterface(HttpAsyncTaskInterface httpAsyncTaskInterface) {
         this.httpAsyncTaskInterface = httpAsyncTaskInterface;
-    }
-
-    public ProgressDialog getProgressDialog() {
-        return progressDialog;
-    }
-
-    public void setProgressDialog(ProgressDialog progressDialog) {
-        this.progressDialog = progressDialog;
     }
 
 }
