@@ -78,8 +78,14 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                     //httpAsyncTask.execute(url);
                     if (usuarioDto != null && usuarioDto.isExito() != null){
                         if (usuarioDto.isExito()){
-                            Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class);
-                            MainActivity.this.startActivity(userNormal_intent);
+                            if (usuarioDto.getTipoUsuario().equals(1)){
+                                Intent userEspecial_intent = new Intent(MainActivity.this, MenuEspecialActivity.class);
+                                MainActivity.this.startActivity(userEspecial_intent);
+                            } else{
+                                Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class);
+                                MainActivity.this.startActivity(userNormal_intent);
+                            }
+
                         } else{
                             Toast.makeText(MainActivity.this, "ERROR EN DATOS",Toast.LENGTH_LONG).show();
                         }
