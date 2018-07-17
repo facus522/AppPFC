@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                     catch (ExecutionException | InterruptedException ei){
                         ei.printStackTrace();
                     }
-                    //httpAsyncTask.execute(url);
                     if (usuarioDto != null && usuarioDto.isExito() != null){
                         if (usuarioDto.isExito()){
                             if (usuarioDto.getTipoUsuario().equals(1)){
@@ -92,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                     } else{
                         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
                         alertDialog.setTitle("Error de Conexión");
-                        alertDialog.setMessage("Verifique su conexión a Internet!");
+                        alertDialog.setMessage("Verifique su conexión a Internet! \n\nSi el problema persiste se trata de un error interno en la base de datos.");
                         alertDialog.setIcon(R.drawable.ic_action_error);
                         alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override

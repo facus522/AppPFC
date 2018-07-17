@@ -8,6 +8,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,7 +51,10 @@ public class HttpAsyncTask extends AsyncTask<String,Void,String> {
         InputStream inputStream = null;
         String result = "";
         try {
-            HttpClient httpClient = new DefaultHttpClient();
+            final HttpParams httpParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
+            HttpClient httpClient = new DefaultHttpClient(httpParams);
+
             HttpResponse httpResponse = httpClient.execute(new HttpGet(url));
             inputStream = httpResponse.getEntity().getContent();
             if(inputStream != null)
