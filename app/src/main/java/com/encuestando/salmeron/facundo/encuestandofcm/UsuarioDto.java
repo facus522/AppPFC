@@ -10,13 +10,32 @@ public class UsuarioDto {
     private Integer id;
     private Integer sexo;
     private String nombreUsuario;
-
-    public Boolean isExito() {
-        return exito;
-    }
+    private String error;
+    private Integer nroError;
 
     public void setExito(Boolean exito) {
         this.exito = exito;
+    }
+
+    public Integer getNroError() {
+        return nroError;
+    }
+
+    public void setNroError(Integer nroError) {
+        this.nroError = nroError;
+    }
+
+    public Boolean getExito() {
+        return exito;
+
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public Integer getTipoUsuario() {

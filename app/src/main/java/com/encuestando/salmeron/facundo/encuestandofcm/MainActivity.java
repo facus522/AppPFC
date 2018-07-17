@@ -75,18 +75,22 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                     catch (ExecutionException | InterruptedException ei){
                         ei.printStackTrace();
                     }
-                    if (usuarioDto != null && usuarioDto.isExito() != null){
-                        if (usuarioDto.isExito()){
-                            if (usuarioDto.getTipoUsuario().equals(1)){
+                    if (usuarioDto != null && usuarioDto.getExito() != null){
+                        if (usuarioDto.getExito()){
+                            if (usuarioDto.getTipoUsuario().equals(TipoUsuarioEnum.USUARIO_ESPECIAL.getCodigo())){
                                 Intent userEspecial_intent = new Intent(MainActivity.this, MenuEspecialActivity.class);
                                 MainActivity.this.startActivity(userEspecial_intent);
-                            } else{
+                            } else if(usuarioDto.getTipoUsuario().equals(TipoUsuarioEnum.USUARIO_NORMAL.getCodigo())){
                                 Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class);
                                 MainActivity.this.startActivity(userNormal_intent);
                             }
 
                         } else{
-                            Toast.makeText(MainActivity.this, "ERROR EN DATOS",Toast.LENGTH_LONG).show();
+                            if (usuarioDto.getNroError().equals(ErrorLoginEnum.ERROR_USUARIO.getCodigo())){
+                                campo_usuario.setError(usuarioDto.getError());
+                            } else if (usuarioDto.getNroError().equals(ErrorLoginEnum.ERROR_PASSWORD.getCodigo())){
+                                campo_password.setError(usuarioDto.getError());
+                            }
                         }
                     } else{
                         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);

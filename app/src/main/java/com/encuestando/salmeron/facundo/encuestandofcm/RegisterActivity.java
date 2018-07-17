@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
@@ -24,12 +26,25 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout fechaNacimiento;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private CardView boton_volver;
+    private CheckBox tipoUsuario_checkbox;
+    private TextInputLayout nombre_usuario;
+    private TextInputLayout password;
+    private TextInputLayout password2;
+    private TextInputLayout email;
+    private TextInputLayout codigoValidacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
+        tipoUsuario_checkbox = (CheckBox) findViewById(R.id.checkbox_tipo_usuario);
         fechaNacimiento = (TextInputLayout) findViewById(R.id.fecha_nacimiento_text);
+        nombre_usuario = (TextInputLayout) findViewById(R.id.nombre_register_text);
+        password = (TextInputLayout) findViewById(R.id.password1_register_text);
+        password2 = (TextInputLayout) findViewById(R.id.password2_register_text);
+        email = (TextInputLayout) findViewById(R.id.mail_register_text);
+        codigoValidacion = (TextInputLayout) findViewById(R.id.tipo_usuario_validator);
+        codigoValidacion.setVisibility(View.GONE);
         fechaNacimiento.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -83,6 +98,17 @@ public class RegisterActivity extends AppCompatActivity {
                 fechaNacimiento.getEditText().setText(date);
             }
         };
+
+        tipoUsuario_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    codigoValidacion.setVisibility(View.VISIBLE);
+                } else{
+                    codigoValidacion.setVisibility(View.GONE);
+                }
+            }
+        });
 
         boton_volver = (CardView) findViewById(R.id.volver_button);
         boton_volver.setOnClickListener(new View.OnClickListener() {

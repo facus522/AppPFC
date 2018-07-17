@@ -12,11 +12,18 @@ public class JSONConverterUtils {
         UsuarioDto usuarioDto = new UsuarioDto();
         try {
             JSONObject json = new JSONObject(jsonString);
-            usuarioDto.setExito(Boolean.valueOf(json.getString("exito")));
-            usuarioDto.setTipoUsuario(Integer.parseInt(json.getString("tipoUsuario")));
-            usuarioDto.setId(Integer.parseInt(json.getString("id")));
-            usuarioDto.setSexo(Integer.parseInt(json.getString("sexo")));
-            usuarioDto.setNombreUsuario(json.getString("nombre"));
+            Boolean exito = Boolean.valueOf(json.getString("exito"));
+            usuarioDto.setExito(exito);
+            if (exito){
+                usuarioDto.setTipoUsuario(Integer.parseInt(json.getString("tipoUsuario")));
+                usuarioDto.setId(Integer.parseInt(json.getString("id")));
+                usuarioDto.setSexo(Integer.parseInt(json.getString("sexo")));
+                usuarioDto.setNombreUsuario(json.getString("nombre"));
+            } else{
+                usuarioDto.setError(json.getString("error"));
+                usuarioDto.setNroError(Integer.parseInt(json.getString("nroError")));
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
