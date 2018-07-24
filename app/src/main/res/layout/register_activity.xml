@@ -106,12 +106,36 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="17dp"
+                android:id="@+id/sexo_radio_group"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/sexo_masculino_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Masculino"
+                    android:textSize="24dp" />
+
+                <RadioButton
+                    android:id="@+id/sexo_femenino_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Femenino"
+                    android:textSize="24dp" />
+
+            </RadioGroup>
+
+
             <CheckBox
                 android:id="@+id/checkbox_tipo_usuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Usuario de Medicina?"
+                android:layout_marginTop="17dp"
+                android:hint="Usuario de Medicina?"
                 android:textSize="24dp" />
 
             <android.support.design.widget.TextInputLayout
@@ -125,16 +149,26 @@
                     android:drawableLeft="@drawable/ic_validar_usuario"
                     android:hint="Código de validación"
                     android:inputType="textPersonName"
-                    android:textSize="24sp"/>
+                    android:textSize="24sp" />
 
             </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/errores_registro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp"
+                android:textStyle="italic" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="50dp"
                 android:layout_marginBottom="25dp"
+                android:layout_marginTop="25dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
@@ -142,9 +176,10 @@
                     android:id="@+id/guardar_button"
                     android:layout_width="150dp"
                     android:layout_height="50dp"
+                    android:layout_marginBottom="10dp"
                     app:cardBackgroundColor="@color/colorAccent"
                     app:cardCornerRadius="25dp"
-                    app:cardElevation="10dp">
+                    app:cardElevation="7dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -165,10 +200,11 @@
                     android:id="@+id/volver_button"
                     android:layout_width="150dp"
                     android:layout_height="50dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginLeft="20dp"
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="25dp"
-                    app:cardElevation="10dp">
+                    app:cardElevation="7dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"

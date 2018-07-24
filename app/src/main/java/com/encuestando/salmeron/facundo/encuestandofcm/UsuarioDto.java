@@ -9,6 +9,7 @@ public class UsuarioDto {
     private Integer tipoUsuario;
     private Integer id;
     private Integer sexo;
+    private Integer edad;
     private String nombreUsuario;
     private String error;
     private Integer nroError;
@@ -68,5 +69,13 @@ public class UsuarioDto {
 
     public void setNombreUsuario(String nombreUsuario) {
         this.nombreUsuario = nombreUsuario;
+    }
+
+    public Integer getEdad() {
+        return edad;
+    }
+
+    public void setEdad(Integer edad) {
+        this.edad = edad;
     }
 }

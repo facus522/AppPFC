@@ -38,6 +38,8 @@ public class HttpAsyncTask extends AsyncTask<String,Void,String> {
         String result = GET(url[0]);
         if(nroWebService.equals(0)){
             httpAsyncTaskInterface.loginUsuario(result);
+        } else if (nroWebService.equals(1)){
+            httpAsyncTaskInterface.registerUsuario(result);
         }
         try {
             this.finalize();

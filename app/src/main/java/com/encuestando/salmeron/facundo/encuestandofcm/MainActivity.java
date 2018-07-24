@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
         boton_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String usuario = campo_usuario.getEditText().getText().toString().trim();
-                String contrasenia = campo_password.getEditText().getText().toString().trim();
+                String usuario = campo_usuario.getEditText().getText().toString();
+                String contrasenia = campo_password.getEditText().getText().toString();
 
                  if (usuario.isEmpty()){
                      campo_usuario.setError("El campo usuario no puede estar vacío.");
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                 if (!(usuario.isEmpty() || contrasenia.isEmpty())){
                     campo_usuario.setError(null);
                     campo_password.setError(null);
-                    String url = "http://192.168.0.106:8080/EncuestasFCM/usuarios/loginUser?nombre=" + campo_usuario.getEditText().getText().toString() + "&password=" + campo_password.getEditText().getText().toString();
+                    String url = "http://192.168.0.107:8080/EncuestasFCM/usuarios/loginUser?nombre=" + reemplazarEspacios(campo_usuario.getEditText().getText().toString()) + "&password=" + reemplazarEspacios(campo_password.getEditText().getText().toString());
                     httpAsyncTask = new HttpAsyncTask(0);
                     httpAsyncTask.setHttpAsyncTaskInterface(MainActivity.this);
                     try{
@@ -117,6 +117,15 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
             usuarioDto = JSONConverterUtils.JSONUsuarioLoginConverter(result);
 
         }
+    }
+
+    @Override
+    public void registerUsuario(String result) {
+
+    }
+
+    private String reemplazarEspacios(String valor){
+        return valor.replace(" ", "%20");
     }
 
     public UsuarioDto getUsuarioDto() {

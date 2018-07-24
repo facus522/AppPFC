@@ -19,6 +19,7 @@ public class JSONConverterUtils {
                 usuarioDto.setId(Integer.parseInt(json.getString("id")));
                 usuarioDto.setSexo(Integer.parseInt(json.getString("sexo")));
                 usuarioDto.setNombreUsuario(json.getString("nombre"));
+                usuarioDto.setEdad(Integer.parseInt(json.getString("edad")));
             } else{
                 usuarioDto.setError(json.getString("error"));
                 usuarioDto.setNroError(Integer.parseInt(json.getString("nroError")));
