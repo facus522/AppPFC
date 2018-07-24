@@ -1,6 +1,8 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -44,6 +46,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
     private RadioGroup sexo_radioGroup;
     private RadioButton sexo_radioButton;
     private HttpAsyncTask httpAsyncTask;
+    private String erroresRegister = "null";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,20 +155,52 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                 if (nombre.isEmpty() || contrasenia1.isEmpty() || contrasenia2.isEmpty() || mail.isEmpty() || nacimiento.isEmpty() || (tipoUsuario_checkbox.isChecked() && codigo.isEmpty()) || (sexo_radioButton == null)) {
                     errores.setText("Debe completar todos los campos!");
                     errores.setVisibility(View.VISIBLE);
-                } else if (contrasenia1.equals(contrasenia2)) {
+                } else if (!contrasenia1.equals(contrasenia2)) {
                     errores.setText("Las contraseñas no coinciden. Revisar!");
                     errores.setVisibility(View.VISIBLE);
                 } else {
                     errores.setVisibility(View.GONE);
-                    //String url = "http://192.168.0.107:8080/EncuestasFCM/usuarios/saveUser?nombre="+nombre+"&password="+contrasenia1+"&fechaNacimiento="+nacimiento+"&mail="+mail+"&activo=1&sexo="+sexo+"&tipoUsuario="+tipoUsuario_checkbox+"&validar="+codigo;
-                    //httpAsyncTask = new HttpAsyncTask(1);
-                    //httpAsyncTask.setHttpAsyncTaskInterface(RegisterActivity.this);
-                    //try{
-                    //    String receivedData = httpAsyncTask.execute(url).get();
-                    //}
-                    //catch (ExecutionException | InterruptedException ei){
-                    //    ei.printStackTrace();
-                    //}
+                    String sexo = sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2";
+                    String tipoUsuario = tipoUsuario_checkbox.isChecked() ? "1" : "2";
+                    String url = "http://192.168.0.107:8080/EncuestasFCM/usuarios/saveUser?nombre="+reemplazarEspacios(nombre)+"&password="+reemplazarEspacios(contrasenia1)+"&fechaNacimiento="+nacimiento+"&mail="+reemplazarEspacios(mail)+"&activo=1&sexo="+sexo+"&tipoUsuario="+tipoUsuario+"&validar="+codigo;
+                    httpAsyncTask = new HttpAsyncTask(1);
+                    httpAsyncTask.setHttpAsyncTaskInterface(RegisterActivity.this);
+                    try{
+                        String receivedData = httpAsyncTask.execute(url).get();
+                    }
+                    catch (ExecutionException | InterruptedException ei){
+                        ei.printStackTrace();
+                    }
+                    if (erroresRegister.isEmpty()){
+                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
+                        alertDialog.setTitle("Éxito");
+                        alertDialog.setIcon(R.drawable.ic_validar_usuario);
+                        alertDialog.setMessage("El usuario ha sido registrado correctamente!");
+                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                RegisterActivity.this.finish();
+                            }
+                        });
+                        alertDialog.show();
+
+                    } else if (erroresRegister.equals("null")){
+                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
+                        alertDialog.setTitle("Error al Registrar");
+                        alertDialog.setMessage("Verifique su conexión a Internet! \n\nSi el problema persiste se trata de un error interno en la base de datos.");
+                        alertDialog.setIcon(R.drawable.ic_action_error);
+                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        alertDialog.show();
+                    } else{
+                        errores.setText(erroresRegister);
+                        errores.setVisibility(View.VISIBLE);
+                    }
                 }
 
             }
@@ -181,7 +216,10 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
 
     @Override
     public void registerUsuario(String result) {
-
+        String registerUsuarioJSON = result;
+        if (registerUsuarioJSON != null && !registerUsuarioJSON.isEmpty()) {
+            erroresRegister = JSONConverterUtils.JSONUsuarioRegisterConverter(result);
+        }
     }
 
     private String reemplazarEspacios(String valor) {

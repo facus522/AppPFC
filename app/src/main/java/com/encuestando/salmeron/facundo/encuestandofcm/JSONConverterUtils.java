@@ -30,4 +30,19 @@ public class JSONConverterUtils {
         }
         return  usuarioDto;
     }
+
+    public static String JSONUsuarioRegisterConverter(String jsonString){
+        String resultado = "";
+        try {
+            JSONObject json = new JSONObject(jsonString);
+            Boolean exito = Boolean.valueOf(json.getString("exito"));
+            if (!exito){
+                resultado = json.getString("error");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return resultado;
+    }
 }
