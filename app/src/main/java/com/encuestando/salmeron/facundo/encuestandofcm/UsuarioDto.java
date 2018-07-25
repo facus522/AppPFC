@@ -1,10 +1,12 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import java.io.Serializable;
+
 /**
  * Created by fsalmeron on 17/6/2018.
  */
 
-public class UsuarioDto {
+public class UsuarioDto implements Serializable{
     private Boolean exito;
     private Integer tipoUsuario;
     private Integer id;

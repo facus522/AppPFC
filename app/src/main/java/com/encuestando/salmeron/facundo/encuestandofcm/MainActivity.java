@@ -15,13 +15,14 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Facundo Salmerón on 14/6/2018.
  */
 
-public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInterface{
+public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable{
 
     private CardView boton_registrar;
     private CardView boton_login;
@@ -79,10 +80,10 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                     if (usuarioDto != null && usuarioDto.getExito() != null){
                         if (usuarioDto.getExito()){
                             if (usuarioDto.getTipoUsuario().equals(TipoUsuarioEnum.USUARIO_ESPECIAL.getCodigo())){
-                                Intent userEspecial_intent = new Intent(MainActivity.this, MenuEspecialActivity.class);
+                                Intent userEspecial_intent = new Intent(MainActivity.this, MenuEspecialActivity.class).putExtra("usuario", usuarioDto);
                                 MainActivity.this.startActivity(userEspecial_intent);
                             } else if(usuarioDto.getTipoUsuario().equals(TipoUsuarioEnum.USUARIO_NORMAL.getCodigo())){
-                                Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class);
+                                Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class).putExtra("usuario", usuarioDto);
                                 MainActivity.this.startActivity(userNormal_intent);
                             }
 
