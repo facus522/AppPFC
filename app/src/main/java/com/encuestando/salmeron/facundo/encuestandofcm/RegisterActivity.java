@@ -146,12 +146,13 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
         boton_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String nombre = nombre_usuario.getEditText().getText().toString();
-                String contrasenia1 = password.getEditText().getText().toString();
-                String contrasenia2 = password2.getEditText().getText().toString();
-                String mail = email.getEditText().getText().toString();
-                String nacimiento = fechaNacimiento.getEditText().getText().toString();
-                String codigo = codigoValidacion.getEditText().getText().toString();
+                final String nombre = nombre_usuario.getEditText().getText().toString();
+                final String contrasenia1 = password.getEditText().getText().toString();
+                final String contrasenia2 = password2.getEditText().getText().toString();
+                final String mail = email.getEditText().getText().toString();
+                final String nacimiento = fechaNacimiento.getEditText().getText().toString();
+                final String codigo = codigoValidacion.getEditText().getText().toString();
+                errores.setTextColor(getResources().getColor(R.color.colorAccent));
                 if (nombre.isEmpty() || contrasenia1.isEmpty() || contrasenia2.isEmpty() || mail.isEmpty() || nacimiento.isEmpty() || (tipoUsuario_checkbox.isChecked() && codigo.isEmpty()) || (sexo_radioButton == null)) {
                     errores.setText("Debe completar todos los campos!");
                     errores.setVisibility(View.VISIBLE);
@@ -159,48 +160,65 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                     errores.setText("Las contraseñas no coinciden. Revisar!");
                     errores.setVisibility(View.VISIBLE);
                 } else {
-                    errores.setVisibility(View.GONE);
-                    String sexo = sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2";
-                    String tipoUsuario = tipoUsuario_checkbox.isChecked() ? "1" : "2";
-                    String url = "http://192.168.0.107:8080/EncuestasFCM/usuarios/saveUser?nombre="+reemplazarEspacios(nombre)+"&password="+reemplazarEspacios(contrasenia1)+"&fechaNacimiento="+nacimiento+"&mail="+reemplazarEspacios(mail)+"&activo=1&sexo="+sexo+"&tipoUsuario="+tipoUsuario+"&validar="+codigo;
-                    httpAsyncTask = new HttpAsyncTask(1);
-                    httpAsyncTask.setHttpAsyncTaskInterface(RegisterActivity.this);
-                    try{
-                        String receivedData = httpAsyncTask.execute(url).get();
-                    }
-                    catch (ExecutionException | InterruptedException ei){
-                        ei.printStackTrace();
-                    }
-                    if (erroresRegister.isEmpty()){
-                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
-                        alertDialog.setTitle("Éxito");
-                        alertDialog.setIcon(R.drawable.ic_validar_usuario);
-                        alertDialog.setMessage("El usuario ha sido registrado correctamente!");
-                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                                RegisterActivity.this.finish();
-                            }
-                        });
-                        alertDialog.show();
+                    errores.setVisibility(View.VISIBLE);
+                    errores.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+                    errores.setText("Cargando...");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
 
-                    } else if (erroresRegister.equals("null")){
-                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
-                        alertDialog.setTitle("Error al Registrar");
-                        alertDialog.setMessage("Verifique su conexión a Internet! \n\nSi el problema persiste se trata de un error interno en la base de datos.");
-                        alertDialog.setIcon(R.drawable.ic_action_error);
-                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        alertDialog.show();
-                    } else{
-                        errores.setText(erroresRegister);
-                        errores.setVisibility(View.VISIBLE);
-                    }
+                                    String sexo = sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2";
+                                    String tipoUsuario = tipoUsuario_checkbox.isChecked() ? "1" : "2";
+                                    String url = "http://192.168.0.107:8080/EncuestasFCM/usuarios/saveUser?nombre="+reemplazarEspacios(nombre)+"&password="+reemplazarEspacios(contrasenia1)+"&fechaNacimiento="+nacimiento+"&mail="+reemplazarEspacios(mail)+"&activo=1&sexo="+sexo+"&tipoUsuario="+tipoUsuario+"&validar="+codigo;
+                                    httpAsyncTask = new HttpAsyncTask(1);
+                                    httpAsyncTask.setHttpAsyncTaskInterface(RegisterActivity.this);
+                                    try{
+                                        String receivedData = httpAsyncTask.execute(url).get();
+                                    }
+                                    catch (ExecutionException | InterruptedException ei){
+                                        ei.printStackTrace();
+                                    }
+                                    if (erroresRegister.isEmpty()){
+                                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
+                                        alertDialog.setTitle("Éxito");
+                                        alertDialog.setIcon(R.drawable.ic_validar_usuario);
+                                        alertDialog.setMessage("El usuario ha sido registrado correctamente!");
+                                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                RegisterActivity.this.finish();
+                                            }
+                                        });
+                                        errores.setVisibility(View.GONE);
+                                        alertDialog.show();
+
+                                    } else if (erroresRegister.equals("null")){
+                                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
+                                        alertDialog.setTitle("Error al Registrar");
+                                        alertDialog.setMessage("Verifique su conexión a Internet! \n\nSi el problema persiste se trata de un error interno en la base de datos.");
+                                        alertDialog.setIcon(R.drawable.ic_action_error);
+                                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        });
+                                        errores.setVisibility(View.GONE);
+                                        alertDialog.show();
+                                    } else{
+                                        errores.setText(erroresRegister);
+                                        errores.setTextColor(getResources().getColor(R.color.colorAccent));
+                                        errores.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            });
+                        }
+                    }).start();
+
                 }
 
             }
