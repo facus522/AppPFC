@@ -1,5 +1,6 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -34,7 +35,8 @@ public class MenuNormalActivity extends AppCompatActivity implements Serializabl
         informacionNoticias.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MenuNormalActivity.this, "Sección en desarrollo.",Toast.LENGTH_LONG).show();
+                Intent info_intent = new Intent(MenuNormalActivity.this, InfoNoticiasNormalActivity.class);
+                MenuNormalActivity.this.startActivity(info_intent);
             }
         });
     }

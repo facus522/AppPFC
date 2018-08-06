@@ -20,7 +20,8 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MenuNormalActivity" />
-        <activity android:name=".MenuEspecialActivity"></activity>
+        <activity android:name=".MenuEspecialActivity" />
+        <activity android:name=".InfoNoticiasNormalActivity"></activity>
     </application>
 
 </manifest>
