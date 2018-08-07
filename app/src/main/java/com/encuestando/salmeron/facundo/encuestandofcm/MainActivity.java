@@ -147,6 +147,11 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
 
     }
 
+    @Override
+    public void cargarInfoNoticias(String result) {
+
+    }
+
     private String reemplazarEspacios(String valor){
         return valor.replace(" ", "%20");
     }

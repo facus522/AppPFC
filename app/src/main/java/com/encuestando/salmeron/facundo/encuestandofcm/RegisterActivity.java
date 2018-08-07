@@ -240,6 +240,11 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
         }
     }
 
+    @Override
+    public void cargarInfoNoticias(String result) {
+
+    }
+
     private String reemplazarEspacios(String valor) {
         return valor.replace(" ", "%20");
     }

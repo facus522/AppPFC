@@ -40,6 +40,8 @@ public class HttpAsyncTask extends AsyncTask<String,Void,String> {
             httpAsyncTaskInterface.loginUsuario(result);
         } else if (nroWebService.equals(1)){
             httpAsyncTaskInterface.registerUsuario(result);
+        } else if (nroWebService.equals(2)){
+            httpAsyncTaskInterface.cargarInfoNoticias(result);
         }
         try {
             this.finalize();
