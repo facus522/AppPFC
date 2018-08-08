@@ -21,7 +21,8 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MenuNormalActivity" />
         <activity android:name=".MenuEspecialActivity" />
-        <activity android:name=".InfoNoticiasNormalActivity"></activity>
+        <activity android:name=".InfoNoticiasNormalActivity" />
+        <activity android:name=".WebViewNormalActivity"></activity>
     </application>
 
 </manifest>

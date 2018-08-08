@@ -2,8 +2,11 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -21,6 +24,7 @@ public class InfoNoticiasNormalActivity extends AppCompatActivity implements Htt
     private ListView listViewInfoNoticias;
     private List<InfoNoticiaDto> infoNoticiasDto = new ArrayList<InfoNoticiaDto>();
     private HttpAsyncTask httpAsyncTask;
+    private String urlInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,24 +42,23 @@ public class InfoNoticiasNormalActivity extends AppCompatActivity implements Htt
         }
 
         if (infoNoticiasDto.size() > 0){
-            HashMap<String, String> mapaInfoNoticias = new HashMap<>();
+            List<Map<String, String>> crsList = new ArrayList<Map<String,String>>();
             for (InfoNoticiaDto dto : infoNoticiasDto){
-                mapaInfoNoticias.put(dto.getTitulo(), dto.getDescripcion());
+                Map<String, String> aug = new HashMap<String, String>();
+                aug.put("tituloInfo", dto.getTitulo());
+                aug.put("descripcionInfo", dto.getDescripcion());
+                crsList.add(aug);
             }
 
-            List<HashMap<String, String>> listaMapas = new ArrayList<>();
-            SimpleAdapter adapter = new SimpleAdapter(this, listaMapas, R.layout.info_noticias_item, new String[]{"First Line", "Second Line"}, new int[]{R.id.titulo_info_normal, R.id.subtitulo_info_normal});
+            String[] keys = {"tituloInfo","descripcionInfo"};
+            int[] widgetIds = {R.id.titulo_info_normal, R.id.subtitulo_info_normal};
+            SimpleAdapter crsAdapter = new SimpleAdapter(InfoNoticiasNormalActivity.this, crsList, R.layout.info_noticias_item, keys,widgetIds);
 
-            Iterator it = mapaInfoNoticias.entrySet().iterator();
-            while (it.hasNext()) {
-                HashMap<String, String> resultMap = new HashMap<>();
-                Map.Entry pair = (Map.Entry) it.next();
-                resultMap.put("First Line", pair.getKey().toString());
-                resultMap.put("Second Line", pair.getValue().toString());
-                listaMapas.add(resultMap);
-            }
 
-            listViewInfoNoticias.setAdapter(adapter);
+
+
+            listViewInfoNoticias.setAdapter(crsAdapter);
+
         } else{
             //Toast.makeText(InfoNoticiasNormalActivity.this, "Actualmente no existen informaciones y noticias cargadas!",Toast.LENGTH_LONG).show();
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(InfoNoticiasNormalActivity.this);
@@ -72,6 +75,20 @@ public class InfoNoticiasNormalActivity extends AppCompatActivity implements Htt
             alertDialog.show();
         }
 
+        listViewInfoNoticias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                urlInfo = "";
+                if (!infoNoticiasDto.get(i).getUrl().substring(0,4).equals("http")){
+                    urlInfo += "http://" + infoNoticiasDto.get(i).getUrl();
+                } else{
+                    urlInfo = infoNoticiasDto.get(i).getUrl();
+                }
+
+                Intent web_info_intent = new Intent(InfoNoticiasNormalActivity.this, WebViewNormalActivity.class).putExtra("urlInfo", urlInfo);;
+                InfoNoticiasNormalActivity.this.startActivity(web_info_intent);
+            }
+        });
 
     }
 
