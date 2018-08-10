@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -47,11 +48,20 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
     private RadioButton sexo_radioButton;
     private HttpAsyncTask httpAsyncTask;
     private String erroresRegister = "null";
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
+        toolbar = (Toolbar) findViewById(R.id.registro_titulo);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RegisterActivity.this.finish();
+            }
+        });
         errores = (TextView) findViewById(R.id.errores_registro);
         errores.setVisibility(View.GONE);
         tipoUsuario_checkbox = (CheckBox) findViewById(R.id.checkbox_tipo_usuario);

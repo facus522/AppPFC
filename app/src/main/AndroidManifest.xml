@@ -22,7 +22,8 @@
         <activity android:name=".MenuNormalActivity" />
         <activity android:name=".MenuEspecialActivity" />
         <activity android:name=".InfoNoticiasNormalActivity" />
-        <activity android:name=".WebViewNormalActivity"></activity>
+        <activity android:name=".WebViewNormalActivity" />
+        <activity android:name=".InfoNoticiasEspecialActivity" />
     </application>
 
 </manifest>

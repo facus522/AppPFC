@@ -13,7 +13,7 @@
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/toolbar_web_info_normal"
+        android:id="@+id/toolbar_info_especial"
         app:title="Información y Noticias"
         android:background="?attr/colorPrimary"
         android:layout_gravity="center"
@@ -22,12 +22,19 @@
         app:titleTextColor="?android:attr/colorPressedHighlight"
         android:theme="?attr/actionBarTheme" />
 
-    <WebView
-        android:id="@+id/web_view_normal"
+    <ListView
+        android:id="@+id/listaInfoNoticiasEspecial"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"></WebView>
+        android:layout_height="@android:dimen/dialog_min_width_minor"></ListView>
 
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:clickable="true"
+        android:backgroundTint="@android:color/holo_red_light"
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:layout_gravity="bottom|end" />
 
 </LinearLayout>

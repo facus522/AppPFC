@@ -3,6 +3,8 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -14,15 +16,25 @@ public class WebViewNormalActivity extends AppCompatActivity implements Serializ
     private WebView webView;
     private String url;
     private ProgressDialog progDialog;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_view_normal_activity);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_web_info_normal);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WebViewNormalActivity.this.finish();
+            }
+        });
+
         url = (String) getIntent().getSerializableExtra("urlInfo");
 
         progDialog = ProgressDialog.show(WebViewNormalActivity.this, "Cargando Información","Espere por favor...", true);
-        progDialog.setCancelable(false);
+        progDialog.setCancelable(true);
 
         webView = (WebView) findViewById(R.id.web_view_normal);
 

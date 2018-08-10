@@ -10,18 +10,19 @@
     android:orientation="vertical"
     tools:context="com.encuestando.salmeron.facundo.encuestandofcm.RegisterActivity">
 
-            <TextView
-                android:id="@+id/registro_titulo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:text="Información y Noticias"
-                android:textColor="?android:attr/colorPressedHighlight"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar_info_normal"
+        app:title="Información y Noticias"
+        android:background="?attr/colorPrimary"
+        android:layout_gravity="center"
+        app:titleMargin="@dimen/cardview_default_elevation"
+        android:minHeight="?attr/actionBarSize"
+        app:titleTextColor="?android:attr/colorPressedHighlight"
+        android:theme="?attr/actionBarTheme" />
 
-            <ListView
+    <ListView
                 android:id="@+id/listaInfoNoticias"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
