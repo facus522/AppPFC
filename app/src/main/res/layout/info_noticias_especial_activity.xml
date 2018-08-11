@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical"
-    tools:context="com.encuestando.salmeron.facundo.encuestandofcm.RegisterActivity">
+    tools:context="com.encuestando.salmeron.facundo.encuestandofcm.InfoNoticiasEspecialActivity">
 
-    <android.support.v7.widget.Toolbar
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/toolbar_info_especial"
-        app:title="Información y Noticias"
-        android:background="?attr/colorPrimary"
-        android:layout_gravity="center"
-        app:titleMargin="@dimen/cardview_default_elevation"
-        android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="?android:attr/colorPressedHighlight"
-        android:theme="?attr/actionBarTheme" />
+        android:theme="@style/AppBarOverlay">
 
-    <ListView
-        android:id="@+id/listaInfoNoticiasEspecial"
-        android:layout_width="match_parent"
-        android:layout_height="@android:dimen/dialog_min_width_minor"></ListView>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_info_especial"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:title="Información y Noticias"
+            app:titleTextColor="?android:attr/colorPressedHighlight"
+            app:popupTheme="@style/PopupOverlay" />
 
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_info_noticias_especial" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
+        android:id="@+id/boton_agregar_info"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:clickable="true"
-        android:backgroundTint="@android:color/holo_red_light"
-        app:srcCompat="@android:drawable/ic_input_add"
-        android:layout_gravity="bottom|end" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/cardview_light_background"
+        android:elevation="10dp"
+        android:scaleType="center"
+        app:backgroundTint="@android:color/holo_red_dark"
+        app:fabSize="normal"
+        app:srcCompat="@android:drawable/ic_input_add" />
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

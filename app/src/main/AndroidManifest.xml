@@ -23,7 +23,10 @@
         <activity android:name=".MenuEspecialActivity" />
         <activity android:name=".InfoNoticiasNormalActivity" />
         <activity android:name=".WebViewNormalActivity" />
-        <activity android:name=".InfoNoticiasEspecialActivity" />
+        <activity
+            android:name=".InfoNoticiasEspecialActivity"
+            android:label="@string/title_activity_info_noticias_especial"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
     </application>
 
 </manifest>
