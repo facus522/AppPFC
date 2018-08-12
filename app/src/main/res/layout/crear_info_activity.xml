@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context="com.encuestando.salmeron.facundo.encuestandofcm.RegisterActivity">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/add_info_toolbar"
+                app:title="Añadir Información o Noticia"
+                android:background="?attr/colorPrimary"
+                android:layout_gravity="center"
+                app:titleMargin="@dimen/cardview_default_elevation"
+                android:minHeight="?attr/actionBarSize"
+                app:titleTextColor="?android:attr/colorPressedHighlight"
+                android:theme="?attr/actionBarTheme" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/add_info_titulo"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="20dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="99dp"
+                    android:drawableLeft="@drawable/ic_action_nombreusuario"
+                    android:hint="Título"
+                    android:inputType="textPersonName"
+                    android:textSize="24sp" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

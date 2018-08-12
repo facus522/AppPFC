@@ -5,7 +5,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Facundo Salmerón on 11/7/2018.
@@ -35,13 +37,15 @@ public class JSONConverterUtils {
         return  usuarioDto;
     }
 
-    public static String JSONUsuarioRegisterConverter(String jsonString){
-        String resultado = "";
+    public static Map<Integer, String> JSONUsuarioRegisterConverter(String jsonString){
+        Map<Integer, String> resultado = new HashMap<>();
         try {
             JSONObject json = new JSONObject(jsonString);
             Boolean exito = Boolean.valueOf(json.getString("exito"));
             if (!exito){
-                resultado = json.getString("error");
+                Integer idError = Integer.valueOf(json.getString("idError"));
+                String error = json.getString("error");
+                resultado.put(idError, error);
             }
 
         } catch (JSONException e) {
@@ -59,6 +63,7 @@ public class JSONConverterUtils {
             for (int i=0; i<jsonArray.length();i++){
                 JSONObject aux = jsonArray.getJSONObject(i);
                 InfoNoticiaDto dto = new InfoNoticiaDto();
+                dto.setId(Integer.parseInt(aux.getString("id")));
                 dto.setTitulo(aux.getString("titulo"));
                 dto.setDescripcion(aux.getString("descripcion"));
                 dto.setUrl(aux.getString("url"));

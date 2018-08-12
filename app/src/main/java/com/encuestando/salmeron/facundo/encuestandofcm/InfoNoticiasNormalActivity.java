@@ -43,7 +43,7 @@ public class InfoNoticiasNormalActivity extends AppCompatActivity implements Htt
         });
 
         String url = "http://192.168.0.107:8080/EncuestasFCM/infoNoticias/getAll";
-        httpAsyncTask = new HttpAsyncTask(2);
+        httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CARGAR_INFO.getCodigo());
         httpAsyncTask.setHttpAsyncTaskInterface(InfoNoticiasNormalActivity.this);
         try {
             String receivedData = httpAsyncTask.execute(url).get();
@@ -116,6 +116,11 @@ public class InfoNoticiasNormalActivity extends AppCompatActivity implements Htt
 
     @Override
     public void registerUsuario(String result) {
+
+    }
+
+    @Override
+    public void eliminarInfoNoticia(String result) {
 
     }
 }

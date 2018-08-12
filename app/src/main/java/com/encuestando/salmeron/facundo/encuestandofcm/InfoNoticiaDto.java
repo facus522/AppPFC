@@ -6,12 +6,21 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 
 public class InfoNoticiaDto {
 
+    private Integer id;
     private String titulo;
     private String descripcion;
     private String url;
 
     public String getTitulo() {
         return titulo;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setTitulo(String titulo) {

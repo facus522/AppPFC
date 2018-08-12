@@ -49,12 +49,13 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
         agregarInfoBoton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(InfoNoticiasEspecialActivity.this, "Agregar Info", Toast.LENGTH_LONG).show();
+                Intent agregar_info_intent = new Intent(InfoNoticiasEspecialActivity.this, CrearInfoActivity.class);
+                InfoNoticiasEspecialActivity.this.startActivity(agregar_info_intent);
             }
         });
 
         String url = "http://192.168.0.107:8080/EncuestasFCM/infoNoticias/getAll";
-        httpAsyncTask = new HttpAsyncTask(2);
+        httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CARGAR_INFO.getCodigo());
         httpAsyncTask.setHttpAsyncTaskInterface(InfoNoticiasEspecialActivity.this);
         try {
             String receivedData = httpAsyncTask.execute(url).get();
@@ -103,9 +104,19 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
                 });
                 alertDialog.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                        Toast.makeText(InfoNoticiasEspecialActivity.this, "Eliminar.", Toast.LENGTH_LONG).show();
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        String url = "http://192.168.0.107:8080/EncuestasFCM/infoNoticias/removeInfo?idInfo=" + infoNoticiasDto.get(i).getId();
+                        httpAsyncTask = new HttpAsyncTask(WebServiceEnum.ELIMINAR_INFO.getCodigo());
+                        httpAsyncTask.setHttpAsyncTaskInterface(InfoNoticiasEspecialActivity.this);
+                        try {
+                            String receivedData = httpAsyncTask.execute(url).get();
+                        } catch (ExecutionException | InterruptedException ei) {
+                            ei.printStackTrace();
+                        }
+                        finish();
+                        startActivity(getIntent());
+                        Toast.makeText(InfoNoticiasEspecialActivity.this, "Información eliminada correctamente!", Toast.LENGTH_LONG).show();
                     }
                 });
                 alertDialog.show();
@@ -120,6 +131,11 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
         if (infoNoticiasJSON != null && !infoNoticiasJSON.isEmpty()) {
             infoNoticiasDto = JSONConverterUtils.JSONInfoNoticiasConverter(result);
         }
+    }
+
+    @Override
+    public void eliminarInfoNoticia(String result) {
+
     }
 
     @Override

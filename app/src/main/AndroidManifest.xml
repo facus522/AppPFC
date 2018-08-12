@@ -26,7 +26,8 @@
         <activity
             android:name=".InfoNoticiasEspecialActivity"
             android:label="@string/title_activity_info_noticias_especial"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".CrearInfoActivity"></activity>
     </application>
 
 </manifest>

@@ -24,6 +24,8 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -47,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
     private RadioGroup sexo_radioGroup;
     private RadioButton sexo_radioButton;
     private HttpAsyncTask httpAsyncTask;
-    private String erroresRegister = "null";
+    private Map<Integer, String> erroresRegister = null;
     private Toolbar toolbar;
 
     @Override
@@ -148,7 +150,24 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
         boton_volver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RegisterActivity.this.finish();
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this);
+                alertDialog.setTitle("Atención");
+                alertDialog.setIcon(R.drawable.ic_action_error);
+                alertDialog.setMessage("Si sale de la pantalla se perderán todos los datos ingresados!\n¿Desea salir?");
+                alertDialog.setNegativeButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        RegisterActivity.this.finish();
+                    }
+                });
+                alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
             }
         });
 
@@ -156,6 +175,10 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
         boton_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                nombre_usuario.setError(null);
+                password.setError(null);
+                codigoValidacion.setError(null);
+                email.setError(null);
                 final String nombre = nombre_usuario.getEditText().getText().toString();
                 final String contrasenia1 = password.getEditText().getText().toString();
                 final String contrasenia2 = password2.getEditText().getText().toString();
@@ -183,7 +206,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                                     String sexo = sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2";
                                     String tipoUsuario = tipoUsuario_checkbox.isChecked() ? "1" : "2";
                                     String url = "http://192.168.0.107:8080/EncuestasFCM/usuarios/saveUser?nombre="+reemplazarEspacios(nombre)+"&password="+reemplazarEspacios(contrasenia1)+"&fechaNacimiento="+nacimiento+"&mail="+reemplazarEspacios(mail)+"&activo=1&sexo="+sexo+"&tipoUsuario="+tipoUsuario+"&validar="+codigo;
-                                    httpAsyncTask = new HttpAsyncTask(1);
+                                    httpAsyncTask = new HttpAsyncTask(WebServiceEnum.REGISTER_USER.getCodigo());
                                     httpAsyncTask.setHttpAsyncTaskInterface(RegisterActivity.this);
                                     try{
                                         String receivedData = httpAsyncTask.execute(url).get();
@@ -191,7 +214,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                                     catch (ExecutionException | InterruptedException ei){
                                         ei.printStackTrace();
                                     }
-                                    if (erroresRegister.isEmpty()){
+                                    if (erroresRegister != null && erroresRegister.size() < 1){
                                         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
                                         alertDialog.setTitle("Éxito");
                                         alertDialog.setIcon(R.drawable.ic_validar_usuario);
@@ -206,7 +229,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                                         errores.setVisibility(View.GONE);
                                         alertDialog.show();
 
-                                    } else if (erroresRegister.equals("null")){
+                                    } else if (erroresRegister == null){
                                         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
                                         alertDialog.setTitle("Error al Registrar");
                                         alertDialog.setMessage("Verifique su conexión a Internet! \n\nSi el problema persiste se trata de un error interno en la base de datos.");
@@ -220,9 +243,8 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                                         errores.setVisibility(View.GONE);
                                         alertDialog.show();
                                     } else{
-                                        errores.setText(erroresRegister);
-                                        errores.setTextColor(getResources().getColor(R.color.colorAccent));
-                                        errores.setVisibility(View.VISIBLE);
+                                        insertarErrores(erroresRegister);
+                                        errores.setVisibility(View.GONE);
                                     }
                                 }
                             });
@@ -235,6 +257,45 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
         });
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this);
+        alertDialog.setTitle("Atención");
+        alertDialog.setIcon(R.drawable.ic_action_error);
+        alertDialog.setMessage("Si sale de la pantalla se perderán todos los datos ingresados!\n ¿Desea salir?");
+        alertDialog.setNegativeButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                RegisterActivity.this.finish();
+            }
+        });
+        alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
+    }
+
+    public void insertarErrores(Map<Integer, String> mapa){
+        Integer numError = 0;
+        for (Integer key : mapa.keySet()){
+            numError = key;
+        }
+
+        if (numError == ErrorRegisterEnum.ERROR_CODIGO_VALIDACION.getCodigo()){
+            codigoValidacion.setError(mapa.get(numError));
+        } else if (numError == ErrorRegisterEnum.ERROR_MAIL_REPETIDO.getCodigo()){
+            email.setError(mapa.get(numError));
+        } else if (numError == ErrorRegisterEnum.ERROR_PASSWORD_MIN.getCodigo() || numError == ErrorRegisterEnum.ERROR_PASSWORD_MAX.getCodigo()){
+            password.setError(mapa.get(numError));
+        } else {
+            nombre_usuario.setError(mapa.get(numError));
+        }
     }
 
     @Override
@@ -252,6 +313,11 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
 
     @Override
     public void cargarInfoNoticias(String result) {
+
+    }
+
+    @Override
+    public void eliminarInfoNoticia(String result) {
 
     }
 

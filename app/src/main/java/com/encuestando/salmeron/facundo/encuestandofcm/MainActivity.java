@@ -9,6 +9,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.text.InputType;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                                     campo_usuario.setError(null);
                                     campo_password.setError(null);
                                     String url = "http://192.168.0.107:8080/EncuestasFCM/usuarios/loginUser?nombre=" + reemplazarEspacios(campo_usuario.getEditText().getText().toString()) + "&password=" + reemplazarEspacios(campo_password.getEditText().getText().toString());
-                                    httpAsyncTask = new HttpAsyncTask(0);
+                                    httpAsyncTask = new HttpAsyncTask(WebServiceEnum.LOGIN_USER.getCodigo());
                                     httpAsyncTask.setHttpAsyncTaskInterface(MainActivity.this);
                                     try{
                                         String receivedData = httpAsyncTask.execute(url).get();
@@ -149,6 +150,11 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
 
     @Override
     public void cargarInfoNoticias(String result) {
+
+    }
+
+    @Override
+    public void eliminarInfoNoticia(String result) {
 
     }
 

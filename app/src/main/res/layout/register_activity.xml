@@ -35,11 +35,13 @@
                 android:id="@+id/nombre_register_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:errorEnabled="true"
                 android:layout_marginTop="20dp">
 
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#11000000"
                     android:drawableLeft="@drawable/ic_action_nombreusuario"
                     android:hint="Nombre de Usuario"
                     android:inputType="textPersonName"
@@ -50,11 +52,13 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/password1_register_text"
                 android:layout_width="match_parent"
+                app:errorEnabled="true"
                 android:layout_height="wrap_content">
 
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#11000000"
                     android:drawableLeft="@drawable/ic_action_pass"
                     android:hint="Contraseña"
                     android:inputType="textPassword"
@@ -65,11 +69,13 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/password2_register_text"
                 android:layout_width="match_parent"
+                app:errorEnabled="true"
                 android:layout_height="wrap_content">
 
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#11000000"
                     android:drawableLeft="@drawable/ic_action_pass"
                     android:hint="Repita Contraseña"
                     android:inputType="textPassword"
@@ -80,14 +86,16 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/mail_register_text"
                 android:layout_width="match_parent"
+                app:errorEnabled="true"
                 android:layout_height="wrap_content">
 
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#11000000"
                     android:drawableLeft="@drawable/ic_action_mail"
                     android:hint="E-Mail"
-                    android:inputType="textPersonName"
+                    android:inputType="textEmailAddress"
                     android:textSize="24sp" />
 
             </android.support.design.widget.TextInputLayout>
@@ -95,11 +103,13 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/fecha_nacimiento_text"
                 android:layout_width="match_parent"
+                app:errorEnabled="true"
                 android:layout_height="wrap_content">
 
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#11000000"
                     android:drawableLeft="@drawable/ic_action_fecha"
                     android:hint="Fecha de Nacimiento"
                     android:inputType="textPersonName"
@@ -110,7 +120,8 @@
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="17dp"
+                android:layout_marginTop="14dp"
+                android:background="#11000000"
                 android:id="@+id/sexo_radio_group"
                 android:orientation="horizontal">
 
@@ -135,13 +146,16 @@
                 android:id="@+id/checkbox_tipo_usuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="17dp"
+                android:layout_marginTop="30dp"
+                android:background="#11000000"
                 android:hint="Usuario de Medicina?"
                 android:textSize="24dp" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/tipo_usuario_validator"
                 android:layout_width="match_parent"
+                app:errorEnabled="true"
+                android:layout_marginTop="17dp"
                 android:layout_height="wrap_content">
 
                 <android.support.design.widget.TextInputEditText
@@ -149,6 +163,7 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_validar_usuario"
                     android:hint="Código de validación"
+                    android:background="#11000000"
                     android:inputType="textPersonName"
                     android:textSize="24sp" />
 

@@ -36,12 +36,14 @@ public class HttpAsyncTask extends AsyncTask<String,Void,String> {
     @Override
     protected String doInBackground(String... url) {
         String result = GET(url[0]);
-        if(nroWebService.equals(0)){
+        if(nroWebService.equals(WebServiceEnum.LOGIN_USER.getCodigo())){
             httpAsyncTaskInterface.loginUsuario(result);
-        } else if (nroWebService.equals(1)){
+        } else if (nroWebService.equals(WebServiceEnum.REGISTER_USER.getCodigo())){
             httpAsyncTaskInterface.registerUsuario(result);
-        } else if (nroWebService.equals(2)){
+        } else if (nroWebService.equals(WebServiceEnum.CARGAR_INFO.getCodigo())){
             httpAsyncTaskInterface.cargarInfoNoticias(result);
+        } else if (nroWebService.equals(WebServiceEnum.ELIMINAR_INFO.getCodigo())){
+            httpAsyncTaskInterface.eliminarInfoNoticia(result);
         }
         try {
             this.finalize();
