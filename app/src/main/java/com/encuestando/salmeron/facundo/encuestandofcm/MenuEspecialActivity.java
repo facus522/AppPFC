@@ -31,7 +31,6 @@ public class MenuEspecialActivity extends AppCompatActivity implements Serializa
         toolbar = (Toolbar) findViewById(R.id.titulo_especial);
         toolbar.setTitle("BIENVENIDO " + usuarioLogueado.getNombreUsuario().toUpperCase());
 
-
         encuestasDisponibles = (CardView) findViewById(R.id.encuestasDisponiblesEspecial);
         informacionNoticias = (CardView) findViewById(R.id.informacionNoticiasEspecial);
         administrarEncuestas = (CardView) findViewById(R.id.administrarEncuestas);
@@ -39,7 +38,7 @@ public class MenuEspecialActivity extends AppCompatActivity implements Serializa
         informacionNoticias.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent info_intent = new Intent(MenuEspecialActivity.this, InfoNoticiasEspecialActivity.class);
+                Intent info_intent = new Intent(MenuEspecialActivity.this, InfoNoticiasEspecialActivity.class).putExtra("usuario", usuarioLogueado);
                 MenuEspecialActivity.this.startActivity(info_intent);
             }
         });

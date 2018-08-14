@@ -87,13 +87,7 @@ public class InfoNoticiasNormalActivity extends AppCompatActivity implements Htt
         listViewInfoNoticias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                urlInfo = "";
-                if (!infoNoticiasDto.get(i).getUrl().substring(0,4).equals("http")){
-                    urlInfo += "http://" + infoNoticiasDto.get(i).getUrl();
-                } else{
-                    urlInfo = infoNoticiasDto.get(i).getUrl();
-                }
-
+                urlInfo = infoNoticiasDto.get(i).getUrl();
                 Intent web_info_intent = new Intent(InfoNoticiasNormalActivity.this, WebViewNormalActivity.class).putExtra("urlInfo", urlInfo);
                 InfoNoticiasNormalActivity.this.startActivity(web_info_intent);
             }
@@ -107,6 +101,11 @@ public class InfoNoticiasNormalActivity extends AppCompatActivity implements Htt
         if (infoNoticiasJSON != null && !infoNoticiasJSON.isEmpty()) {
             infoNoticiasDto = JSONConverterUtils.JSONInfoNoticiasConverter(result);
         }
+    }
+
+    @Override
+    public void crearInfoNoticica(String result) {
+
     }
 
     @Override

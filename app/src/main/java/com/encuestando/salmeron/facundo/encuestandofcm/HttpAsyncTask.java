@@ -44,6 +44,8 @@ public class HttpAsyncTask extends AsyncTask<String,Void,String> {
             httpAsyncTaskInterface.cargarInfoNoticias(result);
         } else if (nroWebService.equals(WebServiceEnum.ELIMINAR_INFO.getCodigo())){
             httpAsyncTaskInterface.eliminarInfoNoticia(result);
+        } else if (nroWebService.equals(WebServiceEnum.CREAR_INFO.getCodigo())){
+            httpAsyncTaskInterface.crearInfoNoticica(result);
         }
         try {
             this.finalize();

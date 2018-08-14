@@ -9,4 +9,5 @@ public interface HttpAsyncTaskInterface {
     void registerUsuario(String result); //nroWebService = 1;
     void cargarInfoNoticias(String result); //nroWebService = 2;
     void eliminarInfoNoticia(String result); //nroWebService = 3;
+    void crearInfoNoticica(String result); //nroWebService = 4;
 }

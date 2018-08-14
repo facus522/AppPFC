@@ -1,5 +1,6 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,14 +15,19 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Created by Facundo Salmerón on 12/8/2018.
+ */
 
-public class InfoNoticiasEspecialActivity extends AppCompatActivity implements HttpAsyncTaskInterface{
+
+public class InfoNoticiasEspecialActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable{
 
     private ListView listViewInfoNoticias;
     private List<InfoNoticiaDto> infoNoticiasDto = new ArrayList<InfoNoticiaDto>();
@@ -29,12 +35,14 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
     private String urlInfo;
     private Toolbar toolbar;
     private FloatingActionButton agregarInfoBoton;
+    private UsuarioDto usuarioLogueado;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_noticias_especial_activity);
+        usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
         listViewInfoNoticias = (ListView) findViewById(R.id.listaInfoNoticiasEspecial);
         agregarInfoBoton = (FloatingActionButton) findViewById(R.id.boton_agregar_info);
         toolbar = (Toolbar) findViewById(R.id.toolbar_info_especial);
@@ -49,8 +57,8 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
         agregarInfoBoton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent agregar_info_intent = new Intent(InfoNoticiasEspecialActivity.this, CrearInfoActivity.class);
-                InfoNoticiasEspecialActivity.this.startActivity(agregar_info_intent);
+                Intent agregar_info_intent = new Intent(InfoNoticiasEspecialActivity.this, CrearInfoActivity.class).putExtra("usuario", usuarioLogueado);
+                startActivityForResult(agregar_info_intent, 1);
             }
         });
 
@@ -91,13 +99,7 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
                 alertDialog.setPositiveButton("Ver URL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        urlInfo = "";
-                        if (!infoNoticiasDto.get(i).getUrl().substring(0,4).equals("http")){
-                            urlInfo += "http://" + infoNoticiasDto.get(i).getUrl();
-                        } else{
-                            urlInfo = infoNoticiasDto.get(i).getUrl();
-                        }
-
+                        urlInfo = infoNoticiasDto.get(i).getUrl();
                         Intent web_info_intent = new Intent(InfoNoticiasEspecialActivity.this, WebViewNormalActivity.class).putExtra("urlInfo", urlInfo);
                         InfoNoticiasEspecialActivity.this.startActivity(web_info_intent);
                     }
@@ -126,6 +128,15 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK){
+            finish();
+            startActivity(getIntent());
+            Toast.makeText(InfoNoticiasEspecialActivity.this, "La información ha sido añadida correctamente!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
     public void cargarInfoNoticias(String result) {
         String infoNoticiasJSON = result;
         if (infoNoticiasJSON != null && !infoNoticiasJSON.isEmpty()) {
@@ -135,6 +146,11 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
 
     @Override
     public void eliminarInfoNoticia(String result) {
+
+    }
+
+    @Override
+    public void crearInfoNoticica(String result) {
 
     }
 

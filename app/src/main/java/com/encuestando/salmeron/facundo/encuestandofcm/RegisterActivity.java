@@ -312,6 +312,11 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
     }
 
     @Override
+    public void crearInfoNoticica(String result) {
+
+    }
+
+    @Override
     public void cargarInfoNoticias(String result) {
 
     }
