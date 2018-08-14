@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -82,8 +83,18 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
 
             String[] keys = {"tituloInfo","descripcionInfo"};
             int[] widgetIds = {R.id.titulo_info_normal, R.id.subtitulo_info_normal};
-            SimpleAdapter crsAdapter = new SimpleAdapter(InfoNoticiasEspecialActivity.this, crsList, R.layout.info_noticias_item, keys,widgetIds);
-
+            SimpleAdapter crsAdapter = new SimpleAdapter(InfoNoticiasEspecialActivity.this, crsList, R.layout.info_noticias_item, keys,widgetIds){
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    View view = super.getView(position, convertView, parent);
+                    if (position%2 == 1){
+                        view.setBackgroundColor(getResources().getColor(R.color.impares));
+                    } else{
+                        view.setBackgroundColor(getResources().getColor(R.color.pares));
+                    }
+                    return view;
+                }
+            };
             listViewInfoNoticias.setAdapter(crsAdapter);
 
         } else{

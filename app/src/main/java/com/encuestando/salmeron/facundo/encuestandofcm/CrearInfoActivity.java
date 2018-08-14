@@ -101,7 +101,10 @@ public class CrearInfoActivity extends AppCompatActivity implements HttpAsyncTas
     }
 
     private String reemplazarEspacios(String valor){
-        return valor.replace(" ", "%20");
+
+        String aux = valor.replace(" ", "%20");
+        aux = aux.replace("\n", "%20");
+        return aux;
     }
 
     private boolean camposValidos(){

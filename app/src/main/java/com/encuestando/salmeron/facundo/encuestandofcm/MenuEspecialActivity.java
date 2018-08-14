@@ -1,5 +1,8 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,5 +45,44 @@ public class MenuEspecialActivity extends AppCompatActivity implements Serializa
                 MenuEspecialActivity.this.startActivity(info_intent);
             }
         });
+
+        encuestasDisponibles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MenuEspecialActivity.this, "Sección en desarrollo.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        administrarEncuestas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MenuEspecialActivity.this, "Sección en desarrollo.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MenuEspecialActivity.this);
+        alertDialog.setTitle("Atención");
+        alertDialog.setIcon(R.drawable.ic_action_error);
+        alertDialog.setMessage("¿Desea cerrar su sesión?");
+        alertDialog.setNegativeButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+            }
+        });
+        alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
     }
 }

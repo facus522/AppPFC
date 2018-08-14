@@ -1,5 +1,6 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
@@ -158,7 +159,9 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
-                        RegisterActivity.this.finish();
+                        Intent returnIntent = new Intent();
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
                     }
                 });
                 alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -269,7 +272,9 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                RegisterActivity.this.finish();
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
             }
         });
         alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {

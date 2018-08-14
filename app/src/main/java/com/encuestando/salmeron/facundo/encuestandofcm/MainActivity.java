@@ -1,5 +1,6 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
             @Override
             public void onClick(View view) {
                 Intent register_intent = new Intent(MainActivity.this, RegisterActivity.class);
-                MainActivity.this.startActivity(register_intent);
+                startActivityForResult(register_intent, 1);
             }
         });
 
@@ -97,10 +98,10 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                                         if (usuarioDto.getExito()){
                                             if (usuarioDto.getTipoUsuario().equals(TipoUsuarioEnum.USUARIO_ESPECIAL.getCodigo())){
                                                 Intent userEspecial_intent = new Intent(MainActivity.this, MenuEspecialActivity.class).putExtra("usuario", usuarioDto);
-                                                MainActivity.this.startActivity(userEspecial_intent);
+                                                startActivityForResult(userEspecial_intent, 1);
                                             } else if(usuarioDto.getTipoUsuario().equals(TipoUsuarioEnum.USUARIO_NORMAL.getCodigo())){
                                                 Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class).putExtra("usuario", usuarioDto);
-                                                MainActivity.this.startActivity(userNormal_intent);
+                                                startActivityForResult(userNormal_intent, 1);
                                             }
 
                                         } else{
@@ -132,6 +133,14 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK){
+            finish();
+            startActivity(getIntent());
+        }
     }
 
     @Override

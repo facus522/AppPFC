@@ -42,8 +42,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#11000000"
-                    android:drawableLeft="@drawable/ic_action_user"
+                    android:drawableRight="@drawable/ic_action_user"
                     android:ems="10"
+                    android:paddingLeft="10dp"
                     android:hint="Usuario"
                     android:inputType="textPersonName"
                     android:textColor="#fff"
@@ -56,6 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/usuario_texto"
+                app:passwordToggleEnabled="true"
                 android:layout_below="@+id/usuario_texto"
                 android:layout_marginTop="14dp">
 
@@ -65,6 +67,7 @@
                     android:background="#11000000"
                     android:drawableLeft="@drawable/ic_action_pass"
                     android:ems="10"
+                    android:paddingLeft="10dp"
                     android:hint="Contraseña"
                     android:inputType="textPassword"
                     android:textColor="#fff"
