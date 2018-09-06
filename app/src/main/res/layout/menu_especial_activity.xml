@@ -37,6 +37,7 @@
                 android:layout_height="149dp"
                 android:layout_below="@+id/titulo_especial"
                 android:layout_centerHorizontal="true"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:layout_marginTop="20dp"
                 app:cardCornerRadius="25dp"
                 app:cardElevation="20dp">
@@ -58,6 +59,7 @@
                 android:layout_height="149dp"
                 android:layout_below="@+id/encuestasDisponiblesEspecial"
                 android:layout_centerHorizontal="true"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:layout_marginTop="20dp"
                 app:cardCornerRadius="25dp"
                 app:cardElevation="20dp">
@@ -78,6 +80,7 @@
                 android:layout_width="360dp"
                 android:layout_height="149dp"
                 android:layout_below="@+id/informacionNoticiasEspecial"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 app:cardCornerRadius="25dp"

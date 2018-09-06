@@ -93,6 +93,7 @@
                 android:layout_alignStart="@+id/register_button"
                 android:layout_below="@+id/cargandoLogin"
                 android:layout_marginTop="15dp"
+                android:foreground="?android:attr/selectableItemBackground"
                 app:cardBackgroundColor="@color/colorAccent"
                 app:cardCornerRadius="25dp"
                 app:cardElevation="7dp">
@@ -119,6 +120,7 @@
                 android:layout_below="@+id/login_button"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
+                android:foreground="?android:attr/selectableItemBackground"
                 app:cardBackgroundColor="@color/colorPrimary"
                 app:cardCornerRadius="25dp"
                 android:layout_marginBottom="10dp"

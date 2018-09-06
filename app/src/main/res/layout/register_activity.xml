@@ -194,6 +194,7 @@
                     android:layout_height="50dp"
                     android:layout_marginBottom="10dp"
                     app:cardBackgroundColor="@color/colorAccent"
+                    android:foreground="?android:attr/selectableItemBackground"
                     app:cardCornerRadius="25dp"
                     app:cardElevation="7dp">
 
@@ -218,6 +219,7 @@
                     android:layout_height="50dp"
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="20dp"
+                    android:foreground="?android:attr/selectableItemBackground"
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="25dp"
                     app:cardElevation="7dp">
