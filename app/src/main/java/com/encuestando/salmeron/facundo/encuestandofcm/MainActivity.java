@@ -38,17 +38,20 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
     private UsuarioDto usuarioDto;
     private HttpAsyncTask httpAsyncTask;
     private TextView cargandoLogin;
+    private ProgressBar loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         usuarioDto = new UsuarioDto();
         setContentView(R.layout.login_activity);
-        cargandoLogin = (TextView) findViewById(R.id.cargandoLogin);
+        cargandoLogin = findViewById(R.id.cargandoLogin);
         cargandoLogin.setVisibility(View.GONE);
-        campo_usuario = (TextInputLayout) findViewById(R.id.usuario_texto);
-        campo_password = (TextInputLayout) findViewById(R.id.password_texto);
-        boton_registrar = (CardView) findViewById(R.id.register_button);
+        loading = findViewById(R.id.loadingLogin);
+        loading.setVisibility(View.GONE);
+        campo_usuario = findViewById(R.id.usuario_texto);
+        campo_password = findViewById(R.id.password_texto);
+        boton_registrar = findViewById(R.id.register_button);
         boton_registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
             }
         });
 
-        boton_login = (CardView) findViewById(R.id.login_button);
+        boton_login = findViewById(R.id.login_button);
         boton_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

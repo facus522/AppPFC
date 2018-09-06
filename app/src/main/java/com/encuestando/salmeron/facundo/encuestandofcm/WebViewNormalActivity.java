@@ -22,7 +22,7 @@ public class WebViewNormalActivity extends AppCompatActivity implements Serializ
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_view_normal_activity);
-        toolbar = (Toolbar) findViewById(R.id.toolbar_web_info_normal);
+        toolbar = findViewById(R.id.toolbar_web_info_normal);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,7 +36,7 @@ public class WebViewNormalActivity extends AppCompatActivity implements Serializ
         progDialog = ProgressDialog.show(WebViewNormalActivity.this, "Cargando Información","Espere por favor...", true);
         progDialog.setCancelable(true);
 
-        webView = (WebView) findViewById(R.id.web_view_normal);
+        webView = findViewById(R.id.web_view_normal);
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadWithOverviewMode(true);

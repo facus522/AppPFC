@@ -44,9 +44,9 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_noticias_especial_activity);
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
-        listViewInfoNoticias = (ListView) findViewById(R.id.listaInfoNoticiasEspecial);
-        agregarInfoBoton = (FloatingActionButton) findViewById(R.id.boton_agregar_info);
-        toolbar = (Toolbar) findViewById(R.id.toolbar_info_especial);
+        listViewInfoNoticias = findViewById(R.id.listaInfoNoticiasEspecial);
+        agregarInfoBoton = findViewById(R.id.boton_agregar_info);
+        toolbar = findViewById(R.id.toolbar_info_especial);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

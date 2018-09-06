@@ -32,11 +32,11 @@ public class MenuNormalActivity extends AppCompatActivity implements Serializabl
 
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
 
-        toolbar = (Toolbar) findViewById(R.id.titulo_normal);
+        toolbar = findViewById(R.id.titulo_normal);
         toolbar.setTitle("BIENVENIDO " + usuarioLogueado.getNombreUsuario().toUpperCase());
 
-        encuestasDisponibles = (CardView) findViewById(R.id.encuestasDisponiblesNormal);
-        informacionNoticias = (CardView) findViewById(R.id.informacionNoticiasNormal);
+        encuestasDisponibles = findViewById(R.id.encuestasDisponiblesNormal);
+        informacionNoticias = findViewById(R.id.informacionNoticiasNormal);
 
         informacionNoticias.setOnClickListener(new View.OnClickListener() {
             @Override

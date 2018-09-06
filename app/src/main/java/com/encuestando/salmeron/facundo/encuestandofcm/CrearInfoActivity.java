@@ -35,7 +35,7 @@ public class CrearInfoActivity extends AppCompatActivity implements HttpAsyncTas
         super.onCreate(savedInstanceState);
         setContentView(R.layout.crear_info_activity);
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
-        toolbar = (Toolbar) findViewById(R.id.add_info_toolbar);
+        toolbar = findViewById(R.id.add_info_toolbar);
 
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -45,11 +45,11 @@ public class CrearInfoActivity extends AppCompatActivity implements HttpAsyncTas
             }
         });
 
-        boton_guardar = (CardView) findViewById(R.id.add_info_guardar_button);
-        boton_volver = (CardView) findViewById(R.id.add_info_volver_button);
-        titulo = (TextInputLayout) findViewById(R.id.add_info_titulo);
-        descripcion = (TextInputLayout) findViewById(R.id.add_info_descripcion);
-        url = (TextInputLayout) findViewById(R.id.add_info_url);
+        boton_guardar = findViewById(R.id.add_info_guardar_button);
+        boton_volver = findViewById(R.id.add_info_volver_button);
+        titulo = findViewById(R.id.add_info_titulo);
+        descripcion = findViewById(R.id.add_info_descripcion);
+        url = findViewById(R.id.add_info_url);
 
         boton_volver.setOnClickListener(new View.OnClickListener() {
             @Override

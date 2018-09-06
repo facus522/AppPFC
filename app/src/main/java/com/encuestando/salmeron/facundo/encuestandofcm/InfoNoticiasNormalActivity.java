@@ -34,8 +34,8 @@ public class InfoNoticiasNormalActivity extends AppCompatActivity implements Htt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_noticias_normal_activity);
-        listViewInfoNoticias = (ListView) findViewById(R.id.listaInfoNoticias);
-        toolbar = (Toolbar) findViewById(R.id.toolbar_info_normal);
+        listViewInfoNoticias = findViewById(R.id.listaInfoNoticias);
+        toolbar = findViewById(R.id.toolbar_info_normal);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

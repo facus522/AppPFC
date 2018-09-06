@@ -31,12 +31,12 @@ public class MenuEspecialActivity extends AppCompatActivity implements Serializa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_especial_activity);
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
-        toolbar = (Toolbar) findViewById(R.id.titulo_especial);
+        toolbar = findViewById(R.id.titulo_especial);
         toolbar.setTitle("BIENVENIDO " + usuarioLogueado.getNombreUsuario().toUpperCase());
 
-        encuestasDisponibles = (CardView) findViewById(R.id.encuestasDisponiblesEspecial);
-        informacionNoticias = (CardView) findViewById(R.id.informacionNoticiasEspecial);
-        administrarEncuestas = (CardView) findViewById(R.id.administrarEncuestas);
+        encuestasDisponibles = findViewById(R.id.encuestasDisponiblesEspecial);
+        informacionNoticias = findViewById(R.id.informacionNoticiasEspecial);
+        administrarEncuestas = findViewById(R.id.administrarEncuestas);
 
         informacionNoticias.setOnClickListener(new View.OnClickListener() {
             @Override

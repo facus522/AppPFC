@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
-        toolbar = (Toolbar) findViewById(R.id.registro_titulo);
+        toolbar = findViewById(R.id.registro_titulo);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,17 +65,17 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                 RegisterActivity.this.finish();
             }
         });
-        errores = (TextView) findViewById(R.id.errores_registro);
+        errores = findViewById(R.id.errores_registro);
         errores.setVisibility(View.GONE);
-        tipoUsuario_checkbox = (CheckBox) findViewById(R.id.checkbox_tipo_usuario);
-        fechaNacimiento = (TextInputLayout) findViewById(R.id.fecha_nacimiento_text);
-        nombre_usuario = (TextInputLayout) findViewById(R.id.nombre_register_text);
-        password = (TextInputLayout) findViewById(R.id.password1_register_text);
-        password2 = (TextInputLayout) findViewById(R.id.password2_register_text);
-        email = (TextInputLayout) findViewById(R.id.mail_register_text);
-        codigoValidacion = (TextInputLayout) findViewById(R.id.tipo_usuario_validator);
+        tipoUsuario_checkbox = findViewById(R.id.checkbox_tipo_usuario);
+        fechaNacimiento = findViewById(R.id.fecha_nacimiento_text);
+        nombre_usuario = findViewById(R.id.nombre_register_text);
+        password = findViewById(R.id.password1_register_text);
+        password2 = findViewById(R.id.password2_register_text);
+        email = findViewById(R.id.mail_register_text);
+        codigoValidacion = findViewById(R.id.tipo_usuario_validator);
         codigoValidacion.setVisibility(View.GONE);
-        sexo_radioGroup = (RadioGroup) findViewById(R.id.sexo_radio_group);
+        sexo_radioGroup = findViewById(R.id.sexo_radio_group);
         sexo_radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -147,7 +147,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
             }
         });
 
-        boton_volver = (CardView) findViewById(R.id.volver_button);
+        boton_volver = findViewById(R.id.volver_button);
         boton_volver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,7 +174,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
             }
         });
 
-        boton_guardar = (CardView) findViewById(R.id.guardar_button);
+        boton_guardar = findViewById(R.id.guardar_button);
         boton_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
