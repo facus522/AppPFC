@@ -56,7 +56,8 @@ public class MenuEspecialActivity extends AppCompatActivity implements Serializa
         administrarEncuestas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MenuEspecialActivity.this, "Sección en desarrollo.", Toast.LENGTH_LONG).show();
+                Intent admin_intent = new Intent(MenuEspecialActivity.this, AdministrarEncuestasActivity.class).putExtra("usuario", usuarioLogueado);
+                MenuEspecialActivity.this.startActivity(admin_intent);
             }
         });
     }
