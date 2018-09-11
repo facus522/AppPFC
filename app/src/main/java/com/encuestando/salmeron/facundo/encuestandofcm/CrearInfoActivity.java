@@ -98,6 +98,29 @@ public class CrearInfoActivity extends AppCompatActivity implements HttpAsyncTas
                 }
             }
         });
+        if (savedInstanceState != null){
+            String title = savedInstanceState.getString("titulo");
+            String description = savedInstanceState.getString("descripcion");
+            String pagina = savedInstanceState.getString("pagina");
+
+            if (title != null){
+                titulo.getEditText().setText(title);
+            }
+            if (description != null){
+                descripcion.getEditText().setText(description);
+            }
+            if (pagina != null){
+                url.getEditText().setText(pagina);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("titulo", titulo.getEditText().getText().toString());
+        outState.putString("descripcion", descripcion.getEditText().getText().toString());
+        outState.putString("pagina", url.getEditText().getText().toString());
+        super.onSaveInstanceState(outState);
     }
 
     private String reemplazarEspacios(String valor){

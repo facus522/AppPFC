@@ -1,12 +1,18 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -39,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
     private HttpAsyncTask httpAsyncTask;
     private TextView cargandoLogin;
     private ProgressBar loading;
+    private StringBuilder nombreUsuario;
+    private StringBuilder contraseniaUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +144,25 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                 }
             }
         });
+
+        if (savedInstanceState != null){
+            String nombreUsuario = savedInstanceState.getString("nombreUsuario");
+            String contraseniaUsuario = savedInstanceState.getString("contraseniaUsuario");
+
+            if (nombreUsuario != null){
+                campo_usuario.getEditText().setText(nombreUsuario);
+            }
+            if (contraseniaUsuario != null){
+                campo_password.getEditText().setText(contraseniaUsuario);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("nombreUsuario", campo_usuario.getEditText().getText().toString());
+        outState.putString("contraseniaUsuario", campo_password.getEditText().getText().toString());
+        super.onSaveInstanceState(outState);
     }
 
     @Override

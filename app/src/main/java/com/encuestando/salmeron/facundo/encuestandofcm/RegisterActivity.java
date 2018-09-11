@@ -259,7 +259,44 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
             }
         });
 
+        if (savedInstanceState != null){
+            String nombreUsuarioInstance = savedInstanceState.getString("nombreUsuario");
+            String contraseniaUsuarioInstance = savedInstanceState.getString("contraseniaUsuario");
+            String contraseniaUsuario2Instance = savedInstanceState.getString("contraseniaUsuario2");
+            String emailInstance = savedInstanceState.getString("email");
+            String nacimientoInstance = savedInstanceState.getString("nacimiento");
+            String codigoInstance = savedInstanceState.getString("codigo");
+            if (nombreUsuarioInstance != null){
+                nombre_usuario.getEditText().setText(nombreUsuarioInstance);
+            }
+            if (contraseniaUsuarioInstance != null){
+                password.getEditText().setText(contraseniaUsuarioInstance);
+            }
+            if (contraseniaUsuario2Instance != null){
+                password2.getEditText().setText(contraseniaUsuario2Instance);
+            }
+            if (emailInstance != null){
+                email.getEditText().setText(emailInstance);
+            }
+            if (nacimientoInstance != null){
+                fechaNacimiento.getEditText().setText(nacimientoInstance);
+            }
+            if (codigoInstance != null){
+                codigoValidacion.getEditText().setText(codigoInstance);
+            }
+        }
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("nombreUsuario", nombre_usuario.getEditText().getText().toString());
+        outState.putString("contraseniaUsuario", password.getEditText().getText().toString());
+        outState.putString("contraseniaUsuario2", password2.getEditText().getText().toString());
+        outState.putString("email", email.getEditText().getText().toString());
+        outState.putString("nacimiento", fechaNacimiento.getEditText().getText().toString());
+        outState.putString("codigo", codigoValidacion.getEditText().getText().toString());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
