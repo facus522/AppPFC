@@ -30,7 +30,8 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".CrearInfoActivity" />
         <activity android:name=".AdministrarEncuestasActivity" />
-        <activity android:name=".NuevaEncuestaActivity"></activity>
+        <activity android:name=".NuevaEncuestaActivity" />
+        <activity android:name=".PreguntaNumericaActivity"></activity>
     </application>
 
 </manifest>

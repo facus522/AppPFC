@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
             public void onClick(View view) {
                 Intent register_intent = new Intent(MainActivity.this, RegisterActivity.class);
                 startActivityForResult(register_intent, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
             }
         });
 

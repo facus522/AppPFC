@@ -28,6 +28,7 @@ public class WebViewNormalActivity extends AppCompatActivity implements Serializ
             @Override
             public void onClick(View view) {
                 WebViewNormalActivity.this.finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
 
@@ -68,6 +69,7 @@ public class WebViewNormalActivity extends AppCompatActivity implements Serializ
             webView.goBack();
         } else{
             WebViewNormalActivity.this.finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
     }
 }

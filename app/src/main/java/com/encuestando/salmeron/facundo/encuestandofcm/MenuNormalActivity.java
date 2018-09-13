@@ -43,6 +43,7 @@ public class MenuNormalActivity extends AppCompatActivity implements Serializabl
             public void onClick(View view) {
                 Intent info_intent = new Intent(MenuNormalActivity.this, InfoNoticiasNormalActivity.class);
                 MenuNormalActivity.this.startActivity(info_intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 

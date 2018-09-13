@@ -25,6 +25,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AdministrarEncuestasActivity.this.finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
 
@@ -34,7 +35,14 @@ public class AdministrarEncuestasActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent agregar_intent = new Intent(AdministrarEncuestasActivity.this, NuevaEncuestaActivity.class).putExtra("usuario", usuarioLogueado);
                 startActivityForResult(agregar_intent, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

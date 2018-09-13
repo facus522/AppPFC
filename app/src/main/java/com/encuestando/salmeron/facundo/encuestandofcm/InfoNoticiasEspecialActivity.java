@@ -52,6 +52,7 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
             @Override
             public void onClick(View view) {
                 InfoNoticiasEspecialActivity.this.finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
 
@@ -60,6 +61,7 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
             public void onClick(View view) {
                 Intent agregar_info_intent = new Intent(InfoNoticiasEspecialActivity.this, CrearInfoActivity.class).putExtra("usuario", usuarioLogueado);
                 startActivityForResult(agregar_info_intent, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
@@ -113,6 +115,7 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
                         urlInfo = infoNoticiasDto.get(i).getUrl();
                         Intent web_info_intent = new Intent(InfoNoticiasEspecialActivity.this, WebViewNormalActivity.class).putExtra("urlInfo", urlInfo);
                         InfoNoticiasEspecialActivity.this.startActivity(web_info_intent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
                 });
                 alertDialog.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
@@ -136,6 +139,12 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override

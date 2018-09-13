@@ -63,6 +63,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
             @Override
             public void onClick(View view) {
                 RegisterActivity.this.finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
         errores = findViewById(R.id.errores_registro);
@@ -162,6 +163,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                         Intent returnIntent = new Intent();
                         setResult(Activity.RESULT_OK, returnIntent);
                         finish();
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     }
                 });
                 alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -227,6 +229,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.cancel();
                                                 RegisterActivity.this.finish();
+                                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                                             }
                                         });
                                         errores.setVisibility(View.GONE);
@@ -312,6 +315,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                 Intent returnIntent = new Intent();
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
         alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {

@@ -1,12 +1,17 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -33,7 +38,8 @@ public class NuevaEncuestaActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                posibleSalida();
+                NuevaEncuestaActivity.this.finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
         actionMenu = findViewById(R.id.boton_agregar_pregunta);
@@ -58,7 +64,10 @@ public class NuevaEncuestaActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 actionMenu.close(true);
-                Toast.makeText(NuevaEncuestaActivity.this, "Respuesta Numerica.", Toast.LENGTH_LONG).show();
+                Intent agregar_numerica = new Intent(NuevaEncuestaActivity.this, PreguntaNumericaActivity.class);
+                startActivityForResult(agregar_numerica, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
             }
         });
         textualButton = findViewById(R.id.textual_button);
@@ -81,6 +90,7 @@ public class NuevaEncuestaActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
                 NuevaEncuestaActivity.this.finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
         alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {

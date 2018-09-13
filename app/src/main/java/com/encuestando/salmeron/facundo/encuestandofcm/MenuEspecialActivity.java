@@ -43,6 +43,7 @@ public class MenuEspecialActivity extends AppCompatActivity implements Serializa
             public void onClick(View view) {
                 Intent info_intent = new Intent(MenuEspecialActivity.this, InfoNoticiasEspecialActivity.class).putExtra("usuario", usuarioLogueado);
                 MenuEspecialActivity.this.startActivity(info_intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
@@ -58,6 +59,7 @@ public class MenuEspecialActivity extends AppCompatActivity implements Serializa
             public void onClick(View view) {
                 Intent admin_intent = new Intent(MenuEspecialActivity.this, AdministrarEncuestasActivity.class).putExtra("usuario", usuarioLogueado);
                 MenuEspecialActivity.this.startActivity(admin_intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
     }

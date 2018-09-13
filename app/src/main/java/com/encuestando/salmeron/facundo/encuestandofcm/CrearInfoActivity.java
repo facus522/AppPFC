@@ -42,6 +42,7 @@ public class CrearInfoActivity extends AppCompatActivity implements HttpAsyncTas
             @Override
             public void onClick(View view) {
                 CrearInfoActivity.this.finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
 
@@ -63,6 +64,7 @@ public class CrearInfoActivity extends AppCompatActivity implements HttpAsyncTas
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                         CrearInfoActivity.this.finish();
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     }
                 });
                 alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -95,6 +97,7 @@ public class CrearInfoActivity extends AppCompatActivity implements HttpAsyncTas
                     Intent returnIntent = new Intent();
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 }
             }
         });
@@ -159,6 +162,7 @@ public class CrearInfoActivity extends AppCompatActivity implements HttpAsyncTas
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
                 CrearInfoActivity.this.finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
         alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
