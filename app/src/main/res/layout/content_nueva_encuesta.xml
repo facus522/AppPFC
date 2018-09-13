@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.encuestando.salmeron.facundo.encuestandofcm.InfoNoticiasEspecialActivity"
+    tools:showIn="@layout/nueva_encuesta_activity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/titulo_encuesta_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:drawableLeft="@drawable/ic_action_title"
+            android:text="Título de la encuesta:"
+            android:textSize="20dp"
+            android:textStyle="italic"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/titulo_encuesta_nueva"
+            android:layout_width="match_parent"
+            app:errorEnabled="true"
+            android:layout_below="@id/titulo_encuesta_view"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="100"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#46000000"
+                android:inputType="textPersonName|textCapSentences"
+                android:textSize="24sp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/descripcion_encuesta_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_below="@+id/titulo_encuesta_nueva"
+            android:layout_marginTop="10dp"
+            android:text="Descripción:"
+            android:drawableLeft="@drawable/ic_action_description"
+            android:textSize="20dp"
+            android:textStyle="italic"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/descripcion_encuesta_nueva"
+            android:layout_width="match_parent"
+            app:errorEnabled="true"
+            android:layout_below="@id/descripcion_encuesta_view"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="1000"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|left"
+                android:inputType="textMultiLine|textCapSentences"
+                android:background="#46000000"
+                android:lines="5"
+                android:scrollbars="vertical"
+                android:textSize="24sp" />
+
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/preguntas_encuesta_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_below="@+id/descripcion_encuesta_nueva"
+            android:layout_marginTop="10dp"
+            android:text="Preguntas:"
+            android:drawableLeft="@drawable/ic_preguntas"
+            android:textSize="20dp"
+            android:textStyle="italic"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/preguntas_encuesta_view"
+            android:layout_marginTop="10dp"
+            android:id="@+id/recycler_encuesta"/>
+    </RelativeLayout>
+
+
+</android.support.constraint.ConstraintLayout>

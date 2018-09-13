@@ -1,5 +1,7 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +11,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity {
 
     private UsuarioDto usuarioLogueado;
     private Toolbar toolbar;
+    private FloatingActionButton agregarEncuestaBoton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,15 @@ public class AdministrarEncuestasActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AdministrarEncuestasActivity.this.finish();
+            }
+        });
+
+        agregarEncuestaBoton = findViewById(R.id.boton_agregar_encuesta);
+        agregarEncuestaBoton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent agregar_intent = new Intent(AdministrarEncuestasActivity.this, NuevaEncuestaActivity.class).putExtra("usuario", usuarioLogueado);
+                startActivityForResult(agregar_intent, 1);
             }
         });
     }

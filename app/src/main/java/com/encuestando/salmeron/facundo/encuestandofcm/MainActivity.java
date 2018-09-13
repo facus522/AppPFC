@@ -1,34 +1,17 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.PersistableBundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.text.InputType;
-import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -44,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
     private UsuarioDto usuarioDto;
     private HttpAsyncTask httpAsyncTask;
     private TextView cargandoLogin;
-    private ProgressBar loading;
     private StringBuilder nombreUsuario;
     private StringBuilder contraseniaUsuario;
 
@@ -55,8 +37,6 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
         setContentView(R.layout.login_activity);
         cargandoLogin = findViewById(R.id.cargandoLogin);
         cargandoLogin.setVisibility(View.GONE);
-        loading = findViewById(R.id.loadingLogin);
-        loading.setVisibility(View.GONE);
         campo_usuario = findViewById(R.id.usuario_texto);
         campo_password = findViewById(R.id.password_texto);
         boton_registrar = findViewById(R.id.register_button);

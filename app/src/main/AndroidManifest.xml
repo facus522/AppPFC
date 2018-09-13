@@ -29,7 +29,8 @@
             android:label="@string/title_activity_info_noticias_especial"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".CrearInfoActivity" />
-        <activity android:name=".AdministrarEncuestasActivity"></activity>
+        <activity android:name=".AdministrarEncuestasActivity" />
+        <activity android:name=".NuevaEncuestaActivity"></activity>
     </application>
 
 </manifest>

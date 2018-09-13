@@ -7,7 +7,7 @@
     android:background="@drawable/gradient"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.encuestando.salmeron.facundo.encuestandofcm.InfoNoticiasEspecialActivity"
-    tools:showIn="@layout/info_noticias_especial_activity">
+    tools:showIn="@layout/administrar_encuestas_activity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_encuestas"
