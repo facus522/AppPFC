@@ -5,9 +5,9 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
  */
 
 public interface HttpAsyncTaskInterface {
-    void loginUsuario(String result); //nroWebService = 0;
-    void registerUsuario(String result); //nroWebService = 1;
-    void cargarInfoNoticias(String result); //nroWebService = 2;
-    void eliminarInfoNoticia(String result); //nroWebService = 3;
-    void crearInfoNoticica(String result); //nroWebService = 4;
+    default void loginUsuario(String result){}; //nroWebService = 0;
+    default void registerUsuario(String result){}; //nroWebService = 1;
+    default void cargarInfoNoticias(String result){}; //nroWebService = 2;
+    default void eliminarInfoNoticia(String result){}; //nroWebService = 3;
+    default void crearInfoNoticica(String result){}; //nroWebService = 4;
 }

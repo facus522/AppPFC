@@ -6,7 +6,6 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -345,31 +343,11 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
     }
 
     @Override
-    public void loginUsuario(String result) {
-
-    }
-
-    @Override
     public void registerUsuario(String result) {
         String registerUsuarioJSON = result;
         if (registerUsuarioJSON != null && !registerUsuarioJSON.isEmpty()) {
             erroresRegister = JSONConverterUtils.JSONUsuarioRegisterConverter(result);
         }
-    }
-
-    @Override
-    public void crearInfoNoticica(String result) {
-
-    }
-
-    @Override
-    public void cargarInfoNoticias(String result) {
-
-    }
-
-    @Override
-    public void eliminarInfoNoticia(String result) {
-
     }
 
     private String reemplazarEspacios(String valor) {

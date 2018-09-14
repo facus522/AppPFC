@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.CheckBox;
 
 import java.util.concurrent.ExecutionException;
 
@@ -174,28 +173,4 @@ public class CrearInfoActivity extends AppCompatActivity implements HttpAsyncTas
         alertDialog.show();
     }
 
-    @Override
-    public void loginUsuario(String result) {
-
-    }
-
-    @Override
-    public void registerUsuario(String result) {
-
-    }
-
-    @Override
-    public void cargarInfoNoticias(String result) {
-
-    }
-
-    @Override
-    public void eliminarInfoNoticia(String result) {
-
-    }
-
-    @Override
-    public void crearInfoNoticica(String result) {
-
-    }
 }

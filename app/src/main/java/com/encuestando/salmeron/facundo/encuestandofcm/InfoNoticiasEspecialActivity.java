@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -164,23 +163,4 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
         }
     }
 
-    @Override
-    public void eliminarInfoNoticia(String result) {
-
-    }
-
-    @Override
-    public void crearInfoNoticica(String result) {
-
-    }
-
-    @Override
-    public void loginUsuario(String result) {
-
-    }
-
-    @Override
-    public void registerUsuario(String result) {
-
-    }
 }

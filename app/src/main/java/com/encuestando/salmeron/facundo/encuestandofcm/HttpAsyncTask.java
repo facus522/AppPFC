@@ -1,6 +1,5 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 

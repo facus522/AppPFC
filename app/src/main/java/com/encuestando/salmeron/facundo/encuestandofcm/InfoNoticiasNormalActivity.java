@@ -3,21 +3,17 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -121,25 +117,5 @@ public class InfoNoticiasNormalActivity extends AppCompatActivity implements Htt
         if (infoNoticiasJSON != null && !infoNoticiasJSON.isEmpty()) {
             infoNoticiasDto = JSONConverterUtils.JSONInfoNoticiasConverter(result);
         }
-    }
-
-    @Override
-    public void crearInfoNoticica(String result) {
-
-    }
-
-    @Override
-    public void loginUsuario(String result) {
-
-    }
-
-    @Override
-    public void registerUsuario(String result) {
-
-    }
-
-    @Override
-    public void eliminarInfoNoticia(String result) {
-
     }
 }
