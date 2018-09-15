@@ -62,6 +62,12 @@
             android:id="@+id/textual_button"
             app:fab_label="Respuesta Textual"
             android:src="@drawable/ic_desarrollo"/>
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/escala_button"
+            app:fab_label="Escala"
+            android:src="@drawable/ic_escala"/>
     </com.github.clans.fab.FloatingActionMenu>
 
 </android.support.design.widget.CoordinatorLayout>

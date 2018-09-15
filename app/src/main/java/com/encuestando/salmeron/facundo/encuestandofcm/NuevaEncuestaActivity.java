@@ -1,5 +1,6 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +13,10 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
-public class NuevaEncuestaActivity extends AppCompatActivity {
+import java.util.List;
+
+public class
+NuevaEncuestaActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private UsuarioDto usuarioLogueado;
@@ -20,8 +24,9 @@ public class NuevaEncuestaActivity extends AppCompatActivity {
     private FloatingActionButton unicaButton;
     private FloatingActionButton numericaButton;
     private FloatingActionButton textualButton;
+    private FloatingActionButton escalaButton;
     private FloatingActionMenu actionMenu;
-
+    private List<PreguntaDto> preguntas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,23 @@ public class NuevaEncuestaActivity extends AppCompatActivity {
                 Toast.makeText(NuevaEncuestaActivity.this, "Respuesta Textual.", Toast.LENGTH_LONG).show();
             }
         });
+        escalaButton = findViewById(R.id.escala_button);
+        escalaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionMenu.close(true);
+                Toast.makeText(NuevaEncuestaActivity.this, "Escala.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK){
+            finish();
+            startActivity(getIntent());
+            Toast.makeText(NuevaEncuestaActivity.this, "La pregunta ha sido añadida correctamente!", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void posibleSalida(){
