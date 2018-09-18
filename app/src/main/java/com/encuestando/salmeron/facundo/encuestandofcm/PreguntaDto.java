@@ -1,6 +1,8 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
-public class PreguntaDto {
+import java.io.Serializable;
+
+public class PreguntaDto implements Serializable{
 
     private Long id;
     private String descripcion;

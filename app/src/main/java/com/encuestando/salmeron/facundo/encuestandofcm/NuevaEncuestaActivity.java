@@ -13,10 +13,12 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class
-NuevaEncuestaActivity extends AppCompatActivity {
+NuevaEncuestaActivity extends AppCompatActivity implements Serializable{
 
     private Toolbar toolbar;
     private UsuarioDto usuarioLogueado;
@@ -26,12 +28,15 @@ NuevaEncuestaActivity extends AppCompatActivity {
     private FloatingActionButton textualButton;
     private FloatingActionButton escalaButton;
     private FloatingActionMenu actionMenu;
-    private List<PreguntaDto> preguntas;
+    private ArrayList<PreguntaDto> preguntas;
+    private Long contadorPreguntas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nueva_encuesta_activity);
+        preguntas = (ArrayList<PreguntaDto>) getIntent().getSerializableExtra("preguntas");
+        contadorPreguntas = (Long) getIntent().getSerializableExtra("contadorPreguntas");
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
         toolbar = findViewById(R.id.titulo_nueva_encuesta);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
@@ -67,7 +72,6 @@ NuevaEncuestaActivity extends AppCompatActivity {
                 Intent agregar_numerica = new Intent(NuevaEncuestaActivity.this, PreguntaNumericaActivity.class);
                 startActivityForResult(agregar_numerica, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
             }
         });
         textualButton = findViewById(R.id.textual_button);
@@ -75,7 +79,9 @@ NuevaEncuestaActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 actionMenu.close(true);
-                Toast.makeText(NuevaEncuestaActivity.this, "Respuesta Textual.", Toast.LENGTH_LONG).show();
+                Intent agregar_textual = new Intent(NuevaEncuestaActivity.this, PreguntaTextualActivity.class);
+                startActivityForResult(agregar_textual, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         escalaButton = findViewById(R.id.escala_button);
@@ -83,7 +89,9 @@ NuevaEncuestaActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 actionMenu.close(true);
-                Toast.makeText(NuevaEncuestaActivity.this, "Escala.", Toast.LENGTH_LONG).show();
+                Intent agregar_escala = new Intent(NuevaEncuestaActivity.this, PreguntaEscalaActivity.class);
+                startActivityForResult(agregar_escala, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
     }
@@ -91,7 +99,13 @@ NuevaEncuestaActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK){
+            PreguntaDto dto = (PreguntaDto) data.getSerializableExtra("pregunta");
+            contadorPreguntas += 1;
+            dto.setId(contadorPreguntas);
+            preguntas.add(dto);
             finish();
+            getIntent().putExtra("preguntas", preguntas);
+            getIntent().putExtra("contadorPreguntas", contadorPreguntas);
             startActivity(getIntent());
             Toast.makeText(NuevaEncuestaActivity.this, "La pregunta ha sido añadida correctamente!", Toast.LENGTH_LONG).show();
         }
@@ -127,5 +141,13 @@ NuevaEncuestaActivity extends AppCompatActivity {
             posibleSalida();
         }
 
+    }
+
+    public Long getContadorPreguntas() {
+        return contadorPreguntas;
+    }
+
+    public void setContadorPreguntas(Long contadorPreguntas) {
+        this.contadorPreguntas = contadorPreguntas;
     }
 }

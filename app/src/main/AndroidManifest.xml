@@ -31,7 +31,9 @@
         <activity android:name=".CrearInfoActivity" />
         <activity android:name=".AdministrarEncuestasActivity" />
         <activity android:name=".NuevaEncuestaActivity" />
-        <activity android:name=".PreguntaNumericaActivity"></activity>
+        <activity android:name=".PreguntaNumericaActivity" />
+        <activity android:name=".PreguntaTextualActivity" />
+        <activity android:name=".PreguntaEscalaActivity"></activity>
     </application>
 
 </manifest>

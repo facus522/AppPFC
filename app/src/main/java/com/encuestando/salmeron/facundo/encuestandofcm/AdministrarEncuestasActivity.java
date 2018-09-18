@@ -7,7 +7,11 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class AdministrarEncuestasActivity extends AppCompatActivity {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AdministrarEncuestasActivity extends AppCompatActivity implements Serializable{
 
     private UsuarioDto usuarioLogueado;
     private Toolbar toolbar;
@@ -34,6 +38,8 @@ public class AdministrarEncuestasActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent agregar_intent = new Intent(AdministrarEncuestasActivity.this, NuevaEncuestaActivity.class).putExtra("usuario", usuarioLogueado);
+                agregar_intent.putExtra("preguntas", new ArrayList<PreguntaDto>());
+                agregar_intent.putExtra("contadorPreguntas", new Long(0));
                 startActivityForResult(agregar_intent, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }

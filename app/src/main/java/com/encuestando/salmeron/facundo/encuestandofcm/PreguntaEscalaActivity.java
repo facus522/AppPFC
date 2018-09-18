@@ -10,12 +10,10 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
-public class PreguntaNumericaActivity extends AppCompatActivity implements Serializable{
+public class PreguntaEscalaActivity extends AppCompatActivity implements Serializable{
 
     private Toolbar toolbar;
     private TextInputLayout pregunta;
@@ -25,18 +23,18 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pregunta_numerica_activity);
-        toolbar = findViewById(R.id.pregunta_numerica_toolbar);
+        setContentView(R.layout.pregunta_escala_activity);
+        toolbar = findViewById(R.id.pregunta_escala_toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PreguntaNumericaActivity.this.finish();
+                PreguntaEscalaActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
-        pregunta = findViewById(R.id.pregunta_numerica);
-        agregar = findViewById(R.id.agrega_numerica_button);
+        pregunta = findViewById(R.id.pregunta_escala);
+        agregar = findViewById(R.id.agrega_escala_button);
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,7 +46,7 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
                 } else {
                     PreguntaDto dto = new PreguntaDto();
                     dto.setDescripcion(pregunta.getEditText().getText().toString());
-                    dto.setTipoPregunta(TipoPreguntaEnum.RESPUESTA_NUMERICA);
+                    dto.setTipoPregunta(TipoPreguntaEnum.ESCALA);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
                     setResult(Activity.RESULT_OK, returnIntent);
@@ -57,7 +55,7 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
                 }
             }
         });
-        volver = findViewById(R.id.volver_numerica_button);
+        volver = findViewById(R.id.volver_escala_button);
         volver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,10 +64,10 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
         });
 
         if (savedInstanceState != null){
-            String preguntaNumerica = savedInstanceState.getString("preguntaNumerica");
+            String preguntaEscala = savedInstanceState.getString("preguntaEscala");
 
             if (pregunta!= null){
-                pregunta.getEditText().setText(preguntaNumerica);
+                pregunta.getEditText().setText(preguntaEscala);
             }
         }
 
@@ -81,7 +79,7 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
     }
 
     private void posibleSalida(){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PreguntaNumericaActivity.this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PreguntaEscalaActivity.this);
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
         alertDialog.setMessage("Si sale de la pantalla se perderán todos los datos ingresados!\n ¿Desea salir?");
@@ -89,7 +87,7 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                PreguntaNumericaActivity.this.finish();
+                PreguntaEscalaActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
@@ -104,7 +102,7 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString("preguntaNumerica", pregunta.getEditText().getText().toString());
+        outState.putString("preguntaEscala", pregunta.getEditText().getText().toString());
         super.onSaveInstanceState(outState);
     }
 
