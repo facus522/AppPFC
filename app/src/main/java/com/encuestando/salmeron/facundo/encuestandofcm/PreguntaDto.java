@@ -7,6 +7,7 @@ public class PreguntaDto implements Serializable{
     private Long id;
     private String descripcion;
     private TipoPreguntaEnum tipoPregunta;
+    private Integer maximaEscala;
 
     public Long getId() {
         return id;
@@ -30,5 +31,13 @@ public class PreguntaDto implements Serializable{
 
     public void setTipoPregunta(TipoPreguntaEnum tipoPregunta) {
         this.tipoPregunta = tipoPregunta;
+    }
+
+    public Integer getMaximaEscala() {
+        return maximaEscala;
+    }
+
+    public void setMaximaEscala(Integer maximaEscala) {
+        this.maximaEscala = maximaEscala;
     }
 }
