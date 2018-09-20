@@ -5,24 +5,34 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements Serializable{
+public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements Serializable, RespuestaNuevaRecyclerViewAdapter.ItemClickListener {
 
     private Toolbar toolbar;
     private TextInputLayout pregunta;
     private CardView agregar;
     private CardView volver;
     private FloatingActionButton agregarRespuestaBoton;
+    private RecyclerView recyclerView;
+    private ArrayList<String> respuestas;
+    private RespuestaNuevaRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +47,12 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
+        respuestas = (ArrayList<String>) getIntent().getSerializableExtra("respuestas");
+        recyclerView = findViewById(R.id.recycler_respuestas_choice);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new RespuestaNuevaRecyclerViewAdapter(this, respuestas);
+        adapter.setClickListener(this);
+        recyclerView.setAdapter(adapter);
         pregunta = findViewById(R.id.pregunta_multiple_choice);
         agregar = findViewById(R.id.agrega_multiple_choice_button);
         agregar.setOnClickListener(new View.OnClickListener() {
@@ -71,23 +87,43 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
         agregarRespuestaBoton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText rta = new EditText(PreguntaMultipleChoiceActivity.this);
+                TextInputEditText rta = new TextInputEditText(PreguntaMultipleChoiceActivity.this);
                 rta.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
                 rta.setHint("Respuesta");
                 AlertDialog d = new AlertDialog.Builder(PreguntaMultipleChoiceActivity.this)
                         .setView(rta)
                         .setTitle("Ingrese una opción:")
-                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Aceptar", null)
+                        .setNegativeButton("Cancelar", null).create();
+                d.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        Button accept = d.getButton(AlertDialog.BUTTON_POSITIVE);
+                        accept.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
+                            public void onClick(View view) {
+                                rta.setError(null);
+                                if (rta.getText().toString().isEmpty()){
+                                    rta.setError("La respuesta no puede estar vacía");
+                                } else{
+                                    respuestas.add(rta.getText().toString());
+                                    d.dismiss();
+                                    finish();
+                                    getIntent().putExtra("respuestas", respuestas);
+                                    startActivity(getIntent());
+                                    Toast.makeText(PreguntaMultipleChoiceActivity.this, "Respuesta agregada correctamente", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        });
+                        Button cancel = d.getButton(AlertDialog.BUTTON_NEGATIVE);
+                        cancel.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
+                            public void onClick(View view) {
+                                d.dismiss();
                             }
-                        }).create();
+                        });
+                    }
+                });
                 d.show();
             }
         });
@@ -99,7 +135,77 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                 pregunta.getEditText().setText(preguntaMultipleChoice);
             }
         }
+    }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PreguntaMultipleChoiceActivity.this);
+        alertDialog.setTitle("Atención");
+        alertDialog.setIcon(R.drawable.ic_action_error);
+        alertDialog.setMessage("Qué desea realizar sobre la respuesta: '" + respuestas.get(position) + "'.");
+        alertDialog.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                respuestas.remove(position);
+                dialog.dismiss();
+                finish();
+                getIntent().putExtra("respuestas", respuestas);
+                startActivity(getIntent());
+                Toast.makeText(PreguntaMultipleChoiceActivity.this, "Respuesta eliminada correctamente", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alertDialog.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        alertDialog.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                TextInputEditText rta = new TextInputEditText(PreguntaMultipleChoiceActivity.this);
+                rta.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+                rta.setHint("Respuesta");
+                rta.setText(adapter.getItem(position));
+                AlertDialog d = new AlertDialog.Builder(PreguntaMultipleChoiceActivity.this)
+                        .setView(rta)
+                        .setTitle("Ingrese una opción:")
+                        .setPositiveButton("Aceptar", null)
+                        .setNegativeButton("Cancelar", null).create();
+                d.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        Button accept = d.getButton(AlertDialog.BUTTON_POSITIVE);
+                        accept.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                rta.setError(null);
+                                if (rta.getText().toString().isEmpty()){
+                                    rta.setError("La respuesta no puede estar vacía");
+                                } else{
+                                    respuestas.set(position, rta.getText().toString());
+                                    d.dismiss();
+                                    finish();
+                                    getIntent().putExtra("respuestas", respuestas);
+                                    startActivity(getIntent());
+                                    Toast.makeText(PreguntaMultipleChoiceActivity.this, "Respuesta modificada correctamente", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        Button cancel = d.getButton(AlertDialog.BUTTON_NEGATIVE);
+                        cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                d.dismiss();
+                            }
+                        });
+                    }
+                });
+                d.show();
+            }
+        });
+        alertDialog.show();
     }
 
     @Override
@@ -134,5 +240,6 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
         outState.putString("preguntaMultipleChoice", pregunta.getEditText().getText().toString());
         super.onSaveInstanceState(outState);
     }
+
 
 }
