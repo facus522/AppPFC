@@ -8,7 +8,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:background="@drawable/gradient"
-    tools:context=".PreguntaMultipleChoiceActivity">
+    tools:context=".PreguntaUnicaOpcionActivity">
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -20,14 +20,14 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/pregunta_multiple_choice_toolbar"
+                android:id="@+id/pregunta_respuesta_unica_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="?attr/colorPrimary"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
-                app:title="Nueva pregunta Múltiple Choice"
+                app:title="Nueva pregunta Respuesta Única"
                 app:titleMargin="@dimen/cardview_default_elevation"
                 app:titleTextColor="?android:attr/colorPressedHighlight" />
 
@@ -36,7 +36,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/descripcion_multiple_choice"
+                    android:id="@+id/descripcion_respuesta_unica"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -44,16 +44,16 @@
                     android:drawableLeft="@drawable/ic_action_error"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="En este tipo de preguntas, se presenta una lista de respuestas predeterminadas, donde el usuario al resolver puede escoger una o más de ellas."
+                    android:text="En este tipo de preguntas, se presenta una lista de respuestas predeterminadas, donde el usuario al resolver puede escoger solamente una de ellas."
                     android:textAlignment="center"
                     android:textSize="20dp"
                     android:textStyle="italic" />
 
                 <TextView
-                    android:id="@+id/pregunta_multiple_choice_view"
+                    android:id="@+id/pregunta_respuesta_unica_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/descripcion_multiple_choice"
+                    android:layout_below="@id/descripcion_respuesta_unica"
                     android:layout_marginTop="20dp"
                     android:drawableLeft="@drawable/ic_preguntas"
                     android:paddingLeft="10dp"
@@ -63,10 +63,10 @@
                     android:textStyle="italic" />
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/pregunta_multiple_choice"
+                    android:id="@+id/pregunta_respuesta_unica"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/pregunta_multiple_choice_view"
+                    android:layout_below="@+id/pregunta_respuesta_unica_view"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     app:counterEnabled="true"
@@ -90,11 +90,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_below="@id/pregunta_multiple_choice"
-                    android:id="@+id/relative_respuestas">
+                    android:layout_below="@id/pregunta_respuesta_unica"
+                    android:id="@+id/relative_respuestas_unicas">
 
                     <TextView
-                        android:id="@+id/respuesta_multiple_choice_view"
+                        android:id="@+id/respuesta_respuesta_unica_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/ic_desarrollo"
@@ -105,7 +105,7 @@
                         android:textStyle="italic"/>
 
                     <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/boton_agregar_respuesta"
+                        android:id="@+id/boton_agregar_respuesta_unica"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -127,8 +127,8 @@
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/relative_respuestas"
-                    android:id="@+id/recycler_respuestas_choice"
+                    android:layout_below="@id/relative_respuestas_unicas"
+                    android:id="@+id/recycler_respuestas_unicas"
                     android:layout_marginTop="10dp">
 
                 </android.support.v7.widget.RecyclerView>
@@ -136,7 +136,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@id/recycler_respuestas_choice"
+                    android:layout_below="@id/recycler_respuestas_unicas"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="25dp"
                     android:layout_marginTop="25dp"
@@ -144,7 +144,7 @@
                     android:orientation="horizontal">
 
                     <android.support.v7.widget.CardView
-                        android:id="@+id/agrega_multiple_choice_button"
+                        android:id="@+id/agrega_respuesta_unica_button"
                         android:layout_width="150dp"
                         android:layout_height="50dp"
                         android:layout_marginBottom="10dp"
@@ -169,7 +169,7 @@
                     </android.support.v7.widget.CardView>
 
                     <android.support.v7.widget.CardView
-                        android:id="@+id/volver_multiple_choice_button"
+                        android:id="@+id/volver_respuesta_unica_button"
                         android:layout_width="150dp"
                         android:layout_height="50dp"
                         android:layout_marginBottom="10dp"

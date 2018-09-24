@@ -34,7 +34,8 @@
         <activity android:name=".PreguntaNumericaActivity" />
         <activity android:name=".PreguntaTextualActivity" />
         <activity android:name=".PreguntaEscalaActivity" />
-        <activity android:name=".PreguntaMultipleChoiceActivity"></activity>
+        <activity android:name=".PreguntaMultipleChoiceActivity" />
+        <activity android:name=".PreguntaUnicaOpcionActivity"></activity>
     </application>
 
 </manifest>

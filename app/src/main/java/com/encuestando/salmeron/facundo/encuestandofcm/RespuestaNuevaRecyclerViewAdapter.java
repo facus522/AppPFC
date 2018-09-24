@@ -16,17 +16,19 @@ public class RespuestaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Resp
     private ArrayList<String> respuestas;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private int filaRespuestas;
 
     // data is passed into the constructor
-    RespuestaNuevaRecyclerViewAdapter(Context context, ArrayList<String> data) {
+    RespuestaNuevaRecyclerViewAdapter(Context context, ArrayList<String> data, int filaRespuestas) {
         this.mInflater = LayoutInflater.from(context);
         this.respuestas = data;
+        this.filaRespuestas = filaRespuestas;
     }
 
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.row_respuesta_nueva, parent, false);
+        View view = mInflater.inflate(filaRespuestas, parent, false);
         return new ViewHolder(view);
     }
 
@@ -73,5 +75,13 @@ public class RespuestaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Resp
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
+    }
+
+    public int getFilaRespuestas() {
+        return filaRespuestas;
+    }
+
+    public void setFilaRespuestas(int filaRespuestas) {
+        this.filaRespuestas = filaRespuestas;
     }
 }

@@ -54,7 +54,6 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable{
             public void onClick(View view) {
                 actionMenu.close(true);
                 Intent agregar_multiple_choice = new Intent(NuevaEncuestaActivity.this, PreguntaMultipleChoiceActivity.class);
-                agregar_multiple_choice.putExtra("respuestas", new ArrayList<String>());
                 startActivityForResult(agregar_multiple_choice, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -64,7 +63,9 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable{
             @Override
             public void onClick(View view) {
                 actionMenu.close(true);
-                Toast.makeText(NuevaEncuestaActivity.this, "Respuesta Unica.", Toast.LENGTH_LONG).show();
+                Intent agregar_unica_opcion = new Intent(NuevaEncuestaActivity.this, PreguntaUnicaOpcionActivity.class);
+                startActivityForResult(agregar_unica_opcion, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         numericaButton = findViewById(R.id.numerica_button);

@@ -16,14 +16,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
-public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements Serializable, RespuestaNuevaRecyclerViewAdapter.ItemClickListener {
+public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Serializable, RespuestaNuevaRecyclerViewAdapter.ItemClickListener {
 
     private Toolbar toolbar;
     private TextInputLayout pregunta;
@@ -37,36 +35,36 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pregunta_multiple_choice_activity);
+        setContentView(R.layout.pregunta_unica_opcion_activity);
         respuestas = new ArrayList<>();
-        pregunta = findViewById(R.id.pregunta_multiple_choice);
+        pregunta = findViewById(R.id.pregunta_respuesta_unica);
         if (savedInstanceState != null){
-            String preguntaMultipleChoice = savedInstanceState.getString("preguntaMultipleChoice");
-            ArrayList<String> listaRespuestas = savedInstanceState.getStringArrayList("respuestasMultipleChoice");
+            String preguntaRespuestaUnica = savedInstanceState.getString("preguntaRespuestaUnica");
+            ArrayList<String> listaRespuestas = savedInstanceState.getStringArrayList("respuestasUnicas");
 
-            if (preguntaMultipleChoice != null){
-                pregunta.getEditText().setText(preguntaMultipleChoice);
+            if (preguntaRespuestaUnica != null){
+                pregunta.getEditText().setText(preguntaRespuestaUnica);
             }
 
             if (listaRespuestas != null && !listaRespuestas.isEmpty()){
                 respuestas = listaRespuestas;
             }
         }
-        toolbar = findViewById(R.id.pregunta_multiple_choice_toolbar);
+        toolbar = findViewById(R.id.pregunta_respuesta_unica_toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PreguntaMultipleChoiceActivity.this.finish();
+                PreguntaUnicaOpcionActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
-        recyclerView = findViewById(R.id.recycler_respuestas_choice);
+        recyclerView = findViewById(R.id.recycler_respuestas_unicas);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new RespuestaNuevaRecyclerViewAdapter(this, respuestas, R.layout.row_respuesta_nueva);
+        adapter = new RespuestaNuevaRecyclerViewAdapter(this, respuestas, R.layout.row_respuesta_radio_button);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-        agregar = findViewById(R.id.agrega_multiple_choice_button);
+        agregar = findViewById(R.id.agrega_respuesta_unica_button);
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,7 +78,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                 } else {
                     PreguntaDto dto = new PreguntaDto();
                     dto.setDescripcion(pregunta.getEditText().getText().toString());
-                    dto.setTipoPregunta(TipoPreguntaEnum.MULTIPLE_CHOICE);
+                    dto.setTipoPregunta(TipoPreguntaEnum.RESPUESTA_UNICA);
                     dto.setRespuestas(respuestas);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
@@ -90,7 +88,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                 }
             }
         });
-        volver = findViewById(R.id.volver_multiple_choice_button);
+        volver = findViewById(R.id.volver_respuesta_unica_button);
         volver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,14 +96,14 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
             }
         });
 
-        agregarRespuestaBoton = findViewById(R.id.boton_agregar_respuesta);
+        agregarRespuestaBoton = findViewById(R.id.boton_agregar_respuesta_unica);
         agregarRespuestaBoton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextInputEditText rta = new TextInputEditText(PreguntaMultipleChoiceActivity.this);
+                TextInputEditText rta = new TextInputEditText(PreguntaUnicaOpcionActivity.this);
                 rta.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
                 rta.setHint("Respuesta");
-                AlertDialog d = new AlertDialog.Builder(PreguntaMultipleChoiceActivity.this)
+                AlertDialog d = new AlertDialog.Builder(PreguntaUnicaOpcionActivity.this)
                         .setView(rta)
                         .setTitle("Ingrese una opción:")
                         .setPositiveButton("Aceptar", null)
@@ -124,7 +122,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                                     respuestas.add(rta.getText().toString());
                                     d.dismiss();
                                     adapter.notifyDataSetChanged();
-                                    Toast.makeText(PreguntaMultipleChoiceActivity.this, "Respuesta agregada correctamente", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PreguntaUnicaOpcionActivity.this, "Respuesta agregada correctamente", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -145,7 +143,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClick(View view, int position) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PreguntaMultipleChoiceActivity.this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PreguntaUnicaOpcionActivity.this);
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
         alertDialog.setMessage("Qué desea realizar sobre la respuesta: '" + respuestas.get(position) + "'.");
@@ -155,7 +153,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                 respuestas.remove(position);
                 dialog.dismiss();
                 adapter.notifyDataSetChanged();
-                Toast.makeText(PreguntaMultipleChoiceActivity.this, "Respuesta eliminada correctamente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PreguntaUnicaOpcionActivity.this, "Respuesta eliminada correctamente", Toast.LENGTH_SHORT).show();
             }
         });
         alertDialog.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -168,11 +166,11 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                TextInputEditText rta = new TextInputEditText(PreguntaMultipleChoiceActivity.this);
+                TextInputEditText rta = new TextInputEditText(PreguntaUnicaOpcionActivity.this);
                 rta.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
                 rta.setHint("Respuesta");
                 rta.setText(adapter.getItem(position));
-                AlertDialog d = new AlertDialog.Builder(PreguntaMultipleChoiceActivity.this)
+                AlertDialog d = new AlertDialog.Builder(PreguntaUnicaOpcionActivity.this)
                         .setView(rta)
                         .setTitle("Ingrese una opción:")
                         .setPositiveButton("Aceptar", null)
@@ -191,7 +189,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                                     respuestas.set(position, rta.getText().toString());
                                     d.dismiss();
                                     adapter.notifyDataSetChanged();
-                                    Toast.makeText(PreguntaMultipleChoiceActivity.this, "Respuesta modificada correctamente", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PreguntaUnicaOpcionActivity.this, "Respuesta modificada correctamente", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -216,7 +214,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
     }
 
     private void posibleSalida(){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PreguntaMultipleChoiceActivity.this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PreguntaUnicaOpcionActivity.this);
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
         alertDialog.setMessage("Si sale de la pantalla se perderán todos los datos ingresados!\n ¿Desea salir?");
@@ -224,7 +222,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                PreguntaMultipleChoiceActivity.this.finish();
+                PreguntaUnicaOpcionActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
@@ -239,8 +237,8 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString("preguntaMultipleChoice", pregunta.getEditText().getText().toString());
-        outState.putStringArrayList("respuestasMultipleChoice", respuestas);
+        outState.putString("preguntaRespuestaUnica", pregunta.getEditText().getText().toString());
+        outState.putStringArrayList("respuestasUnicas", respuestas);
         super.onSaveInstanceState(outState);
     }
 
