@@ -129,6 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/relative_respuestas"
                     android:id="@+id/recycler_respuestas_choice"
+                    tools:listitem="@layout/row_respuesta_nueva"
                     android:layout_marginTop="10dp">
 
                 </android.support.v7.widget.RecyclerView>

@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class
-NuevaEncuestaActivity extends AppCompatActivity implements Serializable{
+NuevaEncuestaActivity extends AppCompatActivity implements Serializable, PreguntaNuevaRecyclerViewAdapter.ItemClickListener {
 
     private Toolbar toolbar;
     private UsuarioDto usuarioLogueado;
@@ -30,6 +32,8 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable{
     private FloatingActionMenu actionMenu;
     private ArrayList<PreguntaDto> preguntas;
     private Long contadorPreguntas;
+    private RecyclerView recyclerView;
+    private PreguntaNuevaRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,11 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable{
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
+        recyclerView = findViewById(R.id.recycler_encuesta_nueva);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new PreguntaNuevaRecyclerViewAdapter(this, preguntas);
+        adapter.setClickListener(this);
+        recyclerView.setAdapter(adapter);
         actionMenu = findViewById(R.id.boton_agregar_pregunta);
         multipleChoiceButton = findViewById(R.id.multiple_choice_button);
         multipleChoiceButton.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +153,11 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable{
         }else{
             posibleSalida();
         }
+
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
 
     }
 

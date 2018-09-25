@@ -129,6 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/relative_respuestas_unicas"
                     android:id="@+id/recycler_respuestas_unicas"
+                    tools:listitem="@layout/row_respuesta_radio_button"
                     android:layout_marginTop="10dp">
 
                 </android.support.v7.widget.RecyclerView>

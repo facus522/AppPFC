@@ -109,10 +109,11 @@
                     android:textStyle="italic" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_encuesta"
+                    android:id="@+id/recycler_encuesta_nueva"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/preguntas_encuesta_view"
+                    tools:listitem="@layout/row_preguntas_respuestas_nueva_activity"
                     android:layout_marginTop="10dp" />
             </RelativeLayout>
 
