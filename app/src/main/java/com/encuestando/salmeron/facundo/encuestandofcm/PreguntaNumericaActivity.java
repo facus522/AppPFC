@@ -21,6 +21,8 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
     private TextInputLayout pregunta;
     private CardView agregar;
     private CardView volver;
+    private Boolean modificando;
+    private Long idPregunta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
         setContentView(R.layout.pregunta_numerica_activity);
         toolbar = findViewById(R.id.pregunta_numerica_toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
+        modificando = (Boolean) getIntent().getSerializableExtra("modificando");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,6 +39,10 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
             }
         });
         pregunta = findViewById(R.id.pregunta_numerica);
+        if (modificando) {
+            pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaNumerica"));
+            idPregunta = (Long) getIntent().getSerializableExtra("idPreguntaModificar");
+        }
         agregar = findViewById(R.id.agrega_numerica_button);
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +56,7 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
                     PreguntaDto dto = new PreguntaDto();
                     dto.setDescripcion(pregunta.getEditText().getText().toString());
                     dto.setTipoPregunta(TipoPreguntaEnum.RESPUESTA_NUMERICA);
+                    dto.setId(modificando ? idPregunta : null);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
                     setResult(Activity.RESULT_OK, returnIntent);

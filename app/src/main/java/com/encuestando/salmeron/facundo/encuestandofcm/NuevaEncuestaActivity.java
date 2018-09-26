@@ -62,7 +62,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
             @Override
             public void onClick(View view) {
                 actionMenu.close(true);
-                Intent agregar_multiple_choice = new Intent(NuevaEncuestaActivity.this, PreguntaMultipleChoiceActivity.class);
+                Intent agregar_multiple_choice = new Intent(NuevaEncuestaActivity.this, PreguntaMultipleChoiceActivity.class).putExtra("modificando", false);
                 startActivityForResult(agregar_multiple_choice, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -72,7 +72,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
             @Override
             public void onClick(View view) {
                 actionMenu.close(true);
-                Intent agregar_unica_opcion = new Intent(NuevaEncuestaActivity.this, PreguntaUnicaOpcionActivity.class);
+                Intent agregar_unica_opcion = new Intent(NuevaEncuestaActivity.this, PreguntaUnicaOpcionActivity.class).putExtra("modificando", false);
                 startActivityForResult(agregar_unica_opcion, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -82,7 +82,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
             @Override
             public void onClick(View view) {
                 actionMenu.close(true);
-                Intent agregar_numerica = new Intent(NuevaEncuestaActivity.this, PreguntaNumericaActivity.class);
+                Intent agregar_numerica = new Intent(NuevaEncuestaActivity.this, PreguntaNumericaActivity.class).putExtra("modificando", false);
                 startActivityForResult(agregar_numerica, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -92,7 +92,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
             @Override
             public void onClick(View view) {
                 actionMenu.close(true);
-                Intent agregar_textual = new Intent(NuevaEncuestaActivity.this, PreguntaTextualActivity.class);
+                Intent agregar_textual = new Intent(NuevaEncuestaActivity.this, PreguntaTextualActivity.class).putExtra("modificando", false);
                 startActivityForResult(agregar_textual, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -102,7 +102,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
             @Override
             public void onClick(View view) {
                 actionMenu.close(true);
-                Intent agregar_escala = new Intent(NuevaEncuestaActivity.this, PreguntaEscalaActivity.class);
+                Intent agregar_escala = new Intent(NuevaEncuestaActivity.this, PreguntaEscalaActivity.class).putExtra("modificando", false);
                 startActivityForResult(agregar_escala, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -113,14 +113,34 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK){
             PreguntaDto dto = (PreguntaDto) data.getSerializableExtra("pregunta");
-            contadorPreguntas += 1;
-            dto.setId(contadorPreguntas);
-            preguntas.add(dto);
+            boolean isModificacion = false;
+            if (dto.getId() != null){
+                reemplazarPreguntaModificada(dto);
+                isModificacion = true;
+            } else {
+                contadorPreguntas += 1;
+                dto.setId(contadorPreguntas);
+                preguntas.add(dto);
+            }
             finish();
             getIntent().putExtra("preguntas", preguntas);
             getIntent().putExtra("contadorPreguntas", contadorPreguntas);
             startActivity(getIntent());
-            Toast.makeText(NuevaEncuestaActivity.this, "La pregunta ha sido añadida correctamente!", Toast.LENGTH_LONG).show();
+            if (isModificacion){
+                Toast.makeText(NuevaEncuestaActivity.this, "La pregunta ha sido modificada correctamente!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(NuevaEncuestaActivity.this, "La pregunta ha sido añadida correctamente!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void reemplazarPreguntaModificada(PreguntaDto dto){
+        for (PreguntaDto p : preguntas){
+            if (p.getId().equals(dto.getId())){
+                p.setDescripcion(dto.getDescripcion());
+                p.setMaximaEscala(dto.getMaximaEscala());
+                p.setRespuestas(dto.getRespuestas());
+            }
         }
     }
 
@@ -158,7 +178,84 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
 
     @Override
     public void onItemClick(View view, int position) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(NuevaEncuestaActivity.this);
+        alertDialog.setTitle("Atención");
+        alertDialog.setIcon(R.drawable.ic_action_error);
+        alertDialog.setMessage("¿Qué acción desea realizar?");
+        alertDialog.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
+            }
+        });
+        alertDialog.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        alertDialog.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                openModificacionPregunta(adapter.getItem(position));
+            }
+        });
+        alertDialog.show();
+    }
+
+    private void openModificacionPregunta(PreguntaDto dto) {
+        switch (dto.getTipoPregunta().getCodigo()){
+            case 1:
+                actionMenu.close(true);
+                Intent agregar_multiple_choice = new Intent(NuevaEncuestaActivity.this, PreguntaMultipleChoiceActivity.class);
+                agregar_multiple_choice.putExtra("modificando", true);
+                agregar_multiple_choice.putExtra("preguntaChoice", dto.getDescripcion());
+                agregar_multiple_choice.putExtra("idPreguntaModificar", dto.getId());
+                agregar_multiple_choice.putExtra("respuestasChoice", dto.getRespuestas());
+                startActivityForResult(agregar_multiple_choice, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                break;
+            case 2:
+                actionMenu.close(true);
+                Intent agregar_unica_opcion = new Intent(NuevaEncuestaActivity.this, PreguntaUnicaOpcionActivity.class);
+                agregar_unica_opcion.putExtra("modificando", true);
+                agregar_unica_opcion.putExtra("preguntaUnica", dto.getDescripcion());
+                agregar_unica_opcion.putExtra("idPreguntaModificar", dto.getId());
+                agregar_unica_opcion.putExtra("respuestasUnica", dto.getRespuestas());
+                startActivityForResult(agregar_unica_opcion, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                break;
+            case 3:
+                actionMenu.close(true);
+                Intent agregar_numerica = new Intent(NuevaEncuestaActivity.this, PreguntaNumericaActivity.class);
+                agregar_numerica.putExtra("modificando", true);
+                agregar_numerica.putExtra("preguntaNumerica", dto.getDescripcion());
+                agregar_numerica.putExtra("idPreguntaModificar", dto.getId());
+                startActivityForResult(agregar_numerica, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                break;
+            case 4:
+                actionMenu.close(true);
+                Intent agregar_textual = new Intent(NuevaEncuestaActivity.this, PreguntaTextualActivity.class);
+                agregar_textual.putExtra("modificando", true);
+                agregar_textual.putExtra("preguntaTextual", dto.getDescripcion());
+                agregar_textual.putExtra("idPreguntaModificar", dto.getId());
+                startActivityForResult(agregar_textual, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                break;
+            case 5:
+                actionMenu.close(true);
+                Intent agregar_escala = new Intent(NuevaEncuestaActivity.this, PreguntaEscalaActivity.class);
+                agregar_escala.putExtra("modificando", true);
+                agregar_escala.putExtra("preguntaEscala", dto.getDescripcion());
+                agregar_escala.putExtra("maximaEscala", dto.getMaximaEscala());
+                agregar_escala.putExtra("idPreguntaModificar", dto.getId());
+                startActivityForResult(agregar_escala, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                break;
+            default:
+                break;
+        }
     }
 
     public Long getContadorPreguntas() {

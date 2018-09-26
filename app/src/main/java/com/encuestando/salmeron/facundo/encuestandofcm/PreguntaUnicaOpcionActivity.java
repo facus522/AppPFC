@@ -31,6 +31,8 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
     private RecyclerView recyclerView;
     private ArrayList<String> respuestas;
     private RespuestaNuevaRecyclerViewAdapter adapter;
+    private Boolean modificando;
+    private Long idPregunta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,12 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
         setContentView(R.layout.pregunta_unica_opcion_activity);
         respuestas = new ArrayList<>();
         pregunta = findViewById(R.id.pregunta_respuesta_unica);
+        modificando = (Boolean) getIntent().getSerializableExtra("modificando");
+        if (modificando) {
+            pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaUnica"));
+            respuestas = (ArrayList) getIntent().getSerializableExtra("respuestasUnica");
+            idPregunta = (Long) getIntent().getSerializableExtra("idPreguntaModificar");
+        }
         if (savedInstanceState != null){
             String preguntaRespuestaUnica = savedInstanceState.getString("preguntaRespuestaUnica");
             ArrayList<String> listaRespuestas = savedInstanceState.getStringArrayList("respuestasUnicas");
@@ -80,6 +88,7 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
                     dto.setDescripcion(pregunta.getEditText().getText().toString());
                     dto.setTipoPregunta(TipoPreguntaEnum.RESPUESTA_UNICA);
                     dto.setRespuestas(respuestas);
+                    dto.setId(modificando ? idPregunta : null);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
                     setResult(Activity.RESULT_OK, returnIntent);

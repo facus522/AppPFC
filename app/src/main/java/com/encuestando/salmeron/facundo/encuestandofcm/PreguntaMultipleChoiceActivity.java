@@ -33,6 +33,8 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
     private RecyclerView recyclerView;
     private ArrayList<String> respuestas;
     private RespuestaNuevaRecyclerViewAdapter adapter;
+    private Boolean modificando;
+    private Long idPregunta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,12 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
         setContentView(R.layout.pregunta_multiple_choice_activity);
         respuestas = new ArrayList<>();
         pregunta = findViewById(R.id.pregunta_multiple_choice);
+        modificando = (Boolean) getIntent().getSerializableExtra("modificando");
+        if (modificando) {
+            pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaChoice"));
+            respuestas = (ArrayList) getIntent().getSerializableExtra("respuestasChoice");
+            idPregunta = (Long) getIntent().getSerializableExtra("idPreguntaModificar");
+        }
         if (savedInstanceState != null){
             String preguntaMultipleChoice = savedInstanceState.getString("preguntaMultipleChoice");
             ArrayList<String> listaRespuestas = savedInstanceState.getStringArrayList("respuestasMultipleChoice");
@@ -82,6 +90,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                     dto.setDescripcion(pregunta.getEditText().getText().toString());
                     dto.setTipoPregunta(TipoPreguntaEnum.MULTIPLE_CHOICE);
                     dto.setRespuestas(respuestas);
+                    dto.setId(modificando ? idPregunta : null);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
                     setResult(Activity.RESULT_OK, returnIntent);

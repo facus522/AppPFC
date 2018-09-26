@@ -21,6 +21,8 @@ public class PreguntaEscalaActivity extends AppCompatActivity implements Seriali
     private TextInputLayout maxima;
     private CardView agregar;
     private CardView volver;
+    private Boolean modificando;
+    private Long idPregunta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class PreguntaEscalaActivity extends AppCompatActivity implements Seriali
         setContentView(R.layout.pregunta_escala_activity);
         toolbar = findViewById(R.id.pregunta_escala_toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
+        modificando = (Boolean) getIntent().getSerializableExtra("modificando");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,6 +40,11 @@ public class PreguntaEscalaActivity extends AppCompatActivity implements Seriali
         });
         pregunta = findViewById(R.id.pregunta_escala);
         maxima = findViewById(R.id.maxima_escala);
+        if (modificando) {
+            pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaEscala"));
+            maxima.getEditText().setText(((Integer) getIntent().getSerializableExtra("maximaEscala")).toString());
+            idPregunta = (Long) getIntent().getSerializableExtra("idPreguntaModificar");
+        }
         agregar = findViewById(R.id.agrega_escala_button);
         agregar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +61,7 @@ public class PreguntaEscalaActivity extends AppCompatActivity implements Seriali
                     dto.setDescripcion(pregunta.getEditText().getText().toString());
                     dto.setTipoPregunta(TipoPreguntaEnum.ESCALA);
                     dto.setMaximaEscala(Integer.valueOf(maxima.getEditText().getText().toString()));
+                    dto.setId(modificando ? idPregunta : null);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
                     setResult(Activity.RESULT_OK, returnIntent);
