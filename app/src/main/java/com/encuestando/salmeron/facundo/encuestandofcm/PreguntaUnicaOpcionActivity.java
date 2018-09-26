@@ -146,7 +146,7 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(PreguntaUnicaOpcionActivity.this);
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
-        alertDialog.setMessage("Qué desea realizar sobre la respuesta: '" + respuestas.get(position) + "'.");
+        alertDialog.setMessage("Qué acción desea realizar sobre la respuesta: '" + respuestas.get(position) + "'.");
         alertDialog.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

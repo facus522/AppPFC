@@ -148,7 +148,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(PreguntaMultipleChoiceActivity.this);
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
-        alertDialog.setMessage("Qué desea realizar sobre la respuesta: '" + respuestas.get(position) + "'.");
+        alertDialog.setMessage("Qué acción desea realizar sobre la respuesta: '" + respuestas.get(position) + "'.");
         alertDialog.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

@@ -2,9 +2,15 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -15,6 +21,7 @@ public class PreguntaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     private ArrayList<PreguntaDto> preguntas;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private NuevaEncuestaActivity nuevaEncuestaActivity;
 
     // data is passed into the constructor
     PreguntaNuevaRecyclerViewAdapter(Context context, ArrayList<PreguntaDto> data) {
@@ -27,15 +34,15 @@ public class PreguntaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case 1:
-                return new ViewHolder(mInflater.inflate(R.layout.row_preguntas_respuestas_nueva_activity, parent, false));
+                return new ViewHolder2(mInflater.inflate(R.layout.row_choice_preguntas_respuestas_nueva_activity, parent, false));
             case 2:
-                return new ViewHolder(mInflater.inflate(R.layout.row_preguntas_respuestas_nueva_activity, parent, false));
+                return new ViewHolder2(mInflater.inflate(R.layout.row_unica_preguntas_respuestas_nueva_activity, parent, false));
             case 3:
-                return new ViewHolder(mInflater.inflate(R.layout.row_preguntas_respuestas_nueva_activity, parent, false));
+                return new ViewHolder(mInflater.inflate(R.layout.row_numerica_preguntas_respuestas_nueva_activity, parent, false));
             case 4:
-                return new ViewHolder(mInflater.inflate(R.layout.row_respuesta_nueva, parent, false));
+                return new ViewHolder(mInflater.inflate(R.layout.row_textual_preguntas_respuestas_nueva_activity, parent, false));
             case 5:
-                return new ViewHolder(mInflater.inflate(R.layout.row_preguntas_respuestas_nueva_activity, parent, false));
+                return new ViewHolder(mInflater.inflate(R.layout.row_escala_preguntas_respuestas_nueva_activity, parent, false));
             default:
                 return null;
         }
@@ -47,29 +54,42 @@ public class PreguntaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         PreguntaDto pregunta = preguntas.get(position);
         switch (holder.getItemViewType()){
             case 1:
-                ViewHolder viewHolder = (ViewHolder) holder;
-                PreguntaDto preguntaRecycler = preguntas.get(position);
-                viewHolder.textViewPregunta.setText(preguntaRecycler.getDescripcion());
+                ViewHolder2 viewHolderChoice = (ViewHolder2) holder;
+                PreguntaDto preguntaRecyclerChoice = preguntas.get(position);
+                viewHolderChoice.textViewPregunta.setText(preguntaRecyclerChoice.getId() + ". " + preguntaRecyclerChoice.getDescripcion());
+                for (String rta : preguntaRecyclerChoice.getRespuestas()){
+                    CheckBox checkBox = new CheckBox(mInflater.getContext());
+                    checkBox.setText(rta);
+                    viewHolderChoice.linearLayout.addView(checkBox);
+                }
                 break;
             case 2:
-                ViewHolder viewHolder1 = (ViewHolder) holder;
-                PreguntaDto preguntaRecycler1 = preguntas.get(position);
-                viewHolder1.textViewPregunta.setText(preguntaRecycler1.getDescripcion());
+                ViewHolder2 viewHolderUnica = (ViewHolder2) holder;
+                PreguntaDto preguntaRecyclerUnica = preguntas.get(position);
+                viewHolderUnica.textViewPregunta.setText(preguntaRecyclerUnica.getId() + ". " + preguntaRecyclerUnica.getDescripcion());
+                RadioGroup radioGroup = new RadioGroup(mInflater.getContext());
+                for (String rta : preguntaRecyclerUnica.getRespuestas()){
+                    RadioButton radioButton = new RadioButton(mInflater.getContext());
+                    radioButton.setText(rta);
+                    radioGroup.addView(radioButton);
+                }
+                viewHolderUnica.linearLayout.addView(radioGroup);
                 break;
             case 3:
-                ViewHolder viewHolder2 = (ViewHolder) holder;
-                PreguntaDto preguntaRecycler2 = preguntas.get(position);
-                viewHolder2.textViewPregunta.setText(preguntaRecycler2.getDescripcion());
+                ViewHolder viewHolderNumerica = (ViewHolder) holder;
+                PreguntaDto preguntaRecyclerNumerica = preguntas.get(position);
+                viewHolderNumerica.textViewPregunta.setText(preguntaRecyclerNumerica.getId() + ". " + preguntaRecyclerNumerica.getDescripcion());
                 break;
             case 4:
-                ViewHolder viewHolder3 = (ViewHolder) holder;
-                PreguntaDto preguntaRecycler3 = preguntas.get(position);
-                viewHolder3.textViewPregunta.setText(preguntaRecycler3.getDescripcion());
+                ViewHolder viewHolderTextual = (ViewHolder) holder;
+                PreguntaDto preguntaRecyclerTextual = preguntas.get(position);
+                viewHolderTextual.textViewPregunta.setText(preguntaRecyclerTextual.getId() + ". " + preguntaRecyclerTextual.getDescripcion());
                 break;
             case 5:
-                ViewHolder viewHolder4 = (ViewHolder) holder;
-                PreguntaDto preguntaRecycler4 = preguntas.get(position);
-                viewHolder4.textViewPregunta.setText(preguntaRecycler4.getDescripcion());
+                ViewHolder viewHolderEscala = (ViewHolder) holder;
+                PreguntaDto preguntaRecyclerEscala = preguntas.get(position);
+                viewHolderEscala.textViewPregunta.setText(preguntaRecyclerEscala.getId() + ". " + preguntaRecyclerEscala.getDescripcion());
+                viewHolderEscala.textViewBoxRespuesta.setText("Escala del 1 al " + preguntaRecyclerEscala.getMaximaEscala());
                 break;
             default: break;
         }
@@ -86,10 +106,12 @@ public class PreguntaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView textViewPregunta;
+        TextView textViewBoxRespuesta;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textViewPregunta = itemView.findViewById(R.id.respuesta_nueva_textview);
+            textViewPregunta = itemView.findViewById(R.id.textView_pregunta_nueva_encuesta);
+            textViewBoxRespuesta = itemView.findViewById(R.id.box_respuesta_nueva);
             itemView.setOnClickListener(this);
         }
 
@@ -100,11 +122,13 @@ public class PreguntaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public class ViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myTextView;
+        TextView textViewPregunta;
+        LinearLayout linearLayout;
 
         public ViewHolder2(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.respuesta_nueva_textview);
+            textViewPregunta = itemView.findViewById(R.id.textView_pregunta_nueva_encuesta);
+            linearLayout = itemView.findViewById(R.id.linear_layout_respuestas);
             itemView.setOnClickListener(this);
         }
 
