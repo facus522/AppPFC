@@ -11,6 +11,7 @@ public class PreguntaDto implements Serializable{
     private TipoPreguntaEnum tipoPregunta;
     private Integer maximaEscala;
     private ArrayList<String> respuestas;
+    private Boolean activo = Boolean.TRUE;
 
     public Long getId() {
         return id;
@@ -50,5 +51,13 @@ public class PreguntaDto implements Serializable{
 
     public void setRespuestas(ArrayList<String> respuestas) {
         this.respuestas = respuestas;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 }

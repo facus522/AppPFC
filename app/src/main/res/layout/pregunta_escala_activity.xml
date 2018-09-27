@@ -115,6 +115,7 @@
                         android:background="#46000000"
                         android:paddingRight="5dp"
                         android:textAlignment="center"
+                        android:inputType="numberDecimal"
                         android:textStyle="bold"
                         android:paddingLeft="5dp"
                         android:scrollbars="vertical"

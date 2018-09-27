@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class
-NuevaEncuestaActivity extends AppCompatActivity implements Serializable, PreguntaNuevaRecyclerViewAdapter.ItemClickListener {
+NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable, PreguntaNuevaRecyclerViewAdapter.ItemClickListener {
 
     private Toolbar toolbar;
     private UsuarioDto usuarioLogueado;
@@ -31,16 +33,22 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
     private FloatingActionButton escalaButton;
     private FloatingActionMenu actionMenu;
     private ArrayList<PreguntaDto> preguntas;
-    private Long contadorPreguntas;
     private RecyclerView recyclerView;
     private PreguntaNuevaRecyclerViewAdapter adapter;
+    private CardView crear;
+    private CardView volver;
+    private TextInputLayout titulo;
+    private TextInputLayout descripcion;
+    private String tituloGuardar;
+    private String descripcionGuardar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nueva_encuesta_activity);
         preguntas = (ArrayList<PreguntaDto>) getIntent().getSerializableExtra("preguntas");
-        contadorPreguntas = (Long) getIntent().getSerializableExtra("contadorPreguntas");
+        tituloGuardar = (String) getIntent().getSerializableExtra("tituloGuardar");
+        descripcionGuardar = (String) getIntent().getSerializableExtra("descripcionGuardar");
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
         toolbar = findViewById(R.id.titulo_nueva_encuesta);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
@@ -49,6 +57,24 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
             public void onClick(View view) {
                 NuevaEncuestaActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            }
+        });
+        crear = findViewById(R.id.crear_nueva_encuesta_button);
+        volver = findViewById(R.id.volver_nueva_encuesta_button);
+        titulo = findViewById(R.id.titulo_encuesta_nueva);
+        descripcion = findViewById(R.id.descripcion_encuesta_nueva);
+        titulo.getEditText().setText(tituloGuardar);
+        descripcion.getEditText().setText(descripcionGuardar);
+        volver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                posibleSalida();
+            }
+        });
+        crear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickCrearEncuesta();
             }
         });
         recyclerView = findViewById(R.id.recycler_encuesta_nueva);
@@ -107,6 +133,48 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
+
+        if (savedInstanceState != null){
+            String tituloNuevo = savedInstanceState.getString("tituloNuevo");
+            String descripcionNuevo = savedInstanceState.getString("descripcionNuevo");
+            if (tituloNuevo!= null){
+                titulo.getEditText().setText(tituloNuevo);
+            }
+            if (descripcionNuevo!=null){
+                descripcion.getEditText().setText(descripcionNuevo);
+            }
+        }
+    }
+
+    private void onClickCrearEncuesta(){
+        titulo.setError(null);
+        descripcion.setError(null);
+        if (titulo.getEditText().getText().toString().isEmpty()){
+            titulo.setError("El título no puede estar vacío!");
+            return;
+        } else if (titulo.getEditText().getText().length() > titulo.getCounterMaxLength()){
+            titulo.setError("Se superó la cantidad máxima permitida de caracteres.");
+            return;
+        }
+
+        if (descripcion.getEditText().getText().length() > descripcion.getCounterMaxLength()){
+            descripcion.setError("Se superó la cantidad máxima permitida de caracteres.");
+            return;
+        }
+
+        if (preguntas.size() < 1){
+            descripcion.setError("Debe agregarse al menos una pregunta.");
+            return;
+        }
+
+        Toast.makeText(NuevaEncuestaActivity.this, "PELEEEEEE", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("tituloNuevo", titulo.getEditText().getText().toString());
+        outState.putString("descripcionNuevo", descripcion.getEditText().getText().toString());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -118,13 +186,13 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
                 reemplazarPreguntaModificada(dto);
                 isModificacion = true;
             } else {
-                contadorPreguntas += 1;
-                dto.setId(contadorPreguntas);
+                dto.setId(new Long(preguntas.size() + 1));
                 preguntas.add(dto);
             }
             finish();
             getIntent().putExtra("preguntas", preguntas);
-            getIntent().putExtra("contadorPreguntas", contadorPreguntas);
+            getIntent().putExtra("tituloGuardar", titulo.getEditText().getText().toString());
+            getIntent().putExtra("descripcionGuardar", descripcion.getEditText().getText().toString());
             startActivity(getIntent());
             if (isModificacion){
                 Toast.makeText(NuevaEncuestaActivity.this, "La pregunta ha sido modificada correctamente!", Toast.LENGTH_LONG).show();
@@ -132,6 +200,21 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
                 Toast.makeText(NuevaEncuestaActivity.this, "La pregunta ha sido añadida correctamente!", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void crearEncuesta(String result) {
+
+    }
+
+    @Override
+    public void crearPregunta(String result) {
+
+    }
+
+    @Override
+    public void crearRespuesta(String result) {
+
     }
 
     private void reemplazarPreguntaModificada(PreguntaDto dto){
@@ -185,7 +268,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
         alertDialog.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                deletePregunta(adapter.getItem(position));
             }
         });
         alertDialog.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -201,6 +284,24 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
             }
         });
         alertDialog.show();
+    }
+
+    private void deletePregunta(PreguntaDto dto){
+        for (PreguntaDto p : preguntas){
+            if (p.getId().equals(dto.getId())){
+                p.setActivo(Boolean.FALSE);
+            }else if (p.getId() > dto.getId()){
+                p.setId(p.getId()-1);
+            }
+        }
+        for (PreguntaDto p : preguntas){
+            if (!p.getActivo()){
+                preguntas.remove(p);
+                break;
+            }
+        }
+        adapter.notifyDataSetChanged();
+        Toast.makeText(NuevaEncuestaActivity.this, "La pregunta ha sido eliminada correctamente!", Toast.LENGTH_LONG).show();
     }
 
     private void openModificacionPregunta(PreguntaDto dto) {
@@ -258,11 +359,4 @@ NuevaEncuestaActivity extends AppCompatActivity implements Serializable, Pregunt
         }
     }
 
-    public Long getContadorPreguntas() {
-        return contadorPreguntas;
-    }
-
-    public void setContadorPreguntas(Long contadorPreguntas) {
-        this.contadorPreguntas = contadorPreguntas;
-    }
 }

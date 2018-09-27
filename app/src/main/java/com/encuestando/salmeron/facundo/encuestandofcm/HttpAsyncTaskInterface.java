@@ -10,4 +10,7 @@ public interface HttpAsyncTaskInterface {
     default void cargarInfoNoticias(String result){}; //nroWebService = 2;
     default void eliminarInfoNoticia(String result){}; //nroWebService = 3;
     default void crearInfoNoticica(String result){}; //nroWebService = 4;
+    default void crearEncuesta(String result){}; //nroWebService = 5;
+    default void crearPregunta(String result){}; //nroWebService = 6;
+    default void crearRespuesta(String result){}; //nroWebService = 7;
 }

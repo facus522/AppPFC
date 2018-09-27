@@ -39,7 +39,6 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements S
             public void onClick(View view) {
                 Intent agregar_intent = new Intent(AdministrarEncuestasActivity.this, NuevaEncuestaActivity.class).putExtra("usuario", usuarioLogueado);
                 agregar_intent.putExtra("preguntas", new ArrayList<PreguntaDto>());
-                agregar_intent.putExtra("contadorPreguntas", new Long(0));
                 startActivityForResult(agregar_intent, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
