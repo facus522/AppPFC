@@ -75,4 +75,17 @@ public class JSONConverterUtils {
 
         return result;
     }
+
+    public static Integer JSONCreateEncuestaConverter(String jsonString){
+        Integer idAsignado = null;
+        try {
+            JSONObject json = new JSONObject(jsonString);
+            idAsignado = Integer.valueOf(json.getString("idAsignado"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  idAsignado;
+    }
+
 }

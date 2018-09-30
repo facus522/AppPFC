@@ -12,6 +12,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -20,6 +22,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 public class
 NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable, PreguntaNuevaRecyclerViewAdapter.ItemClickListener {
@@ -41,6 +44,13 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
     private TextInputLayout descripcion;
     private String tituloGuardar;
     private String descripcionGuardar;
+    private HttpAsyncTask httpAsyncTaskEncuesta;
+    private HttpAsyncTask httpAsyncTaskPregunta;
+    private HttpAsyncTask httpAsyncTaskRespuesta;
+    private Integer idEncuestaAsignado;
+    private Integer idPreguntaAsignado;
+    private Integer idRespuestaAsignado;
+    private TextView cargandoCrear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +60,14 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
         tituloGuardar = (String) getIntent().getSerializableExtra("tituloGuardar");
         descripcionGuardar = (String) getIntent().getSerializableExtra("descripcionGuardar");
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
+        cargandoCrear = findViewById(R.id.cargandoCrearNueva);
+        cargandoCrear.setVisibility(View.GONE);
         toolbar = findViewById(R.id.titulo_nueva_encuesta);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setResult(RESULT_FIRST_USER);
                 NuevaEncuestaActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
@@ -167,7 +180,108 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
             return;
         }
 
-        Toast.makeText(NuevaEncuestaActivity.this, "PELEEEEEE", Toast.LENGTH_LONG).show();
+        cargandoCrear.setVisibility(View.VISIBLE);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String urlEncuesta = "http://192.168.0.107:8080/EncuestasFCM/encuestas/saveEncuesta?titulo=" + reemplazarEspacios(titulo.getEditText().getText().toString())
+                                + "&descripcion=" + reemplazarEspacios(descripcion.getEditText().getText().toString()) + "&idUsuario=" + usuarioLogueado.getId();
+                        httpAsyncTaskEncuesta = new HttpAsyncTask(WebServiceEnum.CREAR_ENCUESTA.getCodigo());
+                        httpAsyncTaskEncuesta.setHttpAsyncTaskInterface(NuevaEncuestaActivity.this);
+                        httpAsyncTaskEncuesta.execute(urlEncuesta);
+
+                        long startTime = System.currentTimeMillis();
+                        boolean tiempo = false;
+                        while (idEncuestaAsignado == null){
+                            if ((System.currentTimeMillis()-startTime)>7000){
+                                tiempo = true;
+                                break;
+                            }
+                        }
+
+                        if (tiempo){
+                            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(NuevaEncuestaActivity.this, AlertDialog.THEME_HOLO_DARK);
+                            alertDialog.setTitle("Error de Conexión");
+                            alertDialog.setMessage("Verifique su conexión a Internet! \n\nSi el problema persiste se trata de un error interno en la base de datos.");
+                            alertDialog.setIcon(R.drawable.ic_action_error);
+                            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            alertDialog.show();
+                        } else {
+                            for (PreguntaDto pregunta: preguntas){
+                                String urlPregunta = "http://192.168.0.107:8080/EncuestasFCM/preguntas/savePregunta?descripcion=" + reemplazarEspacios(pregunta.getDescripcion())
+                                        + "&idEncuesta=" + idEncuestaAsignado + "&idUsuario=" + usuarioLogueado.getId();
+                                httpAsyncTaskPregunta = new HttpAsyncTask(WebServiceEnum.CREAR_PREGUNTA.getCodigo());
+                                httpAsyncTaskPregunta.setHttpAsyncTaskInterface(NuevaEncuestaActivity.this);
+                                httpAsyncTaskPregunta.execute(urlPregunta);
+                                while (idPreguntaAsignado == null) {
+
+                                }
+                                if (pregunta.getRespuestas() != null && !pregunta.getRespuestas().isEmpty()){
+                                    for (String rta : pregunta.getRespuestas()){
+                                        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/saveRespuesta?descripcion=" + reemplazarEspacios(rta)
+                                                + "&idPregunta=" + idPreguntaAsignado + "&idTipoRespuesta=" + pregunta.getTipoPregunta().getCodigo()
+                                                + "&idUsuario=" + usuarioLogueado.getId();
+                                        httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.CREAR_RESPUESTA.getCodigo());
+                                        httpAsyncTaskRespuesta.setHttpAsyncTaskInterface(NuevaEncuestaActivity.this);
+                                        httpAsyncTaskRespuesta.execute(urlRespuesta);
+                                        while (idRespuestaAsignado == null){
+
+                                        }
+                                        idRespuestaAsignado = null;
+                                    }
+                                }
+
+                                idPreguntaAsignado = null;
+                            }
+
+                            finish();
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                        }
+                        cargandoCrear.setVisibility(View.GONE);
+                    }
+                });
+            }
+        }).start();
+
+
+    }
+
+    private String reemplazarEspacios(String valor){
+        String aux = valor.replace(" ", "%20");
+        aux = aux.replace("\n", "%20");
+        return aux;
+    }
+
+    @Override
+    public void crearEncuesta(String result) {
+        String createEncuestaJSON = result;
+        if (createEncuestaJSON != null && !createEncuestaJSON.isEmpty()) {
+            idEncuestaAsignado = JSONConverterUtils.JSONCreateEncuestaConverter(result);
+        }
+    }
+
+    @Override
+    public void crearPregunta(String result) {
+        String createPreguntaJSON = result;
+        if (createPreguntaJSON != null && !createPreguntaJSON.isEmpty()) {
+            idPreguntaAsignado = JSONConverterUtils.JSONCreateEncuestaConverter(result);
+        }
+    }
+
+    @Override
+    public void crearRespuesta(String result) {
+        String createPreguntaJSON = result;
+        if (createPreguntaJSON != null && !createPreguntaJSON.isEmpty()) {
+            idRespuestaAsignado = JSONConverterUtils.JSONCreateEncuestaConverter(result);
+        }
     }
 
     @Override
@@ -202,21 +316,6 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
         }
     }
 
-    @Override
-    public void crearEncuesta(String result) {
-
-    }
-
-    @Override
-    public void crearPregunta(String result) {
-
-    }
-
-    @Override
-    public void crearRespuesta(String result) {
-
-    }
-
     private void reemplazarPreguntaModificada(PreguntaDto dto){
         for (PreguntaDto p : preguntas){
             if (p.getId().equals(dto.getId())){
@@ -236,6 +335,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+                setResult(RESULT_FIRST_USER);
                 NuevaEncuestaActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }

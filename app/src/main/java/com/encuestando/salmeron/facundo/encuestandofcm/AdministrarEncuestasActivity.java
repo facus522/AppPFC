@@ -1,17 +1,19 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdministrarEncuestasActivity extends AppCompatActivity implements Serializable{
+public class AdministrarEncuestasActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable{
 
     private UsuarioDto usuarioLogueado;
     private Toolbar toolbar;
@@ -43,6 +45,15 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements S
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_CANCELED){
+            finish();
+            startActivity(getIntent());
+            Toast.makeText(AdministrarEncuestasActivity.this, "La encuesta ha sido creada correctamente!", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
