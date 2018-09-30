@@ -88,4 +88,25 @@ public class JSONConverterUtils {
         return  idAsignado;
     }
 
+    public static List<ListaEncuestaDto> JSONEncuestasConverter(String jsonString){
+        List<ListaEncuestaDto> result = new ArrayList<>();
+
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray("response");
+            for (int i=0; i<jsonArray.length();i++){
+                JSONObject aux = jsonArray.getJSONObject(i);
+                ListaEncuestaDto dto = new ListaEncuestaDto();
+                dto.setId(Integer.parseInt(aux.getString("id")));
+                dto.setTitulo(aux.getString("titulo"));
+                dto.setDescripcion(aux.getString("descripcion"));
+                result.add(dto);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 }

@@ -9,10 +9,9 @@
     tools:context="com.encuestando.salmeron.facundo.encuestandofcm.InfoNoticiasEspecialActivity"
     tools:showIn="@layout/administrar_encuestas_activity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_encuestas"
+    <ListView
+        android:id="@+id/listaEncuestas"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
-
+        android:layout_height="match_parent"></ListView>
 
 </android.support.constraint.ConstraintLayout>

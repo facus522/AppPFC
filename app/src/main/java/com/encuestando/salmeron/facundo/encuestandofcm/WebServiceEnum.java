@@ -12,7 +12,9 @@ public enum WebServiceEnum {
     CREAR_INFO(4, "Crear Info"),
     CREAR_ENCUESTA(5, "Crear Encuesta"),
     CREAR_PREGUNTA(6, "Crear Pregunta"),
-    CREAR_RESPUESTA(7, "Crear Respuesta");
+    CREAR_RESPUESTA(7, "Crear Respuesta"),
+    CARGAR_ENCUESTAS(8, "Cargar Encuestas"),
+    ELIMINAR_ENCUESTA(9, "Eliminar Encuesta");
 
     private Integer codigo;
     private String descripcion;
