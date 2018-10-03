@@ -17,6 +17,7 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
@@ -31,10 +32,11 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
     private CardView volver;
     private FloatingActionButton agregarRespuestaBoton;
     private RecyclerView recyclerView;
-    private ArrayList<String> respuestas;
+    private ArrayList<RespuestaDto> respuestas;
     private RespuestaNuevaRecyclerViewAdapter adapter;
     private Boolean modificando;
     private Long idPregunta;
+    private TextView tvButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +49,12 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
             pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaChoice"));
             respuestas = (ArrayList) getIntent().getSerializableExtra("respuestasChoice");
             idPregunta = (Long) getIntent().getSerializableExtra("idPreguntaModificar");
+            tvButton = findViewById(R.id.texto_crear_modificar_choice);
+            tvButton.setText("Modificar");
         }
         if (savedInstanceState != null){
             String preguntaMultipleChoice = savedInstanceState.getString("preguntaMultipleChoice");
-            ArrayList<String> listaRespuestas = savedInstanceState.getStringArrayList("respuestasMultipleChoice");
+            ArrayList<RespuestaDto> listaRespuestas = savedInstanceState.getParcelableArrayList("respuestasMultipleChoice");
 
             if (preguntaMultipleChoice != null){
                 pregunta.getEditText().setText(preguntaMultipleChoice);
@@ -130,7 +134,9 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                                 if (rta.getText().toString().isEmpty()){
                                     rta.setError("La respuesta no puede estar vacía");
                                 } else{
-                                    respuestas.add(rta.getText().toString());
+                                    RespuestaDto rtaDto = new RespuestaDto();
+                                    rtaDto.setDescripcion(rta.getText().toString());
+                                    respuestas.add(rtaDto);
                                     d.dismiss();
                                     adapter.notifyDataSetChanged();
                                     Toast.makeText(PreguntaMultipleChoiceActivity.this, "Respuesta agregada correctamente", Toast.LENGTH_SHORT).show();
@@ -157,7 +163,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(PreguntaMultipleChoiceActivity.this);
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
-        alertDialog.setMessage("Qué acción desea realizar sobre la respuesta: '" + respuestas.get(position) + "'.");
+        alertDialog.setMessage("Qué acción desea realizar sobre la respuesta: '" + respuestas.get(position).getDescripcion() + "'.");
         alertDialog.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -180,7 +186,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                 TextInputEditText rta = new TextInputEditText(PreguntaMultipleChoiceActivity.this);
                 rta.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
                 rta.setHint("Respuesta");
-                rta.setText(adapter.getItem(position));
+                rta.setText(adapter.getItem(position).getDescripcion());
                 AlertDialog d = new AlertDialog.Builder(PreguntaMultipleChoiceActivity.this)
                         .setView(rta)
                         .setTitle("Ingrese una opción:")
@@ -197,7 +203,9 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                                 if (rta.getText().toString().isEmpty()){
                                     rta.setError("La respuesta no puede estar vacía");
                                 } else{
-                                    respuestas.set(position, rta.getText().toString());
+                                    RespuestaDto dtoRta = new RespuestaDto();
+                                    dtoRta.setDescripcion(rta.getText().toString());
+                                    respuestas.set(position, dtoRta);
                                     d.dismiss();
                                     adapter.notifyDataSetChanged();
                                     Toast.makeText(PreguntaMultipleChoiceActivity.this, "Respuesta modificada correctamente", Toast.LENGTH_SHORT).show();
@@ -249,7 +257,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString("preguntaMultipleChoice", pregunta.getEditText().getText().toString());
-        outState.putStringArrayList("respuestasMultipleChoice", respuestas);
+        outState.putParcelableArrayList("respuestasMultipleChoice", respuestas);
         super.onSaveInstanceState(outState);
     }
 

@@ -217,7 +217,8 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
                         } else {
                             for (PreguntaDto pregunta: preguntas){
                                 String urlPregunta = "http://192.168.0.107:8080/EncuestasFCM/preguntas/savePregunta?descripcion=" + reemplazarEspacios(pregunta.getDescripcion())
-                                        + "&idEncuesta=" + idEncuestaAsignado + "&idUsuario=" + usuarioLogueado.getId();
+                                        + "&idEncuesta=" + idEncuestaAsignado + "&idTipoRespuesta=" + pregunta.getTipoPregunta().getCodigo() +
+                                        "&idUsuario=" + usuarioLogueado.getId();
                                 httpAsyncTaskPregunta = new HttpAsyncTask(WebServiceEnum.CREAR_PREGUNTA.getCodigo());
                                 httpAsyncTaskPregunta.setHttpAsyncTaskInterface(NuevaEncuestaActivity.this);
                                 httpAsyncTaskPregunta.execute(urlPregunta);
@@ -225,8 +226,8 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
 
                                 }
                                 if (pregunta.getRespuestas() != null && !pregunta.getRespuestas().isEmpty()){
-                                    for (String rta : pregunta.getRespuestas()){
-                                        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/saveRespuesta?descripcion=" + reemplazarEspacios(rta)
+                                    for (RespuestaDto rta : pregunta.getRespuestas()){
+                                        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/saveRespuesta?descripcion=" + reemplazarEspacios(rta.getDescripcion())
                                                 + "&idPregunta=" + idPreguntaAsignado + "&idTipoRespuesta=" + pregunta.getTipoPregunta().getCodigo()
                                                 + "&idUsuario=" + usuarioLogueado.getId();
                                         httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.CREAR_RESPUESTA.getCodigo());

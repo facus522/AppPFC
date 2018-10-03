@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.encuestando.salmeron.facundo.encuestandofcm.ModificarEncuestaActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/titulo_modificar_encuesta"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:title="Modificando Encuesta..."
+            app:titleTextColor="?android:attr/colorPressedHighlight"
+            app:popupTheme="@style/PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_modificar_encuesta" />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/boton_agregar_pregunta"
+        app:menu_fab_label="¿Qué tipo de respuesta desea?"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/cardview_light_background"
+        android:elevation="10dp"
+        app:menu_icon="@android:drawable/ic_menu_help"
+        app:menu_colorNormal="@android:color/holo_green_dark"
+        android:scaleType="center"
+        app:fabSize="normal">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/multiple_choice_button"
+            app:fab_label="Multiple Choice"
+            android:src="@drawable/ic_multiple_choise"/>
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/unica_button"
+            app:fab_label="Respuesta Única"
+            android:src="@drawable/ic_unica_respuesta"/>
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numerica_button"
+            app:fab_label="Respuesta Numérica"
+            android:src="@drawable/ic_numerica"/>
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textual_button"
+            app:fab_label="Respuesta Textual"
+            android:src="@drawable/ic_desarrollo"/>
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/escala_button"
+            app:fab_label="Escala"
+            android:src="@drawable/ic_escala"/>
+    </com.github.clans.fab.FloatingActionMenu>
+
+</android.support.design.widget.CoordinatorLayout>

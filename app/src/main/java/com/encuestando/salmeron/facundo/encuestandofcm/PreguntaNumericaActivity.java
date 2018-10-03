@@ -11,6 +11,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
     private CardView volver;
     private Boolean modificando;
     private Long idPregunta;
+    private TextView tvButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,8 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
         if (modificando) {
             pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaNumerica"));
             idPregunta = (Long) getIntent().getSerializableExtra("idPreguntaModificar");
+            tvButton = findViewById(R.id.texto_crear_modificar_numerica);
+            tvButton.setText("Modificar");
         }
         agregar = findViewById(R.id.agrega_numerica_button);
         agregar.setOnClickListener(new View.OnClickListener() {

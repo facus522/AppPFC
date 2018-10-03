@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import java.io.Serializable;
 
@@ -21,6 +22,7 @@ public class PreguntaTextualActivity extends AppCompatActivity implements Serial
     private CardView volver;
     private Boolean modificando;
     private Long idPregunta;
+    private TextView tvButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class PreguntaTextualActivity extends AppCompatActivity implements Serial
         if (modificando) {
             pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaTextual"));
             idPregunta = (Long) getIntent().getSerializableExtra("idPreguntaModificar");
+            tvButton = findViewById(R.id.texto_crear_modificar_textual);
+            tvButton.setText("Modificar");
         }
         agregar = findViewById(R.id.agrega_textual_button);
         agregar.setOnClickListener(new View.OnClickListener() {

@@ -11,6 +11,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import java.io.Serializable;
 
@@ -23,6 +24,7 @@ public class PreguntaEscalaActivity extends AppCompatActivity implements Seriali
     private CardView volver;
     private Boolean modificando;
     private Long idPregunta;
+    private TextView tvButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,8 @@ public class PreguntaEscalaActivity extends AppCompatActivity implements Seriali
             pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaEscala"));
             maxima.getEditText().setText(((Integer) getIntent().getSerializableExtra("maximaEscala")).toString());
             idPregunta = (Long) getIntent().getSerializableExtra("idPreguntaModificar");
+            tvButton = findViewById(R.id.texto_crear_modificar_escala);
+            tvButton.setText("Modificar");
         }
         agregar = findViewById(R.id.agrega_escala_button);
         agregar.setOnClickListener(new View.OnClickListener() {

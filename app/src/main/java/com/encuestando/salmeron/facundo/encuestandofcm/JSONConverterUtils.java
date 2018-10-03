@@ -109,4 +109,35 @@ public class JSONConverterUtils {
         return result;
     }
 
+    public static ArrayList<PreguntaDto> JSONAbrirEncuestasConverter(String jsonString){
+        ArrayList<PreguntaDto> result = new ArrayList<>();
+
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray("preguntas");
+            for (int i=0; i<jsonArray.length();i++){
+                PreguntaDto dto = new PreguntaDto();
+                dto.setDescripcion((String) jsonArray.getJSONObject(i).get("descripcionPregunta"));
+                Integer idTipoRespuesta = (Integer) jsonArray.getJSONObject(i).get("idTipoRespuesta");
+                dto.setTipoPregunta(TipoPreguntaEnum.getEnum(idTipoRespuesta));
+                dto.setIdPersistido((Integer) jsonArray.getJSONObject(i).get("idPregunta"));
+                dto.setId(new Long(i+1L));
+                JSONArray jsonArray2 = jsonArray.getJSONObject(i).getJSONArray("respuesta");
+                ArrayList<RespuestaDto> listaRespuestas = new ArrayList<>();
+                for (int j=0; j<jsonArray2.length(); j++){
+                    RespuestaDto rta = new RespuestaDto();
+                    rta.setDescripcion((String) jsonArray2.getJSONObject(j).get("descripcionRespuesta"));
+                    rta.setIdPersistido((Integer) jsonArray2.getJSONObject(j).get("idRespuesta"));
+                    listaRespuestas.add(rta);
+                }
+                dto.setRespuestas(listaRespuestas);
+                result.add(dto);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 }

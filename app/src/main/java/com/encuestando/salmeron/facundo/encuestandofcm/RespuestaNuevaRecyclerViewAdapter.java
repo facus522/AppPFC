@@ -13,13 +13,13 @@ import java.util.List;
 
 public class RespuestaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<RespuestaNuevaRecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<String> respuestas;
+    private ArrayList<RespuestaDto> respuestas;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private int filaRespuestas;
 
     // data is passed into the constructor
-    RespuestaNuevaRecyclerViewAdapter(Context context, ArrayList<String> data, int filaRespuestas) {
+    RespuestaNuevaRecyclerViewAdapter(Context context, ArrayList<RespuestaDto> data, int filaRespuestas) {
         this.mInflater = LayoutInflater.from(context);
         this.respuestas = data;
         this.filaRespuestas = filaRespuestas;
@@ -35,7 +35,7 @@ public class RespuestaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Resp
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String respuesta = respuestas.get(position);
+        String respuesta = respuestas.get(position).getDescripcion();
         holder.myTextView.setText(respuesta);
     }
 
@@ -63,7 +63,7 @@ public class RespuestaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Resp
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
+    RespuestaDto getItem(int id) {
         return respuestas.get(id);
     }
 

@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
@@ -29,10 +30,11 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
     private CardView volver;
     private FloatingActionButton agregarRespuestaBoton;
     private RecyclerView recyclerView;
-    private ArrayList<String> respuestas;
+    private ArrayList<RespuestaDto> respuestas;
     private RespuestaNuevaRecyclerViewAdapter adapter;
     private Boolean modificando;
     private Long idPregunta;
+    private TextView tvButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +47,12 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
             pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaUnica"));
             respuestas = (ArrayList) getIntent().getSerializableExtra("respuestasUnica");
             idPregunta = (Long) getIntent().getSerializableExtra("idPreguntaModificar");
+            tvButton = findViewById(R.id.texto_crear_modificar_unica);
+            tvButton.setText("Modificar");
         }
         if (savedInstanceState != null){
             String preguntaRespuestaUnica = savedInstanceState.getString("preguntaRespuestaUnica");
-            ArrayList<String> listaRespuestas = savedInstanceState.getStringArrayList("respuestasUnicas");
+            ArrayList<RespuestaDto> listaRespuestas = savedInstanceState.getParcelableArrayList("respuestasUnicas");
 
             if (preguntaRespuestaUnica != null){
                 pregunta.getEditText().setText(preguntaRespuestaUnica);
@@ -128,7 +132,9 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
                                 if (rta.getText().toString().isEmpty()){
                                     rta.setError("La respuesta no puede estar vacía");
                                 } else{
-                                    respuestas.add(rta.getText().toString());
+                                    RespuestaDto rtaDto = new RespuestaDto();
+                                    rtaDto.setDescripcion(rta.getText().toString());
+                                    respuestas.add(rtaDto);
                                     d.dismiss();
                                     adapter.notifyDataSetChanged();
                                     Toast.makeText(PreguntaUnicaOpcionActivity.this, "Respuesta agregada correctamente", Toast.LENGTH_SHORT).show();
@@ -155,7 +161,7 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(PreguntaUnicaOpcionActivity.this);
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
-        alertDialog.setMessage("Qué acción desea realizar sobre la respuesta: '" + respuestas.get(position) + "'.");
+        alertDialog.setMessage("Qué acción desea realizar sobre la respuesta: '" + respuestas.get(position).getDescripcion() + "'.");
         alertDialog.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -178,7 +184,7 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
                 TextInputEditText rta = new TextInputEditText(PreguntaUnicaOpcionActivity.this);
                 rta.setInputType(InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
                 rta.setHint("Respuesta");
-                rta.setText(adapter.getItem(position));
+                rta.setText(adapter.getItem(position).getDescripcion());
                 AlertDialog d = new AlertDialog.Builder(PreguntaUnicaOpcionActivity.this)
                         .setView(rta)
                         .setTitle("Ingrese una opción:")
@@ -195,7 +201,9 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
                                 if (rta.getText().toString().isEmpty()){
                                     rta.setError("La respuesta no puede estar vacía");
                                 } else{
-                                    respuestas.set(position, rta.getText().toString());
+                                    RespuestaDto dtoRta = new RespuestaDto();
+                                    dtoRta.setDescripcion(rta.getText().toString());
+                                    respuestas.set(position, dtoRta);
                                     d.dismiss();
                                     adapter.notifyDataSetChanged();
                                     Toast.makeText(PreguntaUnicaOpcionActivity.this, "Respuesta modificada correctamente", Toast.LENGTH_SHORT).show();
@@ -247,7 +255,7 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString("preguntaRespuestaUnica", pregunta.getEditText().getText().toString());
-        outState.putStringArrayList("respuestasUnicas", respuestas);
+        outState.putParcelableArrayList("respuestasUnicas", respuestas);
         super.onSaveInstanceState(outState);
     }
 

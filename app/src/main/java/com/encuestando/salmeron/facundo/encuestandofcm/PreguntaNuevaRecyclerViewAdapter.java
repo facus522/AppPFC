@@ -21,7 +21,6 @@ public class PreguntaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     private ArrayList<PreguntaDto> preguntas;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-    private NuevaEncuestaActivity nuevaEncuestaActivity;
 
     // data is passed into the constructor
     PreguntaNuevaRecyclerViewAdapter(Context context, ArrayList<PreguntaDto> data) {
@@ -57,9 +56,10 @@ public class PreguntaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                 ViewHolder2 viewHolderChoice = (ViewHolder2) holder;
                 PreguntaDto preguntaRecyclerChoice = preguntas.get(position);
                 viewHolderChoice.textViewPregunta.setText(preguntaRecyclerChoice.getId() + ". " + preguntaRecyclerChoice.getDescripcion());
-                for (String rta : preguntaRecyclerChoice.getRespuestas()){
+                viewHolderChoice.linearLayout.removeAllViews();
+                for (RespuestaDto rta : preguntaRecyclerChoice.getRespuestas()){
                     CheckBox checkBox = new CheckBox(mInflater.getContext());
-                    checkBox.setText(rta);
+                    checkBox.setText(rta.getDescripcion());
                     viewHolderChoice.linearLayout.addView(checkBox);
                 }
                 break;
@@ -67,10 +67,11 @@ public class PreguntaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                 ViewHolder2 viewHolderUnica = (ViewHolder2) holder;
                 PreguntaDto preguntaRecyclerUnica = preguntas.get(position);
                 viewHolderUnica.textViewPregunta.setText(preguntaRecyclerUnica.getId() + ". " + preguntaRecyclerUnica.getDescripcion());
+                viewHolderUnica.linearLayout.removeAllViews();
                 RadioGroup radioGroup = new RadioGroup(mInflater.getContext());
-                for (String rta : preguntaRecyclerUnica.getRespuestas()){
+                for (RespuestaDto rta : preguntaRecyclerUnica.getRespuestas()){
                     RadioButton radioButton = new RadioButton(mInflater.getContext());
-                    radioButton.setText(rta);
+                    radioButton.setText(rta.getDescripcion());
                     radioGroup.addView(radioButton);
                 }
                 viewHolderUnica.linearLayout.addView(radioGroup);

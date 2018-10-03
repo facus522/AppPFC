@@ -30,6 +30,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
     private HttpAsyncTask httpAsyncTask;
     private List<ListaEncuestaDto> listaEncuestas = new ArrayList<>();
     private ListView listViewEncuestas;
+    private ArrayList<PreguntaDto> preguntasAbrir = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i2) {
                         dialogInterface.cancel();
-                        String url = "http://192.168.0.107:8080/EncuestasFCM/encuestas/deleteEncuesta?idEncuesta=" + listaEncuestas.get(i).getId();
+                        String url = "http://192.168.0.107:8080/EncuestasFCM/encuestas/disableEncuesta?idEncuesta=" + listaEncuestas.get(i).getId() + "&idUsuario=" + usuarioLogueado.getId();
                         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.ELIMINAR_ENCUESTA.getCodigo());
                         httpAsyncTask.setHttpAsyncTaskInterface(AdministrarEncuestasActivity.this);
                         try {
@@ -130,8 +131,23 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
                 });
                 alertDialog.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(DialogInterface dialogInterface, int i2) {
+                        String urlAbrir = "http://192.168.0.107:8080/EncuestasFCM/encuestas/openEncuesta?idEncuesta=" + listaEncuestas.get(i).getId();
+                        httpAsyncTask = new HttpAsyncTask(WebServiceEnum.OPEN_ENCUESTA.getCodigo());
+                        httpAsyncTask.setHttpAsyncTaskInterface(AdministrarEncuestasActivity.this);
+                        try {
+                            String receivedData = httpAsyncTask.execute(urlAbrir).get();
+                        } catch (ExecutionException | InterruptedException ei) {
+                            ei.printStackTrace();
+                        }
 
+
+                        Intent modificar_intent = new Intent(AdministrarEncuestasActivity.this, ModificarEncuestaActivity.class).putExtra("usuario", usuarioLogueado);
+                        modificar_intent.putExtra("preguntas", preguntasAbrir);
+                        modificar_intent.putExtra("tituloGuardar", listaEncuestas.get(i).getTitulo());
+                        modificar_intent.putExtra("descripcionGuardar", listaEncuestas.get(i).getDescripcion());
+                        startActivityForResult(modificar_intent, 1);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
                 });
                 alertDialog.show();
@@ -144,6 +160,14 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
         String encuestasJSON = result;
         if (encuestasJSON != null && !encuestasJSON.isEmpty()) {
             listaEncuestas = JSONConverterUtils.JSONEncuestasConverter(result);
+        }
+    }
+
+    @Override
+    public void abrirEncuesta(String result) {
+        String encuestasJSON = result;
+        if (encuestasJSON != null && !encuestasJSON.isEmpty()) {
+            preguntasAbrir = JSONConverterUtils.JSONAbrirEncuestasConverter(result);
         }
     }
 
