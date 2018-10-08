@@ -144,6 +144,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
 
                         Intent modificar_intent = new Intent(AdministrarEncuestasActivity.this, ModificarEncuestaActivity.class).putExtra("usuario", usuarioLogueado);
                         modificar_intent.putExtra("preguntas", preguntasAbrir);
+                        modificar_intent.putExtra("preguntasEliminar", new ArrayList<PreguntaDto>());
                         modificar_intent.putExtra("tituloGuardar", listaEncuestas.get(i).getTitulo());
                         modificar_intent.putExtra("descripcionGuardar", listaEncuestas.get(i).getDescripcion());
                         startActivityForResult(modificar_intent, 1);

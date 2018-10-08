@@ -13,6 +13,8 @@ public class PreguntaDto implements Serializable{
     private ArrayList<RespuestaDto> respuestas;
     private Boolean activo = Boolean.TRUE;
     private Integer idPersistido;
+    private Boolean preguntaPersistida = Boolean.FALSE;
+    private Boolean preguntaModificada = Boolean.FALSE;
 
     public Long getId() {
         return id;
@@ -68,5 +70,21 @@ public class PreguntaDto implements Serializable{
 
     public void setIdPersistido(Integer idPersistido) {
         this.idPersistido = idPersistido;
+    }
+
+    public Boolean getPreguntaPersistida() {
+        return preguntaPersistida;
+    }
+
+    public void setPreguntaPersistida(Boolean preguntaPersistida) {
+        this.preguntaPersistida = preguntaPersistida;
+    }
+
+    public Boolean getPreguntaModificada() {
+        return preguntaModificada;
+    }
+
+    public void setPreguntaModificada(Boolean preguntaModificada) {
+        this.preguntaModificada = preguntaModificada;
     }
 }

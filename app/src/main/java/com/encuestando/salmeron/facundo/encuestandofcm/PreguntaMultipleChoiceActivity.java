@@ -37,6 +37,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
     private Boolean modificando;
     private Long idPregunta;
     private TextView tvButton;
+    private Integer idPreguntaPersistida;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
         respuestas = new ArrayList<>();
         pregunta = findViewById(R.id.pregunta_multiple_choice);
         modificando = (Boolean) getIntent().getSerializableExtra("modificando");
+        idPreguntaPersistida = (Integer) getIntent().getSerializableExtra("idPreguntaPersistida");
         if (modificando) {
             pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaChoice"));
             respuestas = (ArrayList) getIntent().getSerializableExtra("respuestasChoice");
@@ -95,6 +97,8 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                     dto.setTipoPregunta(TipoPreguntaEnum.MULTIPLE_CHOICE);
                     dto.setRespuestas(respuestas);
                     dto.setId(modificando ? idPregunta : null);
+                    dto.setPreguntaModificada(modificando ? Boolean.TRUE : Boolean.FALSE);
+                    dto.setIdPersistido(idPreguntaPersistida);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
                     setResult(Activity.RESULT_OK, returnIntent);

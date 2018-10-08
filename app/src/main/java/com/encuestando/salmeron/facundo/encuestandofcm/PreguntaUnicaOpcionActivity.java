@@ -35,6 +35,7 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
     private Boolean modificando;
     private Long idPregunta;
     private TextView tvButton;
+    private Integer idPreguntaPersistida;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
         respuestas = new ArrayList<>();
         pregunta = findViewById(R.id.pregunta_respuesta_unica);
         modificando = (Boolean) getIntent().getSerializableExtra("modificando");
+        idPreguntaPersistida = (Integer) getIntent().getSerializableExtra("idPreguntaPersistida");
         if (modificando) {
             pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaUnica"));
             respuestas = (ArrayList) getIntent().getSerializableExtra("respuestasUnica");
@@ -93,6 +95,8 @@ public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Se
                     dto.setTipoPregunta(TipoPreguntaEnum.RESPUESTA_UNICA);
                     dto.setRespuestas(respuestas);
                     dto.setId(modificando ? idPregunta : null);
+                    dto.setPreguntaModificada(modificando ? Boolean.TRUE : Boolean.FALSE);
+                    dto.setIdPersistido(idPreguntaPersistida);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
                     setResult(Activity.RESULT_OK, returnIntent);

@@ -217,8 +217,8 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
                         } else {
                             for (PreguntaDto pregunta: preguntas){
                                 String urlPregunta = "http://192.168.0.107:8080/EncuestasFCM/preguntas/savePregunta?descripcion=" + reemplazarEspacios(pregunta.getDescripcion())
-                                        + "&idEncuesta=" + idEncuestaAsignado + "&idTipoRespuesta=" + pregunta.getTipoPregunta().getCodigo() +
-                                        "&idUsuario=" + usuarioLogueado.getId();
+                                        + "&idEncuesta=" + idEncuestaAsignado + "&numeroEscala=" + pregunta.getMaximaEscala()
+                                        + "&idTipoRespuesta=" + pregunta.getTipoPregunta().getCodigo() + "&idUsuario=" + usuarioLogueado.getId();
                                 httpAsyncTaskPregunta = new HttpAsyncTask(WebServiceEnum.CREAR_PREGUNTA.getCodigo());
                                 httpAsyncTaskPregunta.setHttpAsyncTaskInterface(NuevaEncuestaActivity.this);
                                 httpAsyncTaskPregunta.execute(urlPregunta);

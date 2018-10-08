@@ -121,6 +121,8 @@ public class JSONConverterUtils {
                 Integer idTipoRespuesta = (Integer) jsonArray.getJSONObject(i).get("idTipoRespuesta");
                 dto.setTipoPregunta(TipoPreguntaEnum.getEnum(idTipoRespuesta));
                 dto.setIdPersistido((Integer) jsonArray.getJSONObject(i).get("idPregunta"));
+                dto.setMaximaEscala((Integer) jsonArray.getJSONObject(i).get("numeroEscala"));
+                dto.setPreguntaPersistida(Boolean.TRUE);
                 dto.setId(new Long(i+1L));
                 JSONArray jsonArray2 = jsonArray.getJSONObject(i).getJSONArray("respuesta");
                 ArrayList<RespuestaDto> listaRespuestas = new ArrayList<>();

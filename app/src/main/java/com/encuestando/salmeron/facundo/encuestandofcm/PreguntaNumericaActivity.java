@@ -25,6 +25,7 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
     private Boolean modificando;
     private Long idPregunta;
     private TextView tvButton;
+    private Integer idPreguntaPersistida;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
         toolbar = findViewById(R.id.pregunta_numerica_toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         modificando = (Boolean) getIntent().getSerializableExtra("modificando");
+        idPreguntaPersistida = (Integer) getIntent().getSerializableExtra("idPreguntaPersistida");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,6 +63,8 @@ public class PreguntaNumericaActivity extends AppCompatActivity implements Seria
                     dto.setDescripcion(pregunta.getEditText().getText().toString());
                     dto.setTipoPregunta(TipoPreguntaEnum.RESPUESTA_NUMERICA);
                     dto.setId(modificando ? idPregunta : null);
+                    dto.setPreguntaModificada(modificando ? Boolean.TRUE : Boolean.FALSE);
+                    dto.setIdPersistido(idPreguntaPersistida);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
                     setResult(Activity.RESULT_OK, returnIntent);

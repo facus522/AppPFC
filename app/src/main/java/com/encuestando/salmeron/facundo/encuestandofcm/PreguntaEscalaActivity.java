@@ -25,6 +25,7 @@ public class PreguntaEscalaActivity extends AppCompatActivity implements Seriali
     private Boolean modificando;
     private Long idPregunta;
     private TextView tvButton;
+    private Integer idPreguntaPersistida;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class PreguntaEscalaActivity extends AppCompatActivity implements Seriali
         toolbar = findViewById(R.id.pregunta_escala_toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         modificando = (Boolean) getIntent().getSerializableExtra("modificando");
+        idPreguntaPersistida = (Integer) getIntent().getSerializableExtra("idPreguntaPersistida");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,6 +68,8 @@ public class PreguntaEscalaActivity extends AppCompatActivity implements Seriali
                     dto.setTipoPregunta(TipoPreguntaEnum.ESCALA);
                     dto.setMaximaEscala(Integer.valueOf(maxima.getEditText().getText().toString()));
                     dto.setId(modificando ? idPregunta : null);
+                    dto.setPreguntaModificada(modificando ? Boolean.TRUE : Boolean.FALSE);
+                    dto.setIdPersistido(idPreguntaPersistida);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
                     setResult(Activity.RESULT_OK, returnIntent);

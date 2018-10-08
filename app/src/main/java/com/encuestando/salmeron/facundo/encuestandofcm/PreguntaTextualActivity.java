@@ -23,6 +23,7 @@ public class PreguntaTextualActivity extends AppCompatActivity implements Serial
     private Boolean modificando;
     private Long idPregunta;
     private TextView tvButton;
+    private Integer idPreguntaPersistida;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class PreguntaTextualActivity extends AppCompatActivity implements Serial
         toolbar = findViewById(R.id.pregunta_textual_toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         modificando = (Boolean) getIntent().getSerializableExtra("modificando");
+        idPreguntaPersistida = (Integer) getIntent().getSerializableExtra("idPreguntaPersistida");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,6 +61,8 @@ public class PreguntaTextualActivity extends AppCompatActivity implements Serial
                     dto.setDescripcion(pregunta.getEditText().getText().toString());
                     dto.setTipoPregunta(TipoPreguntaEnum.RESPUESTA_TEXTUAL);
                     dto.setId(modificando ? idPregunta : null);
+                    dto.setPreguntaModificada(modificando ? Boolean.TRUE : Boolean.FALSE);
+                    dto.setIdPersistido(idPreguntaPersistida);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
                     setResult(Activity.RESULT_OK, returnIntent);
