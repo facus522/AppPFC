@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class AdministrarEncuestasActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable{
+public class AdministrarEncuestasActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable {
 
     private UsuarioDto usuarioLogueado;
     private Toolbar toolbar;
@@ -70,24 +70,24 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
             ei.printStackTrace();
         }
 
-        if (listaEncuestas.size() > 0){
-            List<Map<String, String>> crsList = new ArrayList<Map<String,String>>();
-            for (ListaEncuestaDto dto : listaEncuestas){
+        if (listaEncuestas.size() > 0) {
+            List<Map<String, String>> crsList = new ArrayList<Map<String, String>>();
+            for (ListaEncuestaDto dto : listaEncuestas) {
                 Map<String, String> aug = new HashMap<String, String>();
                 aug.put("tituloEncuesta", dto.getTitulo());
                 aug.put("descripcionEncuesta", dto.getDescripcion());
                 crsList.add(aug);
             }
 
-            String[] keys = {"tituloEncuesta","descripcionEncuesta"};
+            String[] keys = {"tituloEncuesta", "descripcionEncuesta"};
             int[] widgetIds = {R.id.titulo_cargar_encuesta, R.id.subtitulo_cargar_encuesta};
-            SimpleAdapter crsAdapter = new SimpleAdapter(AdministrarEncuestasActivity.this, crsList, R.layout.encuesta_item, keys,widgetIds){
+            SimpleAdapter crsAdapter = new SimpleAdapter(AdministrarEncuestasActivity.this, crsList, R.layout.encuesta_item, keys, widgetIds) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
                     View view = super.getView(position, convertView, parent);
-                    if (position%2 == 1){
+                    if (position % 2 == 1) {
                         view.setBackgroundColor(getResources().getColor(R.color.impares));
-                    } else{
+                    } else {
                         view.setBackgroundColor(getResources().getColor(R.color.pares));
                     }
                     return view;
@@ -145,6 +145,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
                         Intent modificar_intent = new Intent(AdministrarEncuestasActivity.this, ModificarEncuestaActivity.class).putExtra("usuario", usuarioLogueado);
                         modificar_intent.putExtra("preguntas", preguntasAbrir);
                         modificar_intent.putExtra("preguntasEliminar", new ArrayList<PreguntaDto>());
+                        modificar_intent.putExtra("respuestasEliminar", new ArrayList<RespuestaDto>());
                         modificar_intent.putExtra("tituloGuardar", listaEncuestas.get(i).getTitulo());
                         modificar_intent.putExtra("descripcionGuardar", listaEncuestas.get(i).getDescripcion());
                         startActivityForResult(modificar_intent, 1);
@@ -174,11 +175,8 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_CANCELED){
-            finish();
-            startActivity(getIntent());
-            Toast.makeText(AdministrarEncuestasActivity.this, "La encuesta ha sido creada correctamente!", Toast.LENGTH_LONG).show();
-        }
+        finish();
+        startActivity(getIntent());
     }
 
     @Override

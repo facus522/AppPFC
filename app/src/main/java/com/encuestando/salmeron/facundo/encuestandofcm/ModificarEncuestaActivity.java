@@ -33,6 +33,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     private FloatingActionMenu actionMenu;
     private ArrayList<PreguntaDto> preguntas;
     private ArrayList<PreguntaDto> preguntasEliminar;
+    private ArrayList<RespuestaDto> respuestasEliminar;
     private RecyclerView recyclerView;
     private PreguntaNuevaRecyclerViewAdapter adapter;
     private CardView modificar;
@@ -56,6 +57,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         setContentView(R.layout.modificar_encuesta_activity);
         preguntas = (ArrayList<PreguntaDto>) getIntent().getSerializableExtra("preguntas");
         preguntasEliminar = (ArrayList<PreguntaDto>) getIntent().getSerializableExtra("preguntasEliminar");
+        respuestasEliminar = (ArrayList<RespuestaDto>) getIntent().getSerializableExtra("respuestasEliminar");
         tituloGuardar = (String) getIntent().getSerializableExtra("tituloGuardar");
         descripcionGuardar = (String) getIntent().getSerializableExtra("descripcionGuardar");
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
@@ -161,6 +163,8 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK){
+            ArrayList<RespuestaDto> rtasDto = (ArrayList) data.getSerializableExtra("rtasEliminar");
+            if (rtasDto != null) respuestasEliminar.addAll(rtasDto);
             PreguntaDto dto = (PreguntaDto) data.getSerializableExtra("pregunta");
             if (dto.getId() != null){
                 reemplazarPreguntaModificada(dto);
@@ -169,6 +173,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
                 preguntas.add(dto);
             }
             finish();
+            getIntent().putExtra("respuestasEliminar", respuestasEliminar);
             getIntent().putExtra("preguntas", preguntas);
             getIntent().putExtra("tituloGuardar", titulo.getEditText().getText().toString());
             getIntent().putExtra("descripcionGuardar", descripcion.getEditText().getText().toString());
@@ -277,6 +282,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
                 agregar_multiple_choice.putExtra("idPreguntaModificar", dto.getId());
                 agregar_multiple_choice.putExtra("respuestasChoice", dto.getRespuestas());
                 agregar_multiple_choice.putExtra("idPreguntaPersistida", dto.getIdPersistido());
+                agregar_multiple_choice.putExtra("respuestasEliminar", new ArrayList<RespuestaDto>());
                 startActivityForResult(agregar_multiple_choice, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
@@ -288,6 +294,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
                 agregar_unica_opcion.putExtra("idPreguntaModificar", dto.getId());
                 agregar_unica_opcion.putExtra("respuestasUnica", dto.getRespuestas());
                 agregar_unica_opcion.putExtra("idPreguntaPersistida", dto.getIdPersistido());
+                agregar_unica_opcion.putExtra("respuestasEliminar", new ArrayList<RespuestaDto>());
                 startActivityForResult(agregar_unica_opcion, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;

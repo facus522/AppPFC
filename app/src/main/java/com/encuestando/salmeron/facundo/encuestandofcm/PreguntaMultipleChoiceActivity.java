@@ -38,6 +38,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
     private Long idPregunta;
     private TextView tvButton;
     private Integer idPreguntaPersistida;
+    private ArrayList<RespuestaDto> respuestasEliminar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
         if (modificando) {
             pregunta.getEditText().setText((String) getIntent().getSerializableExtra("preguntaChoice"));
             respuestas = (ArrayList) getIntent().getSerializableExtra("respuestasChoice");
+            respuestasEliminar = (ArrayList<RespuestaDto>) getIntent().getSerializableExtra("respuestasEliminar");
             idPregunta = (Long) getIntent().getSerializableExtra("idPreguntaModificar");
             tvButton = findViewById(R.id.texto_crear_modificar_choice);
             tvButton.setText("Modificar");
@@ -101,6 +103,7 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                     dto.setIdPersistido(idPreguntaPersistida);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("pregunta", dto);
+                    returnIntent.putExtra("rtasEliminar", respuestasEliminar);
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -171,6 +174,9 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
         alertDialog.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if (modificando && respuestas.get(position).getIdPersistido() != null && respuestas.get(position).getIdPersistido() != -1){
+                    respuestasEliminar.add(respuestas.get(position));
+                }
                 respuestas.remove(position);
                 dialog.dismiss();
                 adapter.notifyDataSetChanged();
@@ -209,6 +215,10 @@ public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements
                                 } else{
                                     RespuestaDto dtoRta = new RespuestaDto();
                                     dtoRta.setDescripcion(rta.getText().toString());
+                                    if (modificando && respuestas.get(position).getIdPersistido() != null && respuestas.get(position).getIdPersistido() != -1){
+                                        dtoRta.setRespuestaModificada(Boolean.TRUE);
+                                        dtoRta.setIdPersistido(respuestas.get(position).getIdPersistido());
+                                    }
                                     respuestas.set(position, dtoRta);
                                     d.dismiss();
                                     adapter.notifyDataSetChanged();

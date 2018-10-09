@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class RespuestaDto implements Serializable, Parcelable {
     private String descripcion;
     private Integer idPersistido;
+    private Boolean respuestaModificada = Boolean.FALSE;
 
     public String getDescripcion() {
         return descripcion;
@@ -25,6 +26,14 @@ public class RespuestaDto implements Serializable, Parcelable {
         this.idPersistido = idPersistido;
     }
 
+    public Boolean getRespuestaModificada() {
+        return respuestaModificada;
+    }
+
+    public void setRespuestaModificada(Boolean respuestaModificada) {
+        this.respuestaModificada = respuestaModificada;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -32,8 +41,14 @@ public class RespuestaDto implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeSerializable(idPersistido);
-        parcel.writeString(descripcion);
+        if (idPersistido != null){
+            parcel.writeInt(idPersistido.intValue());
+        } else {
+            parcel.writeInt(-1);
+        }
+        if (descripcion != null){
+            parcel.writeString(descripcion);
+        }
     }
 
     private RespuestaDto(Parcel in) {
