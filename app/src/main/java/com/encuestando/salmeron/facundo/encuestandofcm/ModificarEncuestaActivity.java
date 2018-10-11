@@ -20,6 +20,7 @@ import com.github.clans.fab.FloatingActionMenu;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class ModificarEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable, PreguntaNuevaRecyclerViewAdapter.ItemClickListener {
 
@@ -46,16 +47,15 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     private HttpAsyncTask httpAsyncTaskPregunta;
     private HttpAsyncTask httpAsyncTaskRespuesta;
     private Integer idEncuestaAsignado;
-    private Integer idPreguntaAsignado;
-    private Integer idRespuestaAsignado;
     private TextView cargandoModificar;
-
+    private Integer idPreguntaAsignado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.modificar_encuesta_activity);
         preguntas = (ArrayList<PreguntaDto>) getIntent().getSerializableExtra("preguntas");
+        idEncuestaAsignado = (Integer) getIntent().getSerializableExtra("idEncuestaPersistida");
         preguntasEliminar = (ArrayList<PreguntaDto>) getIntent().getSerializableExtra("preguntasEliminar");
         respuestasEliminar = (ArrayList<RespuestaDto>) getIntent().getSerializableExtra("respuestasEliminar");
         tituloGuardar = (String) getIntent().getSerializableExtra("tituloGuardar");
@@ -187,7 +187,193 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     }
 
     private void onClickModificarEncuesta(){
+        titulo.setError(null);
+        descripcion.setError(null);
+        if (titulo.getEditText().getText().toString().isEmpty()){
+            titulo.setError("El título no puede estar vacío!");
+            return;
+        } else if (titulo.getEditText().getText().length() > titulo.getCounterMaxLength()){
+            titulo.setError("Se superó la cantidad máxima permitida de caracteres.");
+            return;
+        }
 
+        if (descripcion.getEditText().getText().length() > descripcion.getCounterMaxLength()){
+            descripcion.setError("Se superó la cantidad máxima permitida de caracteres.");
+            return;
+        }
+
+        if (preguntas.size() < 1){
+            descripcion.setError("Debe agregarse al menos una pregunta.");
+            return;
+        }
+
+        cargandoModificar.setVisibility(View.VISIBLE);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String urlEncuesta = "http://192.168.0.107:8080/EncuestasFCM/encuestas/updateEncuesta?" + "idEncuesta=" + idEncuestaAsignado
+                                + "&titulo=" + reemplazarEspacios(titulo.getEditText().getText().toString())
+                                + "&descripcion=" + reemplazarEspacios(descripcion.getEditText().getText().toString())
+                                + "&idUsuario=" + usuarioLogueado.getId();
+                        httpAsyncTaskEncuesta = new HttpAsyncTask(WebServiceEnum.MODIFICAR_ENCUESTA.getCodigo());
+                        httpAsyncTaskEncuesta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
+                        try{
+                            String receivedDataEncuesta = httpAsyncTaskEncuesta.execute(urlEncuesta).get();
+                        }
+                        catch (ExecutionException | InterruptedException ei){
+                            ei.printStackTrace();
+                        }
+
+                        for (PreguntaDto preg : preguntas){
+                            if (preg.getIdPersistido() != null){
+                                updatePregunta(preg);
+                            } else {
+                                savePregunta(preg);
+                            }
+                        }
+                        for (RespuestaDto rta : respuestasEliminar){
+                            removeRespuesta(rta);
+                        }
+
+                        for (PreguntaDto preg : preguntasEliminar){
+                            removePregunta(preg);
+                        }
+
+                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ModificarEncuestaActivity.this, AlertDialog.THEME_HOLO_DARK);
+                        alertDialog.setMessage("¡La encuesta ha sido modificada correctamente!");
+                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                finish();
+                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                            }
+                        });
+                        alertDialog.show();
+
+
+                        cargandoModificar.setVisibility(View.GONE);
+                    }
+                });
+            }
+        }).start();
+
+
+    }
+
+    private void updatePregunta(PreguntaDto pregunta){
+        if (pregunta.getPreguntaModificada()){
+            String urlPregunta = "http://192.168.0.107:8080/EncuestasFCM/preguntas/updatePregunta?idPregunta=" + pregunta.getIdPersistido()
+                    + "&descripcion=" + reemplazarEspacios(pregunta.getDescripcion())
+                    + "&numeroEscala=" + (pregunta.getMaximaEscala() != null ? pregunta.getMaximaEscala() : "")
+                    + "&idUsuario=" + usuarioLogueado.getId();
+            httpAsyncTaskPregunta = new HttpAsyncTask(WebServiceEnum.MODIFICAR_PREGUNTA.getCodigo());
+            httpAsyncTaskPregunta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
+            try{
+                String receivedDataPregunta = httpAsyncTaskPregunta.execute(urlPregunta).get();
+            }
+            catch (ExecutionException | InterruptedException ei){
+                ei.printStackTrace();
+            }
+            if (pregunta.getRespuestas() != null && !pregunta.getRespuestas().isEmpty()){
+                for (RespuestaDto rta : pregunta.getRespuestas()){
+                    if (rta.getIdPersistido() != null){
+                        updateRespuesta(rta);
+                    } else {
+                        saveRespuesta(rta, pregunta.getIdPersistido(), pregunta.getTipoPregunta().getCodigo());
+                    }
+                }
+            }
+        }
+    }
+
+    private void updateRespuesta(RespuestaDto respuesta){
+        if (respuesta.getRespuestaModificada()){
+            String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/updateRespuesta?idRespuesta=" + respuesta.getIdPersistido()
+                    + "&descripcion=" + reemplazarEspacios(respuesta.getDescripcion())
+                    + "&idUsuario=" + usuarioLogueado.getId();
+            httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.MODIFICAR_RESPUESTA.getCodigo());
+            httpAsyncTaskRespuesta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
+            try{
+                String receivedDataRta = httpAsyncTaskRespuesta.execute(urlRespuesta).get();
+            }
+            catch (ExecutionException | InterruptedException ei){
+                ei.printStackTrace();
+            }
+        }
+    }
+
+    private void saveRespuesta(RespuestaDto respuesta, Integer idPreg, Integer idTipoRespuesta){
+        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/saveRespuesta?descripcion=" + reemplazarEspacios(respuesta.getDescripcion())
+                + "&idPregunta=" + idPreg + "&idTipoRespuesta=" + idTipoRespuesta
+                + "&idUsuario=" + usuarioLogueado.getId();
+        httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.CREAR_RESPUESTA.getCodigo());
+        httpAsyncTaskRespuesta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
+        try{
+            String receivedDataRta = httpAsyncTaskRespuesta.execute(urlRespuesta).get();
+        }
+        catch (ExecutionException | InterruptedException ei){
+            ei.printStackTrace();
+        }
+    }
+
+    private void savePregunta(PreguntaDto pregunta){
+        String urlPregunta = "http://192.168.0.107:8080/EncuestasFCM/preguntas/savePregunta?descripcion=" + reemplazarEspacios(pregunta.getDescripcion())
+                + "&idEncuesta=" + idEncuestaAsignado + "&numeroEscala=" + (pregunta.getMaximaEscala() != null ? pregunta.getMaximaEscala() : "")
+                + "&idTipoRespuesta=" + pregunta.getTipoPregunta().getCodigo() + "&idUsuario=" + usuarioLogueado.getId();
+        httpAsyncTaskPregunta = new HttpAsyncTask(WebServiceEnum.CREAR_PREGUNTA.getCodigo());
+        httpAsyncTaskPregunta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
+        try{
+            String receivedDataPregunta = httpAsyncTaskPregunta.execute(urlPregunta).get();
+        }
+        catch (ExecutionException | InterruptedException ei){
+            ei.printStackTrace();
+        }
+
+        if (pregunta.getRespuestas() != null && !pregunta.getRespuestas().isEmpty() && idPreguntaAsignado != null){
+            for (RespuestaDto rta : pregunta.getRespuestas()){
+                saveRespuesta(rta, pregunta.getIdPersistido(), pregunta.getTipoPregunta().getCodigo());
+            }
+        }
+
+        idPreguntaAsignado = null;
+    }
+
+    private void removeRespuesta(RespuestaDto respuesta){
+        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/deleteRespuesta?idRespuesta=" + respuesta.getIdPersistido()
+                + "&idUsuario=" + usuarioLogueado.getId();
+        httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.ELIMINAR_RESPUESTA.getCodigo());
+        httpAsyncTaskRespuesta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
+        try{
+            String receivedDataRta = httpAsyncTaskRespuesta.execute(urlRespuesta).get();
+        }
+        catch (ExecutionException | InterruptedException ei){
+            ei.printStackTrace();
+        }
+    }
+
+    private void removePregunta(PreguntaDto pregunta){
+        String urlPregunta = "http://192.168.0.107:8080/EncuestasFCM/preguntas/deletePregunta?idPregunta=" + pregunta.getIdPersistido()
+                + "&idUsuario=" + usuarioLogueado.getId();
+        httpAsyncTaskPregunta = new HttpAsyncTask(WebServiceEnum.ELIMINAR_PREGUNTA.getCodigo());
+        httpAsyncTaskPregunta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
+        try{
+            String receivedDataPregunta = httpAsyncTaskPregunta.execute(urlPregunta).get();
+        }
+        catch (ExecutionException | InterruptedException ei){
+            ei.printStackTrace();
+        }
+    }
+
+    @Override
+    public void crearPregunta(String result) {
+        String createPreguntaJSON = result;
+        if (createPreguntaJSON != null && !createPreguntaJSON.isEmpty()) {
+            idPreguntaAsignado = JSONConverterUtils.JSONCreateEncuestaConverter(result);
+        }
     }
 
     private void reemplazarPreguntaModificada(PreguntaDto dto){

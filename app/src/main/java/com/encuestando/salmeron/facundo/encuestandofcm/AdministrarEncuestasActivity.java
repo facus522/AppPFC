@@ -143,6 +143,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
 
 
                         Intent modificar_intent = new Intent(AdministrarEncuestasActivity.this, ModificarEncuestaActivity.class).putExtra("usuario", usuarioLogueado);
+                        modificar_intent.putExtra("idEncuestaPersistida", listaEncuestas.get(i).getId());
                         modificar_intent.putExtra("preguntas", preguntasAbrir);
                         modificar_intent.putExtra("preguntasEliminar", new ArrayList<PreguntaDto>());
                         modificar_intent.putExtra("respuestasEliminar", new ArrayList<RespuestaDto>());
@@ -171,12 +172,6 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
         if (encuestasJSON != null && !encuestasJSON.isEmpty()) {
             preguntasAbrir = JSONConverterUtils.JSONAbrirEncuestasConverter(result);
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        finish();
-        startActivity(getIntent());
     }
 
     @Override

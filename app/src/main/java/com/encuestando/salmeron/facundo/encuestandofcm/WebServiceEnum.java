@@ -15,7 +15,12 @@ public enum WebServiceEnum {
     CREAR_RESPUESTA(7, "Crear Respuesta"),
     CARGAR_ENCUESTAS(8, "Cargar Encuestas"),
     ELIMINAR_ENCUESTA(9, "Eliminar Encuesta"),
-    OPEN_ENCUESTA(10, "Abrir Encuesta");
+    OPEN_ENCUESTA(10, "Abrir Encuesta"),
+    ELIMINAR_PREGUNTA(11, "Eliminar Pregunta"),
+    ELIMINAR_RESPUESTA(12, "Eliminar Respuesta"),
+    MODIFICAR_PREGUNTA(13, "Modificar Pregunta"),
+    MODIFICAR_RESPUESTA(14, "Modificar Respuesta"),
+    MODIFICAR_ENCUESTA(15, "Modificar Encuesta");
 
     private Integer codigo;
     private String descripcion;

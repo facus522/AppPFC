@@ -16,4 +16,10 @@ public interface HttpAsyncTaskInterface {
     default void cargarEncuestas(String result){}; //nroWebService = 8;
     default void eliminarEncuesta(String result){}; //nroWebService = 9;
     default void abrirEncuesta(String result){}; //nroWebService = 10;
+    default void eliminarPregunta(String result){}; //nroWebService = 11;
+    default void eliminarRespuesta(String result){}; //nroWebService = 12;
+    default void modificarPregunta(String result){}; //nroWebService = 13;
+    default void modificarRespuesta(String result){}; //nroWebService = 14;
+    default void modificarEncuesta(String result){}; //nroWebService = 15;
+
 }
