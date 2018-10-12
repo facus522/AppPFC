@@ -11,23 +11,24 @@
     tools:context="com.encuestando.salmeron.facundo.encuestandofcm.RegisterActivity">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_info_normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/toolbar_info_normal"
-        app:title="Información y Noticias"
-        android:background="?attr/colorPrimary"
         android:layout_gravity="center"
-        app:titleMargin="@dimen/cardview_default_elevation"
+        android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="?android:attr/colorPressedHighlight"
-        android:theme="?attr/actionBarTheme" />
+        android:theme="?attr/actionBarTheme"
+        app:title="Información y Noticias"
+        app:titleMargin="@dimen/cardview_default_elevation"
+        app:titleTextColor="?android:attr/colorPressedHighlight" />
 
     <ListView
-                android:id="@+id/listaInfoNoticias"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        android:id="@+id/listaInfoNoticias"
+        android:dividerHeight="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
 
-            </ListView>
+    </ListView>
 
 </LinearLayout>

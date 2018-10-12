@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -22,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class AdministrarEncuestasActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable {
+public class AdministrarEncuestasActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable, SwipeRefreshLayout.OnRefreshListener {
 
     private UsuarioDto usuarioLogueado;
     private Toolbar toolbar;
@@ -31,6 +33,8 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
     private List<ListaEncuestaDto> listaEncuestas = new ArrayList<>();
     private ListView listViewEncuestas;
     private ArrayList<PreguntaDto> preguntasAbrir = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private boolean scrollEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,33 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
 
         listViewEncuestas = findViewById(R.id.listaEncuestas);
+
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_administrar);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
+        listViewEncuestas.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int topRowVerticalPosition =
+                        (listViewEncuestas == null || listViewEncuestas.getChildCount() == 0) ?
+                                0 : listViewEncuestas.getChildAt(0).getTop();
+
+                boolean newScrollEnabled =
+                        (firstVisibleItem == 0 && topRowVerticalPosition >= 0) ?
+                                true : false;
+
+                if (null != AdministrarEncuestasActivity.this.swipeRefreshLayout && scrollEnabled != newScrollEnabled) {
+                    // Start refreshing....
+                    AdministrarEncuestasActivity.this.swipeRefreshLayout.setEnabled(newScrollEnabled);
+                    scrollEnabled = newScrollEnabled;
+                }
+            }
+        });
 
         toolbar = findViewById(R.id.titulo_administrar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
@@ -178,5 +209,12 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onRefresh() {
+        finish();
+        startActivity(getIntent());
+        Toast.makeText(AdministrarEncuestasActivity.this, "Actualizado!", Toast.LENGTH_LONG).show();
     }
 }

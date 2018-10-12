@@ -9,9 +9,33 @@
     tools:context="com.encuestando.salmeron.facundo.encuestandofcm.InfoNoticiasEspecialActivity"
     tools:showIn="@layout/administrar_encuestas_activity">
 
-    <ListView
-        android:id="@+id/listaEncuestas"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_administrar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/tv_swipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="(Deslice hacia abajo para refrescar)"
+                android:background="@color/impares"
+                android:textStyle="italic"
+                android:gravity="center"/>
+
+            <ListView
+                android:id="@+id/listaEncuestas"
+                android:layout_below="@+id/tv_swipe"
+                android:dividerHeight="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></ListView>
+        </RelativeLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>

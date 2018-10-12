@@ -52,6 +52,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
     private Integer idPreguntaAsignado;
     private Integer idRespuestaAsignado;
     private TextView cargandoCrear;
+    private boolean isAlertOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,11 +151,15 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
         if (savedInstanceState != null){
             String tituloNuevo = savedInstanceState.getString("tituloNuevo");
             String descripcionNuevo = savedInstanceState.getString("descripcionNuevo");
+            boolean estaAbierto = savedInstanceState.getBoolean("estaAbierto");
             if (tituloNuevo!= null){
                 titulo.getEditText().setText(tituloNuevo);
             }
             if (descripcionNuevo!=null){
                 descripcion.getEditText().setText(descripcionNuevo);
+            }
+            if (estaAbierto){
+                showAlertDialog();
             }
         }
     }
@@ -243,17 +248,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
 
                                 idPreguntaAsignado = null;
                             }
-                            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(NuevaEncuestaActivity.this, AlertDialog.THEME_HOLO_DARK);
-                            alertDialog.setMessage("¡La encuesta ha sido creada correctamente!");
-                            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    finish();
-                                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                                }
-                            });
-                            alertDialog.show();
+                            showAlertDialog();
                         }
                         cargandoCrear.setVisibility(View.GONE);
                     }
@@ -298,6 +293,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
     public void onSaveInstanceState(Bundle outState) {
         outState.putString("tituloNuevo", titulo.getEditText().getText().toString());
         outState.putString("descripcionNuevo", descripcion.getEditText().getText().toString());
+        outState.putBoolean("estaAbierto", isAlertOpen);
         super.onSaveInstanceState(outState);
     }
 
@@ -466,6 +462,22 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
             default:
                 break;
         }
+    }
+
+    private void showAlertDialog(){
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(NuevaEncuestaActivity.this, AlertDialog.THEME_HOLO_DARK);
+        alertDialog.setMessage("¡La encuesta ha sido creada correctamente!");
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            }
+        });
+        alertDialog.show();
+        isAlertOpen = true;
     }
 
 }

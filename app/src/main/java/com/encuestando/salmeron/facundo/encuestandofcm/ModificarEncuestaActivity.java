@@ -49,6 +49,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     private Integer idEncuestaAsignado;
     private TextView cargandoModificar;
     private Integer idPreguntaAsignado;
+    private boolean isAlertOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,11 +152,15 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         if (savedInstanceState != null){
             String tituloNuevo = savedInstanceState.getString("tituloNuevo");
             String descripcionNuevo = savedInstanceState.getString("descripcionNuevo");
+            boolean estaAbierto = savedInstanceState.getBoolean("estaAbierto");
             if (tituloNuevo!= null){
                 titulo.getEditText().setText(tituloNuevo);
             }
             if (descripcionNuevo!=null){
                 descripcion.getEditText().setText(descripcionNuevo);
+            }
+            if (estaAbierto){
+                showAlertDialog();
             }
         }
     }
@@ -242,19 +247,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
                             removePregunta(preg);
                         }
 
-                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ModificarEncuestaActivity.this, AlertDialog.THEME_HOLO_DARK);
-                        alertDialog.setMessage("¡La encuesta ha sido modificada correctamente!");
-                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                                finish();
-                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                            }
-                        });
-                        alertDialog.show();
-
-
+                        showAlertDialog();
                         cargandoModificar.setVisibility(View.GONE);
                     }
                 });
@@ -262,6 +255,22 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         }).start();
 
 
+    }
+
+    private void showAlertDialog(){
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ModificarEncuestaActivity.this, AlertDialog.THEME_HOLO_DARK);
+        alertDialog.setMessage("¡La encuesta ha sido modificada correctamente!");
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            }
+        });
+        alertDialog.show();
+        isAlertOpen = true;
     }
 
     private void updatePregunta(PreguntaDto pregunta){
@@ -335,7 +344,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
 
         if (pregunta.getRespuestas() != null && !pregunta.getRespuestas().isEmpty() && idPreguntaAsignado != null){
             for (RespuestaDto rta : pregunta.getRespuestas()){
-                saveRespuesta(rta, pregunta.getIdPersistido(), pregunta.getTipoPregunta().getCodigo());
+                saveRespuesta(rta, idPreguntaAsignado, pregunta.getTipoPregunta().getCodigo());
             }
         }
 
@@ -391,6 +400,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     public void onSaveInstanceState(Bundle outState) {
         outState.putString("tituloNuevo", titulo.getEditText().getText().toString());
         outState.putString("descripcionNuevo", descripcion.getEditText().getText().toString());
+        outState.putBoolean("estaAbierto", isAlertOpen);
         super.onSaveInstanceState(outState);
     }
 
