@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Facundo Salmerón on 14/6/2018.
@@ -49,7 +50,9 @@ public class MenuEspecialActivity extends AppCompatActivity implements Serializa
         encuestasDisponibles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MenuEspecialActivity.this, "Sección en desarrollo.", Toast.LENGTH_LONG).show();
+                Intent admin_intent = new Intent(MenuEspecialActivity.this, ResponderEncuestaEspecialActivity.class).putExtra("usuario", usuarioLogueado);
+                MenuEspecialActivity.this.startActivity(admin_intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 

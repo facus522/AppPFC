@@ -79,6 +79,7 @@ public class InfoNoticiasNormalActivity extends AppCompatActivity implements Htt
         } else{
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(InfoNoticiasNormalActivity.this);
             alertDialog.setTitle("Sin Datos");
+            alertDialog.setCancelable(false);
             alertDialog.setMessage("Actualmente no se encuentran cargadas Informaciones y Noticias.");
             alertDialog.setIcon(R.drawable.ic_action_error);
             alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {

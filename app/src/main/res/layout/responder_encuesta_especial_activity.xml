@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.encuestando.salmeron.facundo.encuestandofcm.ResponderEncuestaEspecialActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_resolver_especial"
+        app:title="Escoja una encuesta..."
+        android:background="?attr/colorPrimary"
+        android:layout_gravity="center"
+        app:titleMargin="@dimen/cardview_default_elevation"
+        android:minHeight="?attr/actionBarSize"
+        app:titleTextColor="?android:attr/colorPressedHighlight"
+        android:theme="?attr/actionBarTheme" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_resolver_especial"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/row_responder_especial"
+        android:layout_marginTop="15dp" />
+</LinearLayout>

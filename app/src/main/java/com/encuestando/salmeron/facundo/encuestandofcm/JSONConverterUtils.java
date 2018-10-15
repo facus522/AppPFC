@@ -100,6 +100,9 @@ public class JSONConverterUtils {
                 dto.setId(Integer.parseInt(aux.getString("id")));
                 dto.setTitulo(aux.getString("titulo"));
                 dto.setDescripcion(aux.getString("descripcion"));
+                dto.setUsuarioCreacion(aux.getString("usuario"));
+                dto.setFechaCreacion(aux.getString("fecha"));
+                dto.setResoluciones(aux.getString("resoluciones"));
                 result.add(dto);
             }
         } catch (JSONException e) {

@@ -5,6 +5,9 @@ public class ListaEncuestaDto {
     private Integer id;
     private String titulo;
     private String descripcion;
+    private String fechaCreacion;
+    private String resoluciones;
+    private String usuarioCreacion;
 
     public Integer getId() {
         return id;
@@ -28,5 +31,29 @@ public class ListaEncuestaDto {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(String fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getResoluciones() {
+        return resoluciones;
+    }
+
+    public void setResoluciones(String resoluciones) {
+        this.resoluciones = resoluciones;
+    }
+
+    public String getUsuarioCreacion() {
+        return usuarioCreacion;
+    }
+
+    public void setUsuarioCreacion(String usuarioCreacion) {
+        this.usuarioCreacion = usuarioCreacion;
     }
 }
