@@ -2,24 +2,30 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class ResponderEncuestaEspecialActivity extends AppCompatActivity implements HttpAsyncTaskInterface, EncuestaEspecialRecyclerViewAdapter.ItemClickListener {
+public class ResponderEncuestaEspecialActivity extends AppCompatActivity implements HttpAsyncTaskInterface, EncuestaEspecialRecyclerViewAdapter.ItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
+    private UsuarioDto usuarioLogueado;
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private EncuestaEspecialRecyclerViewAdapter adapter;
     private ArrayList<ListaEncuestaDto> encuestas = new ArrayList<>();
     private HttpAsyncTask httpAsyncTask;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private boolean scrollEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,10 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
+        usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
+
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_responder_especial);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         String url = "http://192.168.0.107:8080/EncuestasFCM/encuestas/getAll";
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CARGAR_ENCUESTAS.getCodigo());
@@ -67,11 +77,55 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ?
+                                0 : recyclerView.getChildAt(0).getTop();
+
+                boolean newScrollEnabled =
+                        (dx == 0 && topRowVerticalPosition >= 0) ?
+                                true : false;
+
+                if (null != ResponderEncuestaEspecialActivity.this.swipeRefreshLayout && scrollEnabled != newScrollEnabled) {
+                    // Start refreshing....
+                    ResponderEncuestaEspecialActivity.this.swipeRefreshLayout.setEnabled(newScrollEnabled);
+                    scrollEnabled = newScrollEnabled;
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void onRefresh() {
+        finish();
+        startActivity(getIntent());
+        Toast.makeText(ResponderEncuestaEspecialActivity.this, "Actualizado!", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onItemClick(View view, int position) {
+        /*String urlAbrir = "http://192.168.0.107:8080/EncuestasFCM/encuestas/openEncuesta?idEncuesta=" + encuestas.get(position).getId();
+        httpAsyncTask = new HttpAsyncTask(WebServiceEnum.OPEN_ENCUESTA.getCodigo());
+        httpAsyncTask.setHttpAsyncTaskInterface(ResponderEncuestaEspecialActivity.this);
+        try {
+            String receivedData = httpAsyncTask.execute(urlAbrir).get();
+        } catch (ExecutionException | InterruptedException ei) {
+            ei.printStackTrace();
+        }
+*/
 
+        Intent responder_intent = new Intent(ResponderEncuestaEspecialActivity.this, ResolviendoEncuestaEspecialActivity.class).putExtra("usuario", usuarioLogueado);
+        responder_intent.putExtra("tituloEncuesta", encuestas.get(position).getTitulo());
+        responder_intent.putExtra("descripcionEncuesta", encuestas.get(position).getDescripcion());
+        startActivityForResult(responder_intent, 1);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @Override

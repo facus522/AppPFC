@@ -10,21 +10,41 @@
     tools:context="com.encuestando.salmeron.facundo.encuestandofcm.ResponderEncuestaEspecialActivity">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/title_resolver_especial"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/title_resolver_especial"
-        app:title="Escoja una encuesta..."
-        android:background="?attr/colorPrimary"
         android:layout_gravity="center"
-        app:titleMargin="@dimen/cardview_default_elevation"
+        android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="?android:attr/colorPressedHighlight"
-        android:theme="?attr/actionBarTheme" />
+        android:theme="?attr/actionBarTheme"
+        app:title="Escoja una encuesta..."
+        app:titleMargin="@dimen/cardview_default_elevation"
+        app:titleTextColor="?android:attr/colorPressedHighlight" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_resolver_especial"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_responder_especial"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/row_responder_especial"
-        android:layout_marginTop="15dp" />
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_swipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="(Deslice hacia abajo para refrescar)"
+                android:textStyle="italic" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_resolver_especial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/tv_swipe"
+                android:layout_marginTop="5dp"
+                tools:listitem="@layout/row_responder_especial" />
+        </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
