@@ -16,13 +16,15 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+
+/**
+ * Created by Facundo Salmerón on 19/9/2018.
+ */
 
 public class PreguntaMultipleChoiceActivity extends AppCompatActivity implements Serializable, RespuestaNuevaRecyclerViewAdapter.ItemClickListener {
 

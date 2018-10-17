@@ -5,6 +5,10 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 
+/**
+ * Created by Facundo Salmerón on 3/10/2018.
+ */
+
 public class RespuestaDto implements Serializable, Parcelable {
     private String descripcion;
     private Integer idPersistido;

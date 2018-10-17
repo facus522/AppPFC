@@ -1,6 +1,5 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+/**
+ * Created by Facundo Salmerón on 11/9/2018.
+ */
 
 public class AdministrarEncuestasActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable, SwipeRefreshLayout.OnRefreshListener {
 

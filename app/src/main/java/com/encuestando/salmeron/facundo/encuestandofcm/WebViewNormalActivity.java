@@ -10,6 +10,10 @@ import android.webkit.WebViewClient;
 
 import java.io.Serializable;
 
+/**
+ * Created by Facundo Salmerón on 8/8/2018.
+ */
+
 public class WebViewNormalActivity extends AppCompatActivity implements Serializable {
 
     private WebView webView;

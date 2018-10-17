@@ -2,7 +2,10 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+
+/**
+ * Created by Facundo Salmerón on 15/9/2018.
+ */
 
 public class PreguntaDto implements Serializable{
 

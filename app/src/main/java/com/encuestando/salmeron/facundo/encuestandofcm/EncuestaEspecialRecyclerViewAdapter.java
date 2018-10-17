@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * Created by Facundo Salmerón on 15/10/2018.
+ */
 
 public class EncuestaEspecialRecyclerViewAdapter extends RecyclerView.Adapter<EncuestaEspecialRecyclerViewAdapter.ViewHolder> {
 

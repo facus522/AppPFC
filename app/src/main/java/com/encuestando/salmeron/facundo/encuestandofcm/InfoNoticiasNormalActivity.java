@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Created by Facundo Salmerón on 6/8/2018.
+ */
+
 public class InfoNoticiasNormalActivity extends AppCompatActivity implements HttpAsyncTaskInterface {
 
     private ListView listViewInfoNoticias;

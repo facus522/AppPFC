@@ -14,6 +14,10 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 
+/**
+ * Created by Facundo Salmerón on 18/9/2018.
+ */
+
 public class PreguntaTextualActivity extends AppCompatActivity implements Serializable{
 
     private Toolbar toolbar;

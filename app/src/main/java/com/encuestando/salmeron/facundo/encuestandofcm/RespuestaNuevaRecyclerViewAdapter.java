@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Created by Facundo Salmerón on 20/9/2018.
+ */
 
 public class RespuestaNuevaRecyclerViewAdapter extends RecyclerView.Adapter<RespuestaNuevaRecyclerViewAdapter.ViewHolder> {
 

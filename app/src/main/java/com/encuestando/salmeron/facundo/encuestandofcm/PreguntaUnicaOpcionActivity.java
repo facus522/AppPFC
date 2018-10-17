@@ -22,6 +22,10 @@ import android.widget.Toast;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Created by Facundo Salmerón on 24/9/2018.
+ */
+
 public class PreguntaUnicaOpcionActivity extends AppCompatActivity implements Serializable, RespuestaNuevaRecyclerViewAdapter.ItemClickListener {
 
     private Toolbar toolbar;

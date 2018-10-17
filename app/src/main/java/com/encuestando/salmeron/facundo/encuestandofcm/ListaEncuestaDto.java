@@ -1,6 +1,12 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
-public class ListaEncuestaDto {
+import java.io.Serializable;
+
+/**
+ * Created by Facundo Salmerón on 30/9/2018.
+ */
+
+public class ListaEncuestaDto implements Serializable{
 
     private Integer id;
     private String titulo;

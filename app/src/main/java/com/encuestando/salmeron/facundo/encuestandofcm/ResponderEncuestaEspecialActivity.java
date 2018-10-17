@@ -10,11 +10,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+
+/**
+ * Created by Facundo Salmerón on 15/10/2018.
+ */
 
 public class ResponderEncuestaEspecialActivity extends AppCompatActivity implements HttpAsyncTaskInterface, EncuestaEspecialRecyclerViewAdapter.ItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -23,6 +26,7 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
     private RecyclerView recyclerView;
     private EncuestaEspecialRecyclerViewAdapter adapter;
     private ArrayList<ListaEncuestaDto> encuestas = new ArrayList<>();
+    private ArrayList<PreguntaDto> preguntasAbrir = new ArrayList<>();
     private HttpAsyncTask httpAsyncTask;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean scrollEnabled;
@@ -111,7 +115,7 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
 
     @Override
     public void onItemClick(View view, int position) {
-        /*String urlAbrir = "http://192.168.0.107:8080/EncuestasFCM/encuestas/openEncuesta?idEncuesta=" + encuestas.get(position).getId();
+        String urlAbrir = "http://192.168.0.107:8080/EncuestasFCM/encuestas/openEncuesta?idEncuesta=" + encuestas.get(position).getId();
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.OPEN_ENCUESTA.getCodigo());
         httpAsyncTask.setHttpAsyncTaskInterface(ResponderEncuestaEspecialActivity.this);
         try {
@@ -119,9 +123,10 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
         } catch (ExecutionException | InterruptedException ei) {
             ei.printStackTrace();
         }
-*/
 
         Intent responder_intent = new Intent(ResponderEncuestaEspecialActivity.this, ResolviendoEncuestaEspecialActivity.class).putExtra("usuario", usuarioLogueado);
+        responder_intent.putExtra("idEncuestaPersistida", encuestas.get(position).getId());
+        responder_intent.putExtra("preguntas", preguntasAbrir);
         responder_intent.putExtra("tituloEncuesta", encuestas.get(position).getTitulo());
         responder_intent.putExtra("descripcionEncuesta", encuestas.get(position).getDescripcion());
         startActivityForResult(responder_intent, 1);
@@ -133,6 +138,14 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
         String encuestasJSON = result;
         if (encuestasJSON != null && !encuestasJSON.isEmpty()) {
             encuestas.addAll(JSONConverterUtils.JSONEncuestasConverter(result));
+        }
+    }
+
+    @Override
+    public void abrirEncuesta(String result) {
+        String encuestasJSON = result;
+        if (encuestasJSON != null && !encuestasJSON.isEmpty()) {
+            preguntasAbrir = JSONConverterUtils.JSONAbrirEncuestasConverter(result);
         }
     }
 

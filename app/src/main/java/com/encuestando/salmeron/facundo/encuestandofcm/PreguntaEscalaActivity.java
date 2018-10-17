@@ -13,6 +13,10 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+/**
+ * Created by Facundo Salmerón on 18/9/2018.
+ */
+
 import java.io.Serializable;
 
 public class PreguntaEscalaActivity extends AppCompatActivity implements Serializable{
