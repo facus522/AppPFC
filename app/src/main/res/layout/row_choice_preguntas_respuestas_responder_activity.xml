@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="13dp"
+    android:paddingRight="13dp"
+    android:padding="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/shape_responder_encuesta"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView_pregunta_nueva_encuesta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:paddingLeft="10dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/linear_layout_respuestas"
+            android:paddingLeft="25dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/textView_pregunta_nueva_encuesta">
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

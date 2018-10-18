@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Created by Facundo Salmerón on 16/10/2018.
  */
 
-public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity implements PreguntaNuevaRecyclerViewAdapter.ItemClickListener {
+public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity implements PreguntaResponderRecyclerViewAdapter.ItemClickListener {
 
     private Toolbar toolbar;
     private String tituloEncuesta;
@@ -26,7 +26,7 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
     private TextView descripcion;
     private TextView cargando;
     private RecyclerView recyclerView;
-    private PreguntaNuevaRecyclerViewAdapter adapter;
+    private PreguntaResponderRecyclerViewAdapter adapter;
     private ArrayList<PreguntaDto> preguntas;
     private CardView enviar;
     private CardView volver;
@@ -68,7 +68,7 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
         preguntas = (ArrayList<PreguntaDto>) getIntent().getSerializableExtra("preguntas");
         recyclerView = findViewById(R.id.recycler_resolviendo_especial);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new PreguntaNuevaRecyclerViewAdapter(this, preguntas);
+        adapter = new PreguntaResponderRecyclerViewAdapter(this, preguntas);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
     }
