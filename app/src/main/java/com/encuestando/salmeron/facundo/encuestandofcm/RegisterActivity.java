@@ -42,6 +42,9 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
     private TextInputLayout password2;
     private TextInputLayout email;
     private TextInputLayout codigoValidacion;
+    private TextInputLayout name;
+    private TextInputLayout surname;
+    private TextInputLayout dni;
     private TextView errores;
     private RadioGroup sexo_radioGroup;
     private RadioButton sexo_radioButton;
@@ -67,6 +70,9 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
         tipoUsuario_checkbox = findViewById(R.id.checkbox_tipo_usuario);
         fechaNacimiento = findViewById(R.id.fecha_nacimiento_text);
         nombre_usuario = findViewById(R.id.nombre_register_text);
+        name = findViewById(R.id.name_register_text);
+        surname = findViewById(R.id.apellido_register_text);
+        dni = findViewById(R.id.dni_register_text);
         password = findViewById(R.id.password1_register_text);
         password2 = findViewById(R.id.password2_register_text);
         email = findViewById(R.id.mail_register_text);
@@ -84,9 +90,16 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus) {
                     Calendar cal = Calendar.getInstance();
-                    int year = cal.get(Calendar.YEAR);
-                    int month = cal.get(Calendar.MONTH);
-                    int day = cal.get(Calendar.DAY_OF_MONTH);
+                    int year, month, day;
+                    if (fechaNacimiento.getEditText().getText().toString().isEmpty()){
+                        year = cal.get(Calendar.YEAR);
+                        month = cal.get(Calendar.MONTH);
+                        day = cal.get(Calendar.DAY_OF_MONTH);
+                    } else {
+                        year = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(6,10));
+                        month = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(3,5)) -1;
+                        day = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(0,2));
+                    }
                     DatePickerDialog dialog = new DatePickerDialog(RegisterActivity.this,
                             android.R.style.Theme_Holo_Dialog_MinWidth,
                             mDateSetListener,
@@ -101,9 +114,16 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
-                int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH);
-                int day = cal.get(Calendar.DAY_OF_MONTH);
+                int year, month, day;
+                if (fechaNacimiento.getEditText().getText().toString().isEmpty()){
+                    year = cal.get(Calendar.YEAR);
+                    month = cal.get(Calendar.MONTH);
+                    day = cal.get(Calendar.DAY_OF_MONTH);
+                } else {
+                    year = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(6,10));
+                    month = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(3,5)) - 1;
+                    day = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(0,2));
+                }
                 DatePickerDialog dialog = new DatePickerDialog(RegisterActivity.this,
                         android.R.style.Theme_Holo_Dialog_MinWidth,
                         mDateSetListener,
@@ -180,14 +200,18 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                 password.setError(null);
                 codigoValidacion.setError(null);
                 email.setError(null);
+                dni.setError(null);
                 final String nombre = nombre_usuario.getEditText().getText().toString();
+                final String doc = dni.getEditText().getText().toString();
+                final String nameUser = name.getEditText().getText().toString();
+                final String surnameUser = surname.getEditText().getText().toString();
                 final String contrasenia1 = password.getEditText().getText().toString();
                 final String contrasenia2 = password2.getEditText().getText().toString();
                 final String mail = email.getEditText().getText().toString();
                 final String nacimiento = fechaNacimiento.getEditText().getText().toString();
                 final String codigo = codigoValidacion.getEditText().getText().toString();
                 errores.setTextColor(getResources().getColor(R.color.colorAccent));
-                if (nombre.isEmpty() || contrasenia1.isEmpty() || contrasenia2.isEmpty() || mail.isEmpty() || nacimiento.isEmpty() || (tipoUsuario_checkbox.isChecked() && codigo.isEmpty()) || (sexo_radioButton == null)) {
+                if (doc.isEmpty() || nameUser.isEmpty() || surnameUser.isEmpty() || nombre.isEmpty() || contrasenia1.isEmpty() || contrasenia2.isEmpty() || mail.isEmpty() || nacimiento.isEmpty() || (tipoUsuario_checkbox.isChecked() && codigo.isEmpty()) || (sexo_radioButton == null)) {
                     errores.setText("Debe completar todos los campos!");
                     errores.setVisibility(View.VISIBLE);
                 } else if (!contrasenia1.equals(contrasenia2)) {
@@ -206,7 +230,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
 
                                     String sexo = sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2";
                                     String tipoUsuario = tipoUsuario_checkbox.isChecked() ? "1" : "2";
-                                    String url = "http://192.168.0.107:8080/EncuestasFCM/usuarios/saveUser?nombre="+reemplazarEspacios(nombre)+"&password="+reemplazarEspacios(contrasenia1)+"&fechaNacimiento="+nacimiento+"&mail="+reemplazarEspacios(mail)+"&activo=1&sexo="+sexo+"&tipoUsuario="+tipoUsuario+"&validar="+codigo;
+                                    String url = "http://192.168.0.107:8080/EncuestasFCM/usuarios/saveUser?nombre=" + reemplazarEspacios(nameUser) + "&apellido=" + reemplazarEspacios(surnameUser) + "&dni=" + doc + "&nombreUsuario="+reemplazarEspacios(nombre)+"&password="+reemplazarEspacios(contrasenia1)+"&fechaNacimiento="+nacimiento+"&mail="+reemplazarEspacios(mail)+"&activo=1&sexo="+sexo+"&tipoUsuario="+tipoUsuario+"&validar="+codigo;
                                     httpAsyncTask = new HttpAsyncTask(WebServiceEnum.REGISTER_USER.getCodigo());
                                     httpAsyncTask.setHttpAsyncTaskInterface(RegisterActivity.this);
                                     try{
@@ -259,12 +283,24 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
         });
 
         if (savedInstanceState != null){
+            String nombreInstance = savedInstanceState.getString("nombreInstance");
+            String apellidoInstance = savedInstanceState.getString("apellidoInstance");
+            String dniInstance = savedInstanceState.getString("dniInstance");
             String nombreUsuarioInstance = savedInstanceState.getString("nombreUsuario");
             String contraseniaUsuarioInstance = savedInstanceState.getString("contraseniaUsuario");
             String contraseniaUsuario2Instance = savedInstanceState.getString("contraseniaUsuario2");
             String emailInstance = savedInstanceState.getString("email");
             String nacimientoInstance = savedInstanceState.getString("nacimiento");
             String codigoInstance = savedInstanceState.getString("codigo");
+            if (nombreInstance != null){
+                name.getEditText().setText(nombreInstance);
+            }
+            if (apellidoInstance != null){
+                surname.getEditText().setText(apellidoInstance);
+            }
+            if (dniInstance != null){
+                dni.getEditText().setText(dniInstance);
+            }
             if (nombreUsuarioInstance != null){
                 nombre_usuario.getEditText().setText(nombreUsuarioInstance);
             }
@@ -289,6 +325,9 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putString("nombreInstance", name.getEditText().getText().toString());
+        outState.putString("apellidoInstance", surname.getEditText().getText().toString());
+        outState.putString("dniInstance", dni.getEditText().getText().toString());
         outState.putString("nombreUsuario", nombre_usuario.getEditText().getText().toString());
         outState.putString("contraseniaUsuario", password.getEditText().getText().toString());
         outState.putString("contraseniaUsuario2", password2.getEditText().getText().toString());
@@ -335,6 +374,8 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
             email.setError(mapa.get(numError));
         } else if (numError == ErrorRegisterEnum.ERROR_PASSWORD_MIN.getCodigo() || numError == ErrorRegisterEnum.ERROR_PASSWORD_MAX.getCodigo()){
             password.setError(mapa.get(numError));
+        } else if (numError == ErrorRegisterEnum.ERROR_DNI_REPETIDO.getCodigo()){
+            dni.setError(mapa.get(numError));
         } else {
             nombre_usuario.setError(mapa.get(numError));
         }

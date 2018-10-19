@@ -30,7 +30,7 @@ public class MenuEspecialActivity extends AppCompatActivity implements Serializa
         setContentView(R.layout.menu_especial_activity);
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
         toolbar = findViewById(R.id.titulo_especial);
-        toolbar.setTitle("BIENVENIDO " + usuarioLogueado.getNombreUsuario().toUpperCase());
+        toolbar.setTitle("BIENVENIDO " + usuarioLogueado.getNombre().toUpperCase());
 
         encuestasDisponibles = findViewById(R.id.encuestasDisponiblesEspecial);
         informacionNoticias = findViewById(R.id.informacionNoticiasEspecial);

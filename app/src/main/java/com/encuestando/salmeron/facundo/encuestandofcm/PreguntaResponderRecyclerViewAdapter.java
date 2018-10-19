@@ -1,12 +1,16 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -52,6 +56,7 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         PreguntaDto pregunta = preguntas.get(position);
+
         switch (holder.getItemViewType()){
             case 1:
                 ViewHolder2 viewHolderChoice = (ViewHolder2) holder;
@@ -91,11 +96,49 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
                 ViewHolder viewHolderEscala = (ViewHolder) holder;
                 PreguntaDto preguntaRecyclerEscala = preguntas.get(position);
                 viewHolderEscala.textViewPregunta.setText(preguntaRecyclerEscala.getId() + ". " + preguntaRecyclerEscala.getDescripcion());
-                viewHolderEscala.textViewBoxRespuesta.setText("Escala del 1 al " + preguntaRecyclerEscala.getMaximaEscala());
+                viewHolderEscala.scaleEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View view, boolean hasFocus) {
+                        if (hasFocus) {
+                            numberPickerDialog(preguntaRecyclerEscala.getMaximaEscala(), viewHolderEscala.scaleEditText);
+                        }
+                    }
+                });
+
+                viewHolderEscala.scaleEditText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        numberPickerDialog(preguntaRecyclerEscala.getMaximaEscala(), viewHolderEscala.scaleEditText);
+                    }
+                });
+
                 break;
             default: break;
         }
 
+    }
+
+    private void numberPickerDialog(Integer maxValue, EditText scaleText){
+        NumberPicker np = new NumberPicker(mInflater.getContext());
+        np.setMinValue(1);
+        np.setMaxValue(maxValue);
+        np.setValue(scaleText.getText().toString().isEmpty() ? maxValue : Integer.parseInt(scaleText.getText().toString()));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mInflater.getContext()).setView(np);
+        builder.setTitle("Máximo valor de escala");
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                scaleText.setText(String.valueOf(np.getValue()));
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.show();
     }
 
     // total number of rows
@@ -108,12 +151,14 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView textViewPregunta;
-        TextView textViewBoxRespuesta;
+        EditText editText;
+        EditText scaleEditText;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textViewPregunta = itemView.findViewById(R.id.textView_pregunta_nueva_encuesta);
-            textViewBoxRespuesta = itemView.findViewById(R.id.box_respuesta_nueva);
+            textViewPregunta = itemView.findViewById(R.id.textView_pregunta_responder_encuesta);
+            editText = itemView.findViewById(R.id.editText_responder_encuesta);
+            scaleEditText = itemView.findViewById(R.id.scale_editText_responder_encuesta);
             itemView.setOnClickListener(this);
         }
 
@@ -129,7 +174,7 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
 
         public ViewHolder2(View itemView) {
             super(itemView);
-            textViewPregunta = itemView.findViewById(R.id.textView_pregunta_nueva_encuesta);
+            textViewPregunta = itemView.findViewById(R.id.textView_pregunta_responder_encuesta);
             linearLayout = itemView.findViewById(R.id.linear_layout_respuestas);
             itemView.setOnClickListener(this);
         }

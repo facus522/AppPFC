@@ -12,7 +12,8 @@ public enum ErrorRegisterEnum {
     ERROR_PASSWORD_MIN(5, "Error password minimo"),
     ERROR_PASSWORD_MAX(6, "Error password maximo"),
     ERROR_NOMBRE_INVALIDO(7, "Error Nombre Usuario invalido"),
-    ERROR_MAIL_REPETIDO(8, "Error Mail repetido");
+    ERROR_MAIL_REPETIDO(8, "Error Mail repetido"),
+    ERROR_DNI_REPETIDO(9, "Error dni repetido");
 
     private Integer codigo;
     private String descripcion;
