@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.encuestando.salmeron.facundo.encuestandofcm.ResolviendoEncuestaEspecialActivity">
@@ -62,12 +64,66 @@
                     android:textSize="18dp"
                     android:textStyle="italic" />
 
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/edad_resolviendo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/descripcion_encuesta_resolver"
+                    android:layout_marginTop="5dp"
+                    app:errorEnabled="true">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#11000000"
+                        android:drawableLeft="@drawable/ic_action_dni"
+                        android:hint="Ingrese edad del encuestado..."
+                        android:textAlignment="center"
+                        android:inputType="number"
+                        android:textSize="22sp" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/text_sexo_encuestado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ingrese sexo del encuestado..."
+                    android:drawableLeft="@drawable/ic_action_dni"
+                    android:layout_below="@id/edad_resolviendo"
+                    android:textSize="22dp" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:background="#11000000"
+                    android:layout_below="@id/text_sexo_encuestado"
+                    android:id="@+id/sexo_encuestado"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/sexo_masculino_encuestado_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="Masculino"
+                        android:textSize="24dp" />
+
+                    <RadioButton
+                        android:id="@+id/sexo_femenino_encuestado_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="Femenino"
+                        android:textSize="24dp" />
+
+                </RadioGroup>
+
                 <TextView
                     android:id="@+id/preguntas_resolver_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/descripcion_encuesta_resolver"
-                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/sexo_encuestado"
+                    android:layout_marginTop="15dp"
                     android:gravity="center"
                     android:drawableLeft="@drawable/ic_preguntas"
                     android:background="#46000000"

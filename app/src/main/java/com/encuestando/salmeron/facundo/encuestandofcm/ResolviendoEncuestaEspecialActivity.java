@@ -2,6 +2,7 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -9,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,6 +33,9 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
     private ArrayList<PreguntaDto> preguntas;
     private CardView enviar;
     private CardView volver;
+    private TextInputLayout edad;
+    private RadioGroup sexo_radioGroup;
+    private RadioButton sexo_radioButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,8 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
         cargando = findViewById(R.id.cargandoResponderEspecial);
         cargando.setVisibility(View.GONE);
 
+        edad = findViewById(R.id.edad_resolviendo);
+
         enviar = findViewById(R.id.enviar_resolviendo_button);
         volver = findViewById(R.id.volver_resolviendo_button);
 
@@ -60,6 +68,11 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
         );
         enviar.setOnClickListener((View v) ->
                 onClickResponderEncuesta()
+        );
+
+        sexo_radioGroup = findViewById(R.id.sexo_encuestado);
+        sexo_radioGroup.setOnCheckedChangeListener((RadioGroup radioGroup, int i) ->
+                sexo_radioButton = findViewById(i)
         );
 
         titulo.setText(tituloEncuesta);
