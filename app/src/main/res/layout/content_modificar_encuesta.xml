@@ -95,12 +95,22 @@
 
                 </android.support.design.widget.TextInputLayout>
 
+                <CheckBox
+                    android:id="@+id/checkbox_geolocalizada_modificar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_below="@id/descripcion_encuesta_modificar"
+                    android:background="#11000000"
+                    android:hint="¿Respuestas Geolocalizadas?"
+                    android:textSize="20dp" />
+
                 <TextView
                     android:id="@+id/preguntas_encuesta_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/descripcion_encuesta_modificar"
-                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/checkbox_geolocalizada_modificar"
+                    android:layout_marginTop="20dp"
                     android:drawableLeft="@drawable/ic_preguntas"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"

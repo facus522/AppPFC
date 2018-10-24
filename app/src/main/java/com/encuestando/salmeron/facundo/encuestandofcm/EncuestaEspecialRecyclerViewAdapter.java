@@ -39,6 +39,11 @@ public class EncuestaEspecialRecyclerViewAdapter extends RecyclerView.Adapter<En
         String description = encuestas.get(position).getDescripcion();
         String dateCreation = "Creada por '" + encuestas.get(position).getUsuarioCreacion() + "' el: " + encuestas.get(position).getFechaCreacion();
         String solves = "Resuelta " + encuestas.get(position).getResoluciones() + " veces.";
+        if (encuestas.get(position).getGeolocalizada()){
+            holder.geo.setVisibility(View.VISIBLE);
+        } else {
+            holder.geo.setVisibility(View.GONE);
+        }
         holder.titulo.setText(title);
         holder.descripcion.setText(description);
         holder.fecha.setText(dateCreation);
@@ -58,6 +63,7 @@ public class EncuestaEspecialRecyclerViewAdapter extends RecyclerView.Adapter<En
         TextView descripcion;
         TextView fecha;
         TextView resoluciones;
+        TextView geo;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -65,6 +71,7 @@ public class EncuestaEspecialRecyclerViewAdapter extends RecyclerView.Adapter<En
             descripcion = itemView.findViewById(R.id.row_descripcion_resolver_especial);
             fecha = itemView.findViewById(R.id.row_fecha_resolver_especial);
             resoluciones = itemView.findViewById(R.id.row_resoluciones_resolver_especial);
+            geo = itemView.findViewById(R.id.row_geolocalizada_resolver_especial);
             itemView.setOnClickListener(this);
         }
 

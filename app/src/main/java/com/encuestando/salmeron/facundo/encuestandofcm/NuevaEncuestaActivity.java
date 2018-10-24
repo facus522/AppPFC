@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
     private Integer idRespuestaAsignado;
     private TextView cargandoCrear;
     private boolean isAlertOpen = false;
+    private CheckBox respuestasGeolocalizadas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
         volver = findViewById(R.id.volver_nueva_encuesta_button);
         titulo = findViewById(R.id.titulo_encuesta_nueva);
         descripcion = findViewById(R.id.descripcion_encuesta_nueva);
+        respuestasGeolocalizadas = findViewById(R.id.checkbox_geolocalizada);
         titulo.getEditText().setText(tituloGuardar);
         descripcion.getEditText().setText(descripcionGuardar);
         volver.setOnClickListener(new View.OnClickListener() {
@@ -193,8 +196,11 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        String geo = respuestasGeolocalizadas.isChecked() ? "true" : "false";
                         String urlEncuesta = "http://192.168.0.107:8080/EncuestasFCM/encuestas/saveEncuesta?titulo=" + reemplazarEspacios(titulo.getEditText().getText().toString())
-                                + "&descripcion=" + reemplazarEspacios(descripcion.getEditText().getText().toString()) + "&idUsuario=" + usuarioLogueado.getId();
+                                + "&descripcion=" + reemplazarEspacios(descripcion.getEditText().getText().toString())
+                                + "&isGeolocalizada=" + geo
+                                + "&idUsuario=" + usuarioLogueado.getId();
                         httpAsyncTaskEncuesta = new HttpAsyncTask(WebServiceEnum.CREAR_ENCUESTA.getCodigo());
                         httpAsyncTaskEncuesta.setHttpAsyncTaskInterface(NuevaEncuestaActivity.this);
                         try{
@@ -245,6 +251,19 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
                                         }
                                         idRespuestaAsignado = null;
                                     }
+                                } else {
+                                    String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/saveRespuesta?descripcion="
+                                            + "&idPregunta=" + idPreguntaAsignado + "&idTipoRespuesta=" + pregunta.getTipoPregunta().getCodigo()
+                                            + "&idUsuario=" + usuarioLogueado.getId();
+                                    httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.CREAR_RESPUESTA.getCodigo());
+                                    httpAsyncTaskRespuesta.setHttpAsyncTaskInterface(NuevaEncuestaActivity.this);
+                                    try{
+                                        String receivedDataRta = httpAsyncTaskRespuesta.execute(urlRespuesta).get();
+                                    }
+                                    catch (ExecutionException | InterruptedException ei){
+                                        ei.printStackTrace();
+                                    }
+                                    idRespuestaAsignado = null;
                                 }
 
                                 idPreguntaAsignado = null;

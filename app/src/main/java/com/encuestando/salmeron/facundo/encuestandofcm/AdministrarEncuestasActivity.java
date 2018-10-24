@@ -183,6 +183,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
                         modificar_intent.putExtra("respuestasEliminar", new ArrayList<RespuestaDto>());
                         modificar_intent.putExtra("tituloGuardar", listaEncuestas.get(i).getTitulo());
                         modificar_intent.putExtra("descripcionGuardar", listaEncuestas.get(i).getDescripcion());
+                        modificar_intent.putExtra("geolocalizada", listaEncuestas.get(i).getGeolocalizada());
                         startActivityForResult(modificar_intent, 1);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }

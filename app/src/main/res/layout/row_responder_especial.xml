@@ -57,6 +57,20 @@
             android:textStyle="italic"
             android:textSize="14dp" />
 
+        <TextView
+            android:id="@+id/row_geolocalizada_resolver_especial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/ic_ubicacion"
+            android:gravity="center | right"
+            android:background="@color/impares"
+            android:layout_below="@id/row_resoluciones_resolver_especial"
+            android:text="Encuesta Geolocalizada"
+            android:textStyle="italic"
+            android:textColor="?android:attr/colorPressedHighlight"
+            android:textSize="14dp" />
+
     </RelativeLayout>
 
 </LinearLayout>

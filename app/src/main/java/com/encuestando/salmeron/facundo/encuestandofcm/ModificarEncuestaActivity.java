@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     private TextView cargandoModificar;
     private Integer idPreguntaAsignado;
     private boolean isAlertOpen = false;
+    private CheckBox respuestasGeolocalizadas;
+    private Boolean geolocalizada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +65,11 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         tituloGuardar = (String) getIntent().getSerializableExtra("tituloGuardar");
         descripcionGuardar = (String) getIntent().getSerializableExtra("descripcionGuardar");
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
+        geolocalizada = (Boolean) getIntent().getSerializableExtra("geolocalizada");
         cargandoModificar = findViewById(R.id.cargandoModificarEncuesta);
         cargandoModificar.setVisibility(View.GONE);
+        respuestasGeolocalizadas = findViewById(R.id.checkbox_geolocalizada_modificar);
+        respuestasGeolocalizadas.setChecked(geolocalizada);
         toolbar = findViewById(R.id.titulo_modificar_encuesta);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -219,9 +225,11 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        String geo = respuestasGeolocalizadas.isChecked() ? "true" : "false";
                         String urlEncuesta = "http://192.168.0.107:8080/EncuestasFCM/encuestas/updateEncuesta?" + "idEncuesta=" + idEncuestaAsignado
                                 + "&titulo=" + reemplazarEspacios(titulo.getEditText().getText().toString())
                                 + "&descripcion=" + reemplazarEspacios(descripcion.getEditText().getText().toString())
+                                + "&isGeolocalizada=" + geo
                                 + "&idUsuario=" + usuarioLogueado.getId();
                         httpAsyncTaskEncuesta = new HttpAsyncTask(WebServiceEnum.MODIFICAR_ENCUESTA.getCodigo());
                         httpAsyncTaskEncuesta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
@@ -287,7 +295,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
             catch (ExecutionException | InterruptedException ei){
                 ei.printStackTrace();
             }
-            if (pregunta.getRespuestas() != null && !pregunta.getRespuestas().isEmpty()){
+            if (pregunta.getRespuestas() != null && !pregunta.getRespuestas().isEmpty() && (pregunta.getTipoPregunta().equals(TipoPreguntaEnum.MULTIPLE_CHOICE) || pregunta.getTipoPregunta().equals(TipoPreguntaEnum.RESPUESTA_UNICA))){
                 for (RespuestaDto rta : pregunta.getRespuestas()){
                     if (rta.getIdPersistido() != null){
                         updateRespuesta(rta);
@@ -316,7 +324,8 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     }
 
     private void saveRespuesta(RespuestaDto respuesta, Integer idPreg, Integer idTipoRespuesta){
-        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/saveRespuesta?descripcion=" + reemplazarEspacios(respuesta.getDescripcion())
+        String desc = respuesta != null ? respuesta.getDescripcion() : "";
+        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/saveRespuesta?descripcion=" + reemplazarEspacios(desc)
                 + "&idPregunta=" + idPreg + "&idTipoRespuesta=" + idTipoRespuesta
                 + "&idUsuario=" + usuarioLogueado.getId();
         httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.CREAR_RESPUESTA.getCodigo());
@@ -346,6 +355,8 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
             for (RespuestaDto rta : pregunta.getRespuestas()){
                 saveRespuesta(rta, idPreguntaAsignado, pregunta.getTipoPregunta().getCodigo());
             }
+        } else {
+            saveRespuesta(null, idPreguntaAsignado, pregunta.getTipoPregunta().getCodigo());
         }
 
         idPreguntaAsignado = null;

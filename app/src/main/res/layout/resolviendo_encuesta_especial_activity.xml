@@ -142,14 +142,13 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/cargandoResponderEspecial"
+                android:id="@+id/cargandoErroresResponderEspecial"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/recycler_resolviendo_especial"
                 android:layout_gravity="center"
-                android:text="Cargando..."
                 android:textAlignment="center"
-                android:textColor="@android:color/holo_orange_light"
+                android:textColor="@color/colorAccent"
                 android:textSize="20dp"
                 android:textStyle="italic" />
 
@@ -157,7 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
-                android:layout_below="@id/cargandoResponderEspecial"
+                android:layout_below="@id/cargandoErroresResponderEspecial"
                 android:layout_marginBottom="25dp"
                 android:layout_marginTop="25dp"
                 android:gravity="center_horizontal"

@@ -27,7 +27,7 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
     private String descripcionEncuesta;
     private TextView titulo;
     private TextView descripcion;
-    private TextView cargando;
+    private TextView cargandoErrores;
     private RecyclerView recyclerView;
     private PreguntaResponderRecyclerViewAdapter adapter;
     private ArrayList<PreguntaDto> preguntas;
@@ -55,8 +55,8 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
 
         titulo = findViewById(R.id.titulo_encuesta_resolver);
         descripcion = findViewById(R.id.descripcion_encuesta_resolver);
-        cargando = findViewById(R.id.cargandoResponderEspecial);
-        cargando.setVisibility(View.GONE);
+        cargandoErrores = findViewById(R.id.cargandoErroresResponderEspecial);
+        cargandoErrores.setVisibility(View.GONE);
 
         edad = findViewById(R.id.edad_resolviendo);
 
@@ -92,7 +92,21 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
     }
 
     private void onClickResponderEncuesta(){
+        edad.setError(null);
+        cargandoErrores.setTextColor(getResources().getColor(R.color.colorAccent));
+        if (sexo_radioButton == null || edad.getEditText().getText().toString().isEmpty()) {
+            cargandoErrores.setText("Debe completar todos los campos y responder todas las preguntas!");
+            cargandoErrores.setVisibility(View.VISIBLE);
+            edad.setError(edad.getEditText().getText().toString().isEmpty() ? "Debe completar la edad!!" : null);
+        } else {
+            cargandoErrores.setVisibility(View.VISIBLE);
+            cargandoErrores.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+            cargandoErrores.setText("Cargando...");
 
+            //doit
+
+            cargandoErrores.setVisibility(View.GONE);
+        }
     }
 
     private void posibleSalida(){

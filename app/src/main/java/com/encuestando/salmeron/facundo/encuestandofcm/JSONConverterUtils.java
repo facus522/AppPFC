@@ -106,6 +106,7 @@ public class JSONConverterUtils {
                 dto.setUsuarioCreacion(aux.getString("usuario"));
                 dto.setFechaCreacion(aux.getString("fecha"));
                 dto.setResoluciones(aux.getString("resoluciones"));
+                dto.setGeolocalizada(Boolean.valueOf(aux.getString("geolocalizada")));
                 result.add(dto);
             }
         } catch (JSONException e) {

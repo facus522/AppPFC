@@ -14,6 +14,7 @@ public class ListaEncuestaDto implements Serializable{
     private String fechaCreacion;
     private String resoluciones;
     private String usuarioCreacion;
+    private Boolean geolocalizada;
 
     public Integer getId() {
         return id;
@@ -61,5 +62,13 @@ public class ListaEncuestaDto implements Serializable{
 
     public void setUsuarioCreacion(String usuarioCreacion) {
         this.usuarioCreacion = usuarioCreacion;
+    }
+
+    public Boolean getGeolocalizada() {
+        return geolocalizada;
+    }
+
+    public void setGeolocalizada(Boolean geolocalizada) {
+        this.geolocalizada = geolocalizada;
     }
 }
