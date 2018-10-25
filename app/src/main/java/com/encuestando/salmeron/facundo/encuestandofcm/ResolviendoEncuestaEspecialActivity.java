@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Facundo Salmerón on 16/10/2018.
@@ -109,10 +110,62 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
                 cargandoErrores.setVisibility(View.VISIBLE);
                 cargandoErrores.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
                 cargandoErrores.setText("Cargando...");
-                //doit
+                new Thread( () -> {
+                        runOnUiThread( () -> {
+                            persistirRespuestas();
+                        });
+                }).start();
                 cargandoErrores.setVisibility(View.GONE);
             }
         }
+    }
+
+    private void persistirRespuestas(){
+        for (RecyclerView.ViewHolder vh : adapter.getViewHolders()){
+            switch (vh.getItemViewType()){
+                case 1:
+                    PreguntaResponderRecyclerViewAdapter.ViewHolder2 viewHolderChoicer = (PreguntaResponderRecyclerViewAdapter.ViewHolder2) vh;
+                    ArrayList<Integer> respuestasChecked = getRespuestasChecked(viewHolderChoicer.getListaCheckbox());
+                    //LOGICA DE PERSISTIR
+                    break;
+                case 2:
+                    PreguntaResponderRecyclerViewAdapter.ViewHolder2 viewHolderUnica = (PreguntaResponderRecyclerViewAdapter.ViewHolder2) vh;
+                    Integer respuestaTildada = getRespuestaTildada(viewHolderUnica.getListaRadios());
+                    //LOGICA DE PERSISTIR
+                    break;
+                case 5:
+                    PreguntaResponderRecyclerViewAdapter.ViewHolder viewHolderScale = (PreguntaResponderRecyclerViewAdapter.ViewHolder) vh;
+                    String rtaEscala = viewHolderScale.getEditText().getText().toString();
+                    //LOGICA DE PERSISTIR
+                    break;
+                default:
+                    PreguntaResponderRecyclerViewAdapter.ViewHolder viewHolder = (PreguntaResponderRecyclerViewAdapter.ViewHolder) vh;
+                    String rtaTextNum = viewHolder.getEditText().getText().toString();
+                    //LOGICA DE PERSISTIR
+                    break;
+            }
+        }
+    }
+
+    private ArrayList<Integer> getRespuestasChecked(ArrayList<CheckBox> checkBoxes){
+        ArrayList<Integer> rtas = new ArrayList<>();
+        for (CheckBox cb : checkBoxes){
+            if (cb.isChecked()){
+                rtas.add(cb.getId());
+            }
+        }
+        return rtas;
+    }
+
+    private Integer getRespuestaTildada(ArrayList<RadioButton> radioButtons){
+        Integer rta = null;
+        for (RadioButton rb : radioButtons){
+            if (rb.isChecked()){
+                rta = rb.getId();
+                break;
+            }
+        }
+        return rta;
     }
 
     private boolean evaluarRespuestas(){
