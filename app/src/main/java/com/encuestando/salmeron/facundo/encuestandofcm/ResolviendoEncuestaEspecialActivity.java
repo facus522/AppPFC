@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.Checkable;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -99,14 +101,60 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
             cargandoErrores.setVisibility(View.VISIBLE);
             edad.setError(edad.getEditText().getText().toString().isEmpty() ? "Debe completar la edad!!" : null);
         } else {
-            cargandoErrores.setVisibility(View.VISIBLE);
-            cargandoErrores.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
-            cargandoErrores.setText("Cargando...");
 
-            //doit
-
-            cargandoErrores.setVisibility(View.GONE);
+            if (!evaluarRespuestas()){
+                cargandoErrores.setText("Debe completar todos los campos y responder todas las preguntas!");
+                cargandoErrores.setVisibility(View.VISIBLE);
+            } else{
+                cargandoErrores.setVisibility(View.VISIBLE);
+                cargandoErrores.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+                cargandoErrores.setText("Cargando...");
+                //doit
+                cargandoErrores.setVisibility(View.GONE);
+            }
         }
+    }
+
+    private boolean evaluarRespuestas(){
+        for (RecyclerView.ViewHolder vh : adapter.getViewHolders()){
+            switch (vh.getItemViewType()){
+                case 1:
+                    PreguntaResponderRecyclerViewAdapter.ViewHolder2 viewHolderChoicer = (PreguntaResponderRecyclerViewAdapter.ViewHolder2) vh;
+                    if (!evaluarRespuestasCheckbox(viewHolderChoicer.getListaCheckbox())) return false;
+                    break;
+                case 2:
+                    PreguntaResponderRecyclerViewAdapter.ViewHolder2 viewHolderUnica = (PreguntaResponderRecyclerViewAdapter.ViewHolder2) vh;
+                    if (!evaluarRespuestasRadios(viewHolderUnica.getListaRadios())) return false;
+                    break;
+                case 5:
+                    PreguntaResponderRecyclerViewAdapter.ViewHolder viewHolderScale = (PreguntaResponderRecyclerViewAdapter.ViewHolder) vh;
+                    if (viewHolderScale.getScaleEditText().getText().toString().isEmpty()) return false;
+                    break;
+                default:
+                    PreguntaResponderRecyclerViewAdapter.ViewHolder viewHolder = (PreguntaResponderRecyclerViewAdapter.ViewHolder) vh;
+                    if (viewHolder.getEditText().getText().toString().isEmpty()) return false;
+                    break;
+            }
+        }
+        return true;
+    }
+
+    private boolean evaluarRespuestasCheckbox(ArrayList<CheckBox> checkBoxes){
+        for (CheckBox cb : checkBoxes){
+            if (cb.isChecked()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean evaluarRespuestasRadios(ArrayList<RadioButton> radioButtons){
+        for (RadioButton rb : radioButtons){
+            if (rb.isChecked()){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void posibleSalida(){

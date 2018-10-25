@@ -26,6 +26,7 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
     private ArrayList<PreguntaDto> preguntas;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private ArrayList<RecyclerView.ViewHolder> viewHolders = new ArrayList<>();
 
     // data is passed into the constructor
     PreguntaResponderRecyclerViewAdapter(Context context, ArrayList<PreguntaDto> data) {
@@ -52,6 +53,25 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
         }
     }
 
+    public void getResultados(){
+        for (PreguntaDto dto : preguntas){
+            switch (dto.getTipoPregunta().getCodigo()){
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
@@ -60,17 +80,22 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
         switch (holder.getItemViewType()){
             case 1:
                 ViewHolder2 viewHolderChoice = (ViewHolder2) holder;
+                viewHolders.add(viewHolderChoice);
                 PreguntaDto preguntaRecyclerChoice = preguntas.get(position);
                 viewHolderChoice.textViewPregunta.setText(preguntaRecyclerChoice.getId() + ". " + preguntaRecyclerChoice.getDescripcion());
                 viewHolderChoice.linearLayout.removeAllViews();
                 for (RespuestaDto rta : preguntaRecyclerChoice.getRespuestas()){
                     CheckBox checkBox = new CheckBox(mInflater.getContext());
+                    checkBox.setId(rta.getIdPersistido());
                     checkBox.setText(rta.getDescripcion());
+                    viewHolderChoice.getListaCheckbox().add(checkBox);
                     viewHolderChoice.linearLayout.addView(checkBox);
                 }
+                viewHolderChoice.setNumeroRespuestas(preguntaRecyclerChoice.getRespuestas().size());
                 break;
             case 2:
                 ViewHolder2 viewHolderUnica = (ViewHolder2) holder;
+                viewHolders.add(viewHolderUnica);
                 PreguntaDto preguntaRecyclerUnica = preguntas.get(position);
                 viewHolderUnica.textViewPregunta.setText(preguntaRecyclerUnica.getId() + ". " + preguntaRecyclerUnica.getDescripcion());
                 viewHolderUnica.linearLayout.removeAllViews();
@@ -78,22 +103,27 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
                 for (RespuestaDto rta : preguntaRecyclerUnica.getRespuestas()){
                     RadioButton radioButton = new RadioButton(mInflater.getContext());
                     radioButton.setText(rta.getDescripcion());
+                    radioButton.setId(rta.getIdPersistido());
+                    viewHolderUnica.getListaRadios().add(radioButton);
                     radioGroup.addView(radioButton);
                 }
                 viewHolderUnica.linearLayout.addView(radioGroup);
                 break;
             case 3:
                 ViewHolder viewHolderNumerica = (ViewHolder) holder;
+                viewHolders.add(viewHolderNumerica);
                 PreguntaDto preguntaRecyclerNumerica = preguntas.get(position);
                 viewHolderNumerica.textViewPregunta.setText(preguntaRecyclerNumerica.getId() + ". " + preguntaRecyclerNumerica.getDescripcion());
                 break;
             case 4:
                 ViewHolder viewHolderTextual = (ViewHolder) holder;
+                viewHolders.add(viewHolderTextual);
                 PreguntaDto preguntaRecyclerTextual = preguntas.get(position);
                 viewHolderTextual.textViewPregunta.setText(preguntaRecyclerTextual.getId() + ". " + preguntaRecyclerTextual.getDescripcion());
                 break;
             case 5:
                 ViewHolder viewHolderEscala = (ViewHolder) holder;
+                viewHolders.add(viewHolderEscala);
                 PreguntaDto preguntaRecyclerEscala = preguntas.get(position);
                 viewHolderEscala.textViewPregunta.setText(preguntaRecyclerEscala.getId() + ". " + preguntaRecyclerEscala.getDescripcion());
                 viewHolderEscala.scaleEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -116,6 +146,14 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
             default: break;
         }
 
+    }
+
+    public ArrayList<RecyclerView.ViewHolder> getViewHolders() {
+        return viewHolders;
+    }
+
+    public void setViewHolders(ArrayList<RecyclerView.ViewHolder> viewHolders) {
+        this.viewHolders = viewHolders;
     }
 
     private void numberPickerDialog(Integer maxValue, EditText scaleText){
@@ -150,9 +188,9 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView textViewPregunta;
-        EditText editText;
-        EditText scaleEditText;
+        private TextView textViewPregunta;
+        private EditText editText;
+        private EditText scaleEditText;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -166,11 +204,38 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
+
+        public TextView getTextViewPregunta() {
+            return textViewPregunta;
+        }
+
+        public void setTextViewPregunta(TextView textViewPregunta) {
+            this.textViewPregunta = textViewPregunta;
+        }
+
+        public EditText getEditText() {
+            return editText;
+        }
+
+        public void setEditText(EditText editText) {
+            this.editText = editText;
+        }
+
+        public EditText getScaleEditText() {
+            return scaleEditText;
+        }
+
+        public void setScaleEditText(EditText scaleEditText) {
+            this.scaleEditText = scaleEditText;
+        }
     }
 
     public class ViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView textViewPregunta;
-        LinearLayout linearLayout;
+        private TextView textViewPregunta;
+        private LinearLayout linearLayout;
+        private Integer numeroRespuestas;
+        private ArrayList<CheckBox> listaCheckbox = new ArrayList<>();
+        private ArrayList<RadioButton> listaRadios = new ArrayList<>();
 
         public ViewHolder2(View itemView) {
             super(itemView);
@@ -182,6 +247,46 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
         @Override
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+        }
+
+        public TextView getTextViewPregunta() {
+            return textViewPregunta;
+        }
+
+        public void setTextViewPregunta(TextView textViewPregunta) {
+            this.textViewPregunta = textViewPregunta;
+        }
+
+        public LinearLayout getLinearLayout() {
+            return linearLayout;
+        }
+
+        public void setLinearLayout(LinearLayout linearLayout) {
+            this.linearLayout = linearLayout;
+        }
+
+        public Integer getNumeroRespuestas() {
+            return numeroRespuestas;
+        }
+
+        public void setNumeroRespuestas(Integer numeroRespuestas) {
+            this.numeroRespuestas = numeroRespuestas;
+        }
+
+        public ArrayList<CheckBox> getListaCheckbox() {
+            return listaCheckbox;
+        }
+
+        public void setListaCheckbox(ArrayList<CheckBox> listaCheckbox) {
+            this.listaCheckbox = listaCheckbox;
+        }
+
+        public ArrayList<RadioButton> getListaRadios() {
+            return listaRadios;
+        }
+
+        public void setListaRadios(ArrayList<RadioButton> listaRadios) {
+            this.listaRadios = listaRadios;
         }
     }
 

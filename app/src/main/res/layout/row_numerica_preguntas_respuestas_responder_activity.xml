@@ -30,6 +30,7 @@
             android:textStyle="italic"
             android:inputType="number"
             android:hint="Ingrese su respuesta"
+            android:imeOptions="actionDone"
             android:layout_marginTop="5dp"
             android:layout_below="@id/textView_pregunta_responder_encuesta"
             android:paddingLeft="10dp"

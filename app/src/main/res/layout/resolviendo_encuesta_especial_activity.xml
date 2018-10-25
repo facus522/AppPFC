@@ -77,6 +77,7 @@
                         android:layout_height="wrap_content"
                         android:background="#11000000"
                         android:drawableLeft="@drawable/ic_action_dni"
+                        android:imeOptions="actionDone"
                         android:hint="Ingrese edad del encuestado..."
                         android:textAlignment="center"
                         android:inputType="number"
