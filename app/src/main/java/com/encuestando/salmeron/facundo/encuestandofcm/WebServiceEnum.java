@@ -20,7 +20,9 @@ public enum WebServiceEnum {
     ELIMINAR_RESPUESTA(12, "Eliminar Respuesta"),
     MODIFICAR_PREGUNTA(13, "Modificar Pregunta"),
     MODIFICAR_RESPUESTA(14, "Modificar Respuesta"),
-    MODIFICAR_ENCUESTA(15, "Modificar Encuesta");
+    MODIFICAR_ENCUESTA(15, "Modificar Encuesta"),
+    CONTESTAR_PREGUNTA(16, "Contestar Pregunta"),
+    INCREMENTAR_RESULTADO(17, "Incrementar Resultado");
 
     private Integer codigo;
     private String descripcion;

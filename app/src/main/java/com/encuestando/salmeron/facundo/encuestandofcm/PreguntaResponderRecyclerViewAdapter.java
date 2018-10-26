@@ -114,18 +114,21 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
                 viewHolders.add(viewHolderNumerica);
                 PreguntaDto preguntaRecyclerNumerica = preguntas.get(position);
                 viewHolderNumerica.textViewPregunta.setText(preguntaRecyclerNumerica.getId() + ". " + preguntaRecyclerNumerica.getDescripcion());
+                viewHolderNumerica.getEditText().setId(preguntaRecyclerNumerica.getRespuestas().get(0).getIdPersistido());
                 break;
             case 4:
                 ViewHolder viewHolderTextual = (ViewHolder) holder;
                 viewHolders.add(viewHolderTextual);
                 PreguntaDto preguntaRecyclerTextual = preguntas.get(position);
                 viewHolderTextual.textViewPregunta.setText(preguntaRecyclerTextual.getId() + ". " + preguntaRecyclerTextual.getDescripcion());
+                viewHolderTextual.getEditText().setId(preguntaRecyclerTextual.getRespuestas().get(0).getIdPersistido());
                 break;
             case 5:
                 ViewHolder viewHolderEscala = (ViewHolder) holder;
                 viewHolders.add(viewHolderEscala);
                 PreguntaDto preguntaRecyclerEscala = preguntas.get(position);
                 viewHolderEscala.textViewPregunta.setText(preguntaRecyclerEscala.getId() + ". " + preguntaRecyclerEscala.getDescripcion());
+                viewHolderEscala.getScaleEditText().setId(preguntaRecyclerEscala.getRespuestas().get(0).getIdPersistido());
                 viewHolderEscala.scaleEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View view, boolean hasFocus) {

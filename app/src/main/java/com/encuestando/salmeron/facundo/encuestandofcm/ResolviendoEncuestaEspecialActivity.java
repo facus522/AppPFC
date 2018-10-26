@@ -1,7 +1,9 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,9 +25,10 @@ import java.util.concurrent.ExecutionException;
  * Created by Facundo Salmerón on 16/10/2018.
  */
 
-public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity implements PreguntaResponderRecyclerViewAdapter.ItemClickListener {
+public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity implements HttpAsyncTaskInterface, PreguntaResponderRecyclerViewAdapter.ItemClickListener {
 
     private Toolbar toolbar;
+    private UsuarioDto usuarioLogueado;
     private String tituloEncuesta;
     private String descripcionEncuesta;
     private TextView titulo;
@@ -39,6 +42,8 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
     private TextInputLayout edad;
     private RadioGroup sexo_radioGroup;
     private RadioButton sexo_radioButton;
+    private HttpAsyncTask httpAsyncTask;
+    private Integer idEncuesta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +51,9 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
         setContentView(R.layout.resolviendo_encuesta_especial_activity);
         toolbar = findViewById(R.id.title_resolviendo_especial);
         tituloEncuesta = (String) getIntent().getSerializableExtra("tituloEncuesta");
+        usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
         descripcionEncuesta = (String) getIntent().getSerializableExtra("descripcionEncuesta");
+        idEncuesta = (Integer) getIntent().getSerializableExtra("idEncuestaPersistida");
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,38 +119,78 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
                 cargandoErrores.setText("Cargando...");
                 new Thread( () -> {
                         runOnUiThread( () -> {
-                            persistirRespuestas();
+                            String sexo = sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2";
+                            persistirRespuestas(sexo);
+                            cargandoErrores.setVisibility(View.GONE);
+                            incrementarResoluciones();
+                            Intent returnIntent = new Intent();
+                            setResult(Activity.RESULT_OK, returnIntent);
+                            finish();
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                         });
                 }).start();
-                cargandoErrores.setVisibility(View.GONE);
             }
         }
     }
 
-    private void persistirRespuestas(){
+    private void incrementarResoluciones(){
+        String urlIncrementando = "http://192.168.0.107:8080/EncuestasFCM/encuestas/incrementarResolucion?idEncuesta=" + idEncuesta;
+        httpAsyncTask = new HttpAsyncTask(WebServiceEnum.INCREMENTAR_RESULTADO.getCodigo());
+        httpAsyncTask.setHttpAsyncTaskInterface(ResolviendoEncuestaEspecialActivity.this);
+        try{
+            String receivedDataEncuesta = httpAsyncTask.execute(urlIncrementando).get();
+        }
+        catch (ExecutionException | InterruptedException ei){
+            ei.printStackTrace();
+        }
+    }
+
+    private void persistirRespuestas(String sexo){
         for (RecyclerView.ViewHolder vh : adapter.getViewHolders()){
             switch (vh.getItemViewType()){
                 case 1:
                     PreguntaResponderRecyclerViewAdapter.ViewHolder2 viewHolderChoicer = (PreguntaResponderRecyclerViewAdapter.ViewHolder2) vh;
                     ArrayList<Integer> respuestasChecked = getRespuestasChecked(viewHolderChoicer.getListaCheckbox());
-                    //LOGICA DE PERSISTIR
+                    for (Integer i : respuestasChecked){
+                        saveRespuesta(i, "", sexo);
+                    }
                     break;
                 case 2:
                     PreguntaResponderRecyclerViewAdapter.ViewHolder2 viewHolderUnica = (PreguntaResponderRecyclerViewAdapter.ViewHolder2) vh;
                     Integer respuestaTildada = getRespuestaTildada(viewHolderUnica.getListaRadios());
-                    //LOGICA DE PERSISTIR
+                    saveRespuesta(respuestaTildada, "", sexo);
                     break;
                 case 5:
                     PreguntaResponderRecyclerViewAdapter.ViewHolder viewHolderScale = (PreguntaResponderRecyclerViewAdapter.ViewHolder) vh;
-                    String rtaEscala = viewHolderScale.getEditText().getText().toString();
-                    //LOGICA DE PERSISTIR
+                    String rtaEscala = viewHolderScale.getScaleEditText().getText().toString();
+                    Integer idSc = viewHolderScale.getScaleEditText().getId();
+                    saveRespuesta(idSc, rtaEscala, sexo);
                     break;
                 default:
                     PreguntaResponderRecyclerViewAdapter.ViewHolder viewHolder = (PreguntaResponderRecyclerViewAdapter.ViewHolder) vh;
                     String rtaTextNum = viewHolder.getEditText().getText().toString();
-                    //LOGICA DE PERSISTIR
+                    Integer idTN = viewHolder.getEditText().getId();
+                    saveRespuesta(idTN, rtaTextNum, sexo);
                     break;
             }
+        }
+    }
+
+    private void saveRespuesta(Integer id, String descripcion, String sexo){
+        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/resultados/saveResultado?latitud=" + "12.1355155"
+                + "&longitud=" + "-33.1515155"
+                + "&edadEncuestado=" + edad.getEditText().getText().toString().trim()
+                + "&sexoEncuestado=" + sexo
+                + "&idUsuario=" + usuarioLogueado.getId()
+                + "&idRespuesta=" + id
+                + "&descripcion=" + descripcion;
+        httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CONTESTAR_PREGUNTA.getCodigo());
+        httpAsyncTask.setHttpAsyncTaskInterface(ResolviendoEncuestaEspecialActivity.this);
+        try{
+            String receivedDataEncuesta = httpAsyncTask.execute(urlRespuesta).get();
+        }
+        catch (ExecutionException | InterruptedException ei){
+            ei.printStackTrace();
         }
     }
 

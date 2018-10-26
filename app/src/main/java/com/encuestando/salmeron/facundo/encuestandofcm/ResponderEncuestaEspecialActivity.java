@@ -1,5 +1,6 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -131,6 +132,15 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
         responder_intent.putExtra("descripcionEncuesta", encuestas.get(position).getDescripcion());
         startActivityForResult(responder_intent, 1);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK){
+            finish();
+            startActivity(getIntent());
+            Toast.makeText(ResponderEncuestaEspecialActivity.this, "La encuesta ha sido respondida correctamente!", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
