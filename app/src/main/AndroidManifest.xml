@@ -40,7 +40,8 @@
         <activity android:name=".PreguntaUnicaOpcionActivity" />
         <activity android:name=".ModificarEncuestaActivity" />
         <activity android:name=".ResponderEncuestaEspecialActivity" />
-        <activity android:name=".ResolviendoEncuestaEspecialActivity"></activity>
+        <activity android:name=".ResolviendoEncuestaEspecialActivity"/>
+        <activity android:name=".ResponderEncuestaNormalActivity"/>
 
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_place_API"></meta-data>

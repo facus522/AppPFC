@@ -49,7 +49,9 @@ public class MenuNormalActivity extends AppCompatActivity implements Serializabl
         encuestasDisponibles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MenuNormalActivity.this, "Sección en desarrollo.", Toast.LENGTH_LONG).show();
+                Intent admin_intent = new Intent(MenuNormalActivity.this, ResponderEncuestaNormalActivity.class).putExtra("usuario", usuarioLogueado);
+                MenuNormalActivity.this.startActivity(admin_intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
     }
