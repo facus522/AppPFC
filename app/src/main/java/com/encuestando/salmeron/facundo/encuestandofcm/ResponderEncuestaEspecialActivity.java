@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
     private HttpAsyncTask httpAsyncTask;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean scrollEnabled;
+    private ImageButton ayuda;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,24 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
             public void onClick(View view) {
                 ResponderEncuestaEspecialActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            }
+        });
+
+        ayuda = findViewById(R.id.ayuda_menu);
+        ayuda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResponderEncuestaEspecialActivity.this, AlertDialog.THEME_HOLO_DARK);
+                alertDialog.setTitle("Información");
+                alertDialog.setMessage("Las encuestas que contienen la etiqueta de 'Geolocalizadas' guardarán en base de datos la ubicación del encuestado.");
+                alertDialog.setIcon(R.drawable.ic_action_error);
+                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
             }
         });
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
@@ -130,6 +150,7 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
         responder_intent.putExtra("preguntas", preguntasAbrir);
         responder_intent.putExtra("tituloEncuesta", encuestas.get(position).getTitulo());
         responder_intent.putExtra("descripcionEncuesta", encuestas.get(position).getDescripcion());
+        responder_intent.putExtra("isGeolocalizada", encuestas.get(position).getGeolocalizada());
         startActivityForResult(responder_intent, 1);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }

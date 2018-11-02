@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId "com.encuestando.salmeron.facundo.encuestandofcm"
         minSdkVersion 19
@@ -33,4 +33,5 @@ dependencies {
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.github.clans:fab:1.6.4'
+    implementation 'com.google.android.gms:play-services:12.0.1'
 }

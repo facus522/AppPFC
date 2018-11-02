@@ -16,12 +16,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:title="Respondiendo..."
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        app:title="Respondiendo..."
         app:titleMargin="@dimen/cardview_default_elevation"
-        app:titleTextColor="?android:attr/colorPressedHighlight" />
+        app:titleTextColor="?android:attr/colorPressedHighlight">
+
+        <ImageButton
+            android:id="@+id/ayuda_respondiendo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/ic_action_error" />
+
+    </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -42,9 +51,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:background="#46d49090"
                     android:drawableLeft="@drawable/ic_action_title"
                     android:gravity="center"
-                    android:background="#46d49090"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textSize="22dp"
@@ -56,10 +65,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/titulo_encuesta_resolver"
                     android:layout_marginTop="10dp"
-                    android:drawableLeft="@drawable/ic_action_description"
-                    android:paddingLeft="10dp"
                     android:background="#46d49090"
+                    android:drawableLeft="@drawable/ic_action_description"
                     android:gravity="center"
+                    android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textSize="18dp"
                     android:textStyle="italic" />
@@ -77,10 +86,10 @@
                         android:layout_height="wrap_content"
                         android:background="#11000000"
                         android:drawableLeft="@drawable/ic_action_dni"
-                        android:imeOptions="actionDone"
                         android:hint="Ingrese edad del encuestado..."
-                        android:textAlignment="center"
+                        android:imeOptions="actionDone"
                         android:inputType="number"
+                        android:textAlignment="center"
                         android:textSize="22sp" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -89,18 +98,18 @@
                     android:id="@+id/text_sexo_encuestado"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Ingrese sexo del encuestado..."
-                    android:drawableLeft="@drawable/ic_action_dni"
                     android:layout_below="@id/edad_resolviendo"
+                    android:drawableLeft="@drawable/ic_action_dni"
+                    android:text="Ingrese sexo del encuestado..."
                     android:textSize="22dp" />
 
                 <RadioGroup
+                    android:id="@+id/sexo_encuestado"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_below="@id/text_sexo_encuestado"
                     android:layout_marginTop="10dp"
                     android:background="#11000000"
-                    android:layout_below="@id/text_sexo_encuestado"
-                    android:id="@+id/sexo_encuestado"
                     android:orientation="horizontal">
 
                     <RadioButton
@@ -125,9 +134,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/sexo_encuestado"
                     android:layout_marginTop="15dp"
-                    android:gravity="center"
-                    android:drawableLeft="@drawable/ic_preguntas"
                     android:background="#46000000"
+                    android:drawableLeft="@drawable/ic_preguntas"
+                    android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="Preguntas:"
@@ -142,12 +151,24 @@
                     android:layout_marginTop="10dp" />
             </RelativeLayout>
 
+            <CheckBox
+                android:id="@+id/checkbox_residencia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/recycler_resolviendo_especial"
+                android:layout_marginTop="10dp"
+                android:text="¿Se encuentra respondiendo en su residencia habitual?\n Active la ubicación de su dispositivo. "
+                android:textAlignment="center"
+                android:textStyle="italic" />
+
             <TextView
                 android:id="@+id/cargandoErroresResponderEspecial"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/recycler_resolviendo_especial"
+                android:layout_below="@+id/checkbox_residencia"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="aosjfoaijsfioa"
                 android:textAlignment="center"
                 android:textColor="@color/colorAccent"
                 android:textSize="20dp"
@@ -156,8 +177,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
                 android:layout_below="@id/cargandoErroresResponderEspecial"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="25dp"
                 android:layout_marginTop="25dp"
                 android:gravity="center_horizontal"
@@ -168,8 +189,8 @@
                     android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:layout_marginBottom="10dp"
-                    app:cardBackgroundColor="@color/colorAccent"
                     android:foreground="?android:attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/colorAccent"
                     app:cardCornerRadius="25dp"
                     app:cardElevation="7dp">
 

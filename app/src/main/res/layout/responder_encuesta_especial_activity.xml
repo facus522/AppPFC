@@ -19,7 +19,16 @@
         android:theme="?attr/actionBarTheme"
         app:title="Escoja una encuesta..."
         app:titleMargin="@dimen/cardview_default_elevation"
-        app:titleTextColor="?android:attr/colorPressedHighlight" />
+        app:titleTextColor="?android:attr/colorPressedHighlight">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ayuda_menu"
+            android:background="@drawable/ic_action_error"
+            android:layout_gravity="end" />
+    </android.support.v7.widget.Toolbar>
+
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_responder_especial"
