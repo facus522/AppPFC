@@ -328,7 +328,8 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
                 + "&sexoEncuestado=" + sexo
                 + "&idUsuario=" + usuarioLogueado.getId()
                 + "&idRespuesta=" + id
-                + "&descripcion=" + descripcion;
+                + "&descripcion=" + descripcion
+                + "&idEncuesta=" + idEncuesta;
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CONTESTAR_PREGUNTA.getCodigo());
         httpAsyncTask.setHttpAsyncTaskInterface(ResolviendoEncuestaEspecialActivity.this);
         try {
