@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -80,7 +81,7 @@ public class ResponderEncuestaNormalActivity extends AppCompatActivity implement
             ei.printStackTrace();
         }
 
-        if (encuestas.size() < 1){
+        if (encuestas.size() < 1) {
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResponderEncuestaNormalActivity.this);
             alertDialog.setTitle("Sin Datos");
             alertDialog.setCancelable(false);
@@ -148,19 +149,33 @@ public class ResponderEncuestaNormalActivity extends AppCompatActivity implement
             ei.printStackTrace();
         }
 
-        Intent responder_intent = new Intent(ResponderEncuestaNormalActivity.this, ResolviendoEncuestaEspecialActivity.class).putExtra("usuario", usuarioLogueado);
-        responder_intent.putExtra("idEncuestaPersistida", encuestas.get(position).getId());
-        responder_intent.putExtra("preguntas", preguntasAbrir);
-        responder_intent.putExtra("tituloEncuesta", encuestas.get(position).getTitulo());
-        responder_intent.putExtra("descripcionEncuesta", encuestas.get(position).getDescripcion());
-        responder_intent.putExtra("isGeolocalizada", encuestas.get(position).getGeolocalizada());
-        startActivityForResult(responder_intent, 1);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        if (preguntasAbrir != null) {
+            Intent responder_intent = new Intent(ResponderEncuestaNormalActivity.this, ResolviendoEncuestaNormalActivity.class).putExtra("usuario", usuarioLogueado);
+            responder_intent.putExtra("idEncuestaPersistida", encuestas.get(position).getId());
+            responder_intent.putExtra("preguntas", preguntasAbrir);
+            responder_intent.putExtra("tituloEncuesta", encuestas.get(position).getTitulo());
+            responder_intent.putExtra("descripcionEncuesta", encuestas.get(position).getDescripcion());
+            responder_intent.putExtra("isGeolocalizada", encuestas.get(position).getGeolocalizada());
+            startActivityForResult(responder_intent, 1);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        } else {
+            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResponderEncuestaNormalActivity.this, AlertDialog.THEME_HOLO_DARK);
+            alertDialog.setTitle("Error de validación");
+            alertDialog.setMessage("Usted ya ha respondido esta encuesta, por lo cual no puede volver a realizarlo.");
+            alertDialog.setIcon(R.drawable.ic_action_error);
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alertDialog.show();
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK) {
             finish();
             startActivity(getIntent());
             Toast.makeText(ResponderEncuestaNormalActivity.this, "La encuesta ha sido respondida correctamente!", Toast.LENGTH_LONG).show();
@@ -180,7 +195,8 @@ public class ResponderEncuestaNormalActivity extends AppCompatActivity implement
         String encuestasJSON = result;
         if (encuestasJSON != null && !encuestasJSON.isEmpty()) {
             Map<Boolean, ArrayList<PreguntaDto>> mapa = JSONConverterUtils.JSONAbrirEncuestasValidarConverter(result);
-            preguntasAbrir = null;
+            ArrayList<PreguntaDto> dtosFALSE = mapa.get(Boolean.FALSE);
+            preguntasAbrir = dtosFALSE != null ? dtosFALSE : null;
         }
     }
 

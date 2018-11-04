@@ -9,10 +9,10 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.encuestando.salmeron.facundo.encuestandofcm.ResolviendoEncuestaEspecialActivity">
+    tools:context="com.encuestando.salmeron.facundo.encuestandofcm.ResolviendoEncuestaNormalActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/title_resolviendo_especial"
+        android:id="@+id/title_resolviendo_normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -73,66 +73,12 @@
                     android:textSize="18dp"
                     android:textStyle="italic" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/edad_resolviendo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/descripcion_encuesta_resolver"
-                    android:layout_marginTop="5dp"
-                    app:errorEnabled="true">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#11000000"
-                        android:drawableLeft="@drawable/ic_action_dni"
-                        android:hint="Ingrese edad del encuestado..."
-                        android:imeOptions="actionDone"
-                        android:inputType="number"
-                        android:textAlignment="center"
-                        android:textSize="22sp" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/text_sexo_encuestado"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/edad_resolviendo"
-                    android:drawableLeft="@drawable/ic_action_dni"
-                    android:text="Ingrese sexo del encuestado..."
-                    android:textSize="22dp" />
-
-                <RadioGroup
-                    android:id="@+id/sexo_encuestado"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/text_sexo_encuestado"
-                    android:layout_marginTop="10dp"
-                    android:background="#11000000"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/sexo_masculino_encuestado_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="Masculino"
-                        android:textSize="24dp" />
-
-                    <RadioButton
-                        android:id="@+id/sexo_femenino_encuestado_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="Femenino"
-                        android:textSize="24dp" />
-
-                </RadioGroup>
 
                 <TextView
                     android:id="@+id/preguntas_resolver_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/sexo_encuestado"
+                    android:layout_below="@+id/descripcion_encuesta_resolver"
                     android:layout_marginTop="15dp"
                     android:background="#46000000"
                     android:drawableLeft="@drawable/ic_preguntas"
@@ -144,7 +90,7 @@
                     android:textStyle="italic" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_resolviendo_especial"
+                    android:id="@+id/recycler_resolviendo_normal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/preguntas_resolver_view"
@@ -162,7 +108,7 @@
                 android:textStyle="italic" />
 
             <TextView
-                android:id="@+id/cargandoErroresResponderEspecial"
+                android:id="@+id/cargandoErroresResponderNormal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/checkbox_residencia"
@@ -176,7 +122,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/cargandoErroresResponderEspecial"
+                android:layout_below="@id/cargandoErroresResponderNormal"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="25dp"
                 android:layout_marginTop="25dp"

@@ -7,21 +7,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Build;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.Checkable;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -34,17 +29,16 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created by Facundo Salmerón on 16/10/2018.
+ * Created by Facundo Salmerón on 04/11/2018.
  */
 
-public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity implements HttpAsyncTaskInterface, PreguntaResponderRecyclerViewAdapter.ItemClickListener {
+public class ResolviendoEncuestaNormalActivity extends AppCompatActivity implements HttpAsyncTaskInterface, PreguntaResponderRecyclerViewAdapter.ItemClickListener {
 
     private Toolbar toolbar;
     private UsuarioDto usuarioLogueado;
@@ -58,9 +52,6 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
     private ArrayList<PreguntaDto> preguntas;
     private CardView enviar;
     private CardView volver;
-    private TextInputLayout edad;
-    private RadioGroup sexo_radioGroup;
-    private RadioButton sexo_radioButton;
     private HttpAsyncTask httpAsyncTask;
     private Integer idEncuesta;
     private double latitud;
@@ -74,8 +65,8 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.resolviendo_encuesta_especial_activity);
-        toolbar = findViewById(R.id.title_resolviendo_especial);
+        setContentView(R.layout.resolviendo_encuesta_normal_activity);
+        toolbar = findViewById(R.id.title_resolviendo_normal);
         tituloEncuesta = (String) getIntent().getSerializableExtra("tituloEncuesta");
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
         descripcionEncuesta = (String) getIntent().getSerializableExtra("descripcionEncuesta");
@@ -86,7 +77,7 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ResolviendoEncuestaEspecialActivity.this.finish();
+                ResolviendoEncuestaNormalActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
@@ -95,7 +86,7 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
         ayuda.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResolviendoEncuestaEspecialActivity.this, AlertDialog.THEME_HOLO_DARK);
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResolviendoEncuestaNormalActivity.this, AlertDialog.THEME_HOLO_DARK);
                 alertDialog.setTitle("Información");
                 alertDialog.setMessage("Si se encuentra en su residencia debe tener activado su ubicación. Si rechazó los permisos activarlos desde Configuración del dispositivo -> Aplicaciones -> Encuestando FCM -> Permisos -> Ubicación.\nSi no se encuentra en su residencia habitual se abrirá un mapa donde deberá escoger su domicilio para completar con la encuesta Geolocalizada.");
                 alertDialog.setIcon(R.drawable.ic_action_error);
@@ -111,7 +102,7 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
 
         titulo = findViewById(R.id.titulo_encuesta_resolver);
         descripcion = findViewById(R.id.descripcion_encuesta_resolver);
-        cargandoErrores = findViewById(R.id.cargandoErroresResponderEspecial);
+        cargandoErrores = findViewById(R.id.cargandoErroresResponderNormal);
         cargandoErrores.setVisibility(View.GONE);
         residencia = findViewById(R.id.checkbox_residencia);
         if (!isGeolocalizada){
@@ -119,8 +110,6 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
             ayuda.setVisibility(View.GONE);
         }
         else requestForSpecificPermission();
-
-        edad = findViewById(R.id.edad_resolviendo);
 
         enviar = findViewById(R.id.enviar_resolviendo_button);
         volver = findViewById(R.id.volver_resolviendo_button);
@@ -132,16 +121,11 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
                 onClickResponderEncuesta()
         );
 
-        sexo_radioGroup = findViewById(R.id.sexo_encuestado);
-        sexo_radioGroup.setOnCheckedChangeListener((RadioGroup radioGroup, int i) ->
-                sexo_radioButton = findViewById(i)
-        );
-
         titulo.setText(tituloEncuesta);
         descripcion.setText(descripcionEncuesta);
 
         preguntas = (ArrayList<PreguntaDto>) getIntent().getSerializableExtra("preguntas");
-        recyclerView = findViewById(R.id.recycler_resolviendo_especial);
+        recyclerView = findViewById(R.id.recycler_resolviendo_normal);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new PreguntaResponderRecyclerViewAdapter(this, preguntas);
         adapter.setClickListener(this);
@@ -154,101 +138,91 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
     }
 
     private void onClickResponderEncuesta() {
-        edad.setError(null);
         cargandoErrores.setTextColor(getResources().getColor(R.color.colorAccent));
-        if (sexo_radioButton == null || edad.getEditText().getText().toString().isEmpty()) {
-            cargandoErrores.setText("Debe completar todos los campos y responder todas las preguntas!");
+        if (!evaluarRespuestas()) {
+            cargandoErrores.setText("Debe responder todas las preguntas!");
             cargandoErrores.setVisibility(View.VISIBLE);
-            edad.setError(edad.getEditText().getText().toString().isEmpty() ? "Debe completar la edad!!" : null);
         } else {
+            cargandoErrores.setVisibility(View.VISIBLE);
+            cargandoErrores.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+            cargandoErrores.setText("Cargando...");
 
-            if (!evaluarRespuestas()) {
-                cargandoErrores.setText("Debe completar todos los campos y responder todas las preguntas!");
-                cargandoErrores.setVisibility(View.VISIBLE);
-            } else {
-                cargandoErrores.setVisibility(View.VISIBLE);
-                cargandoErrores.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
-                cargandoErrores.setText("Cargando...");
-
-                new Thread(() -> {
-                    runOnUiThread(() -> {
-                        String sexo = sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2";
-
-                        if (isGeolocalizada && !residencia.isChecked()) {
-                            try {
-                                Intent intent = new PlacePicker.IntentBuilder().build(this);
-                                startActivityForResult(intent, PICKER_REQUEST_CODE);
-                            } catch (GooglePlayServicesRepairableException e) {
-                                e.printStackTrace();
-                            } catch (GooglePlayServicesNotAvailableException e) {
-                                e.printStackTrace();
-                            }
-                        } else if (isGeolocalizada && residencia.isChecked()) {
-                            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-                            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResolviendoEncuestaEspecialActivity.this, AlertDialog.THEME_HOLO_DARK);
-                                alertDialog.setTitle("Error al Responder");
-                                alertDialog.setIcon(getResources().getDrawable(R.drawable.ic_action_error));
-                                alertDialog.setMessage("No se ha podido responder la encuesta ya que ha denegado los permisos para utilizar la ubicación de su dispositivo móvil.\n Por favor actívelos.\n(Ver ayuda arriba a la derecha)");
-                                alertDialog.setCancelable(false);
-                                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                        return;
-                                    }
-                                });
-                                alertDialog.show();
-                                cargandoErrores.setVisibility(View.GONE);
-                            } else {
-                                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                                    @Override
-                                    public void onSuccess(Location location) {
-                                        if (location != null) {
-                                            latitud = location.getLatitude();
-                                            longitud = location.getLongitude();
-
-                                            persistirRespuestas(sexo);
-                                            cargandoErrores.setVisibility(View.GONE);
-                                            incrementarResoluciones();
-                                            Intent returnIntent = new Intent();
-                                            setResult(Activity.RESULT_OK, returnIntent);
-                                            finish();
-                                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                                        } else {
-                                            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResolviendoEncuestaEspecialActivity.this, AlertDialog.THEME_HOLO_DARK);
-                                            alertDialog.setTitle("Error al Responder");
-                                            alertDialog.setIcon(getResources().getDrawable(R.drawable.ic_action_error));
-                                            alertDialog.setMessage("No se ha podido responder la encuesta ya que no tiene activada la ubicación de su dispositivo móvil.\n Por favor actívela.");
-                                            alertDialog.setCancelable(false);
-                                            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                    return;
-                                                }
-                                            });
-                                            alertDialog.show();
-                                        }
-                                        cargandoErrores.setVisibility(View.GONE);
-                                    }
-                                });
-                            }
-
+            new Thread(() -> {
+                runOnUiThread(() -> {
+                    if (isGeolocalizada && !residencia.isChecked()) {
+                        try {
+                            Intent intent = new PlacePicker.IntentBuilder().build(this);
+                            startActivityForResult(intent, PICKER_REQUEST_CODE);
+                        } catch (GooglePlayServicesRepairableException e) {
+                            e.printStackTrace();
+                        } catch (GooglePlayServicesNotAvailableException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (isGeolocalizada && residencia.isChecked()) {
+                        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResolviendoEncuestaNormalActivity.this, AlertDialog.THEME_HOLO_DARK);
+                            alertDialog.setTitle("Error al Responder");
+                            alertDialog.setIcon(getResources().getDrawable(R.drawable.ic_action_error));
+                            alertDialog.setMessage("No se ha podido responder la encuesta ya que ha denegado los permisos para utilizar la ubicación de su dispositivo móvil.\n Por favor actívelos.\n(Ver ayuda arriba a la derecha)");
+                            alertDialog.setCancelable(false);
+                            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    return;
+                                }
+                            });
+                            alertDialog.show();
+                            cargandoErrores.setVisibility(View.GONE);
                         } else {
-                            persistirRespuestas(sexo);
-                            cargandoErrores.setVisibility(View.GONE);
-                            incrementarResoluciones();
-                            Intent returnIntent = new Intent();
-                            setResult(Activity.RESULT_OK, returnIntent);
-                            finish();
-                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                            cargandoErrores.setVisibility(View.GONE);
+                            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    if (location != null) {
+                                        latitud = location.getLatitude();
+                                        longitud = location.getLongitude();
+
+                                        persistirRespuestas(usuarioLogueado.getSexo().toString());
+                                        cargandoErrores.setVisibility(View.GONE);
+                                        incrementarResoluciones();
+                                        Intent returnIntent = new Intent();
+                                        setResult(Activity.RESULT_OK, returnIntent);
+                                        finish();
+                                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                    } else {
+                                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResolviendoEncuestaNormalActivity.this, AlertDialog.THEME_HOLO_DARK);
+                                        alertDialog.setTitle("Error al Responder");
+                                        alertDialog.setIcon(getResources().getDrawable(R.drawable.ic_action_error));
+                                        alertDialog.setMessage("No se ha podido responder la encuesta ya que no tiene activada la ubicación de su dispositivo móvil.\n Por favor actívela.");
+                                        alertDialog.setCancelable(false);
+                                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                                return;
+                                            }
+                                        });
+                                        alertDialog.show();
+                                    }
+                                    cargandoErrores.setVisibility(View.GONE);
+                                }
+                            });
                         }
 
-                    });
-                }).start();
-            }
+                    } else {
+                        persistirRespuestas(usuarioLogueado.getSexo().toString());
+                        cargandoErrores.setVisibility(View.GONE);
+                        incrementarResoluciones();
+                        Intent returnIntent = new Intent();
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                        cargandoErrores.setVisibility(View.GONE);
+                    }
+
+                });
+            }).start();
         }
     }
 
@@ -265,8 +239,7 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
                 latitud = latLng.latitude;
                 longitud = latLng.longitude;
 
-                String sexoEncuesta = sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2";
-                persistirRespuestas(sexoEncuesta);
+                persistirRespuestas(usuarioLogueado.getSexo().toString());
                 cargandoErrores.setVisibility(View.GONE);
                 incrementarResoluciones();
                 Intent returnIntent = new Intent();
@@ -282,7 +255,7 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
     private void incrementarResoluciones() {
         String urlIncrementando = "http://192.168.0.107:8080/EncuestasFCM/encuestas/incrementarResolucion?idEncuesta=" + idEncuesta;
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.INCREMENTAR_RESULTADO.getCodigo());
-        httpAsyncTask.setHttpAsyncTaskInterface(ResolviendoEncuestaEspecialActivity.this);
+        httpAsyncTask.setHttpAsyncTaskInterface(ResolviendoEncuestaNormalActivity.this);
         try {
             String receivedDataEncuesta = httpAsyncTask.execute(urlIncrementando).get();
         } catch (ExecutionException | InterruptedException ei) {
@@ -324,14 +297,14 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
     private void saveRespuesta(Integer id, String descripcion, String sexo) {
         String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/resultados/saveResultado?latitud=" + String.valueOf(latitud)
                 + "&longitud=" + String.valueOf(longitud)
-                + "&edadEncuestado=" + edad.getEditText().getText().toString().trim()
+                + "&edadEncuestado=" + usuarioLogueado.getEdad().toString()
                 + "&sexoEncuestado=" + sexo
                 + "&idUsuario=" + usuarioLogueado.getId()
                 + "&idRespuesta=" + id
                 + "&descripcion=" + reemplazarEspacios(descripcion)
                 + "&idEncuesta=" + idEncuesta;
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CONTESTAR_PREGUNTA.getCodigo());
-        httpAsyncTask.setHttpAsyncTaskInterface(ResolviendoEncuestaEspecialActivity.this);
+        httpAsyncTask.setHttpAsyncTaskInterface(ResolviendoEncuestaNormalActivity.this);
         try {
             String receivedDataEncuesta = httpAsyncTask.execute(urlRespuesta).get();
         } catch (ExecutionException | InterruptedException ei) {
@@ -412,7 +385,7 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
     }
 
     private void posibleSalida() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResolviendoEncuestaEspecialActivity.this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResolviendoEncuestaNormalActivity.this);
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
         alertDialog.setMessage("Si sale de la pantalla se perderán todas las respuestas!\n ¿Desea salir?");
@@ -420,7 +393,7 @@ public class ResolviendoEncuestaEspecialActivity extends AppCompatActivity imple
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                ResolviendoEncuestaEspecialActivity.this.finish();
+                ResolviendoEncuestaNormalActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
