@@ -13,6 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,8 +57,16 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
     private Integer idPreguntaAsignado;
     private Integer idRespuestaAsignado;
     private TextView cargandoCrear;
+    private TextView errores;
     private boolean isAlertOpen = false;
     private CheckBox respuestasGeolocalizadas;
+    private CheckBox restringir;
+    private CheckBox sexo_restringir;
+    private CheckBox edad_restringir;
+    private TextInputLayout mayoresDe;
+    private RadioGroup sexo_radioGroup;
+    private RadioButton sexo_radioButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +78,8 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
         cargandoCrear = findViewById(R.id.cargandoCrearNueva);
         cargandoCrear.setVisibility(View.GONE);
+        errores = findViewById(R.id.erroresRestricciones);
+        errores.setVisibility(View.GONE);
         toolbar = findViewById(R.id.titulo_nueva_encuesta);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -81,6 +94,70 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
         titulo = findViewById(R.id.titulo_encuesta_nueva);
         descripcion = findViewById(R.id.descripcion_encuesta_nueva);
         respuestasGeolocalizadas = findViewById(R.id.checkbox_geolocalizada);
+
+        restringir = findViewById(R.id.checkbox_restricciones);
+        sexo_restringir = findViewById(R.id.checkbox_restriccion_sexo);
+        edad_restringir = findViewById(R.id.checkbox_restriccion_edad);
+        mayoresDe = findViewById(R.id.restriccion_mayores_de);
+        sexo_radioGroup = findViewById(R.id.restriccion_sexo);
+
+        verificarRestricciones();
+
+        sexo_radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                sexo_radioButton = findViewById(i);
+            }
+        });
+
+        restringir.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (restringir.isChecked()){
+                    sexo_restringir.setVisibility(View.VISIBLE);
+                    edad_restringir.setVisibility(View.VISIBLE);
+                    if (edad_restringir.isChecked()){
+                        mayoresDe.setVisibility(View.VISIBLE);
+                    } else {
+                        mayoresDe.setVisibility(View.GONE);
+                    }
+
+                    if (sexo_restringir.isChecked()){
+                        sexo_radioGroup.setVisibility(View.VISIBLE);
+                    } else {
+                        sexo_radioGroup.setVisibility(View.GONE);
+                    }
+                } else {
+                    sexo_restringir.setVisibility(View.GONE);
+                    edad_restringir.setVisibility(View.GONE);
+                    mayoresDe.setVisibility(View.GONE);
+                    sexo_radioGroup.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        sexo_restringir.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (sexo_restringir.isChecked()){
+                    sexo_radioGroup.setVisibility(View.VISIBLE);
+                } else {
+                    sexo_radioGroup.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        edad_restringir.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (edad_restringir.isChecked()){
+                    mayoresDe.setVisibility(View.VISIBLE);
+                } else {
+                    mayoresDe.setVisibility(View.GONE);
+                }
+            }
+        });
+
         titulo.getEditText().setText(tituloGuardar);
         descripcion.getEditText().setText(descripcionGuardar);
         volver.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +232,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
         if (savedInstanceState != null){
             String tituloNuevo = savedInstanceState.getString("tituloNuevo");
             String descripcionNuevo = savedInstanceState.getString("descripcionNuevo");
+            String edadRestriccion = savedInstanceState.getString("edadRestriccion");
             boolean estaAbierto = savedInstanceState.getBoolean("estaAbierto");
             if (tituloNuevo!= null){
                 titulo.getEditText().setText(tituloNuevo);
@@ -162,15 +240,42 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
             if (descripcionNuevo!=null){
                 descripcion.getEditText().setText(descripcionNuevo);
             }
+            if (edadRestriccion != null){
+                mayoresDe.getEditText().setText(edadRestriccion);
+            }
             if (estaAbierto){
                 showAlertDialog();
             }
         }
     }
 
+    private void verificarRestricciones(){
+        if (restringir.isChecked()){
+            sexo_restringir.setVisibility(View.VISIBLE);
+            edad_restringir.setVisibility(View.VISIBLE);
+            if (edad_restringir.isChecked()){
+                mayoresDe.setVisibility(View.VISIBLE);
+            } else {
+                mayoresDe.setVisibility(View.GONE);
+            }
+
+            if (sexo_restringir.isChecked()){
+                sexo_radioGroup.setVisibility(View.VISIBLE);
+            } else {
+                sexo_radioGroup.setVisibility(View.GONE);
+            }
+        } else {
+            sexo_restringir.setVisibility(View.GONE);
+            edad_restringir.setVisibility(View.GONE);
+            mayoresDe.setVisibility(View.GONE);
+            sexo_radioGroup.setVisibility(View.GONE);
+        }
+    }
+
     private void onClickCrearEncuesta(){
         titulo.setError(null);
         descripcion.setError(null);
+        errores.setVisibility(View.GONE);
         if (titulo.getEditText().getText().toString().isEmpty()){
             titulo.setError("El título no puede estar vacío!");
             return;
@@ -189,6 +294,24 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
             return;
         }
 
+        if (restringir.isChecked() && (!edad_restringir.isChecked() && !sexo_restringir.isChecked())){
+            errores.setText("Si escogió restringir, debe tildar al menos una de las opciones");
+            errores.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (restringir.isChecked() && edad_restringir.isChecked() && mayoresDe.getEditText().getText().toString().isEmpty()){
+            errores.setText("Debe ingresar la edad de restricción");
+            errores.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (restringir.isChecked() && sexo_restringir.isChecked() && sexo_radioButton == null){
+            errores.setText("Debe ingresar el sexo de restricción");
+            errores.setVisibility(View.VISIBLE);
+            return;
+        }
+
         cargandoCrear.setVisibility(View.VISIBLE);
         new Thread(new Runnable() {
             @Override
@@ -197,9 +320,13 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
                     @Override
                     public void run() {
                         String geo = respuestasGeolocalizadas.isChecked() ? "true" : "false";
+                        String isEdad = (restringir.isChecked() && edad_restringir.isChecked()) ? mayoresDe.getEditText().getText().toString() : "";
+                        String isSexo = (restringir.isChecked() && sexo_restringir.isChecked()) ? (sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2") : "";
                         String urlEncuesta = "http://192.168.0.107:8080/EncuestasFCM/encuestas/saveEncuesta?titulo=" + reemplazarEspacios(titulo.getEditText().getText().toString())
                                 + "&descripcion=" + reemplazarEspacios(descripcion.getEditText().getText().toString())
                                 + "&isGeolocalizada=" + geo
+                                + "&isSexo=" + isSexo
+                                + "&isEdad=" + isEdad
                                 + "&idUsuario=" + usuarioLogueado.getId();
                         httpAsyncTaskEncuesta = new HttpAsyncTask(WebServiceEnum.CREAR_ENCUESTA.getCodigo());
                         httpAsyncTaskEncuesta.setHttpAsyncTaskInterface(NuevaEncuestaActivity.this);
@@ -313,6 +440,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
     public void onSaveInstanceState(Bundle outState) {
         outState.putString("tituloNuevo", titulo.getEditText().getText().toString());
         outState.putString("descripcionNuevo", descripcion.getEditText().getText().toString());
+        outState.putString("edadRestriccion", mayoresDe.getEditText().getText().toString());
         outState.putBoolean("estaAbierto", isAlertOpen);
         super.onSaveInstanceState(outState);
     }

@@ -126,11 +126,97 @@
                     android:layout_marginTop="10dp" />
             </RelativeLayout>
 
+            <CheckBox
+                android:id="@+id/checkbox_restricciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/recycler_encuesta_nueva"
+                android:background="#11000000"
+                android:hint="¿Desea restringir los encuestados?"
+                android:textSize="20dp" />
+
+            <CheckBox
+                android:id="@+id/checkbox_restriccion_sexo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/checkbox_restricciones"
+                android:background="#11000000"
+                android:hint="Restringir sexo:"
+                android:textSize="20dp" />
+
+            <RadioGroup
+                android:id="@+id/restriccion_sexo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/checkbox_restriccion_sexo"
+                android:layout_marginTop="10dp"
+                android:background="#11000000"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/sexo_masculino_encuestado_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Masculino"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/sexo_femenino_encuestado_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Femenino"
+                    android:textSize="20dp" />
+
+            </RadioGroup>
+
+            <CheckBox
+                android:id="@+id/checkbox_restriccion_edad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/restriccion_sexo"
+                android:background="#11000000"
+                android:hint="Restringir edad:"
+                android:textSize="20dp" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/restriccion_mayores_de"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/checkbox_restriccion_edad"
+                app:errorEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#11000000"
+                    android:drawableLeft="@drawable/ic_action_dni"
+                    android:hint="Encuesta para mayores de..."
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textSize="20dp" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/erroresRestricciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/restriccion_mayores_de"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp"
+                android:textStyle="italic" />
+
             <TextView
                 android:id="@+id/cargandoCrearNueva"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/recycler_encuesta_nueva"
+                android:layout_below="@+id/erroresRestricciones"
                 android:layout_gravity="center"
                 android:text="Cargando..."
                 android:textAlignment="center"
