@@ -64,7 +64,7 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
             }
         });
 
-        String url = "http://192.168.0.107:8080/EncuestasFCM/infoNoticias/getAll";
+        String url = getResources().getString(R.string.urlWS) + "/infoNoticias/getAll";
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CARGAR_INFO.getCodigo());
         httpAsyncTask.setHttpAsyncTaskInterface(InfoNoticiasEspecialActivity.this);
         try {
@@ -121,7 +121,7 @@ public class InfoNoticiasEspecialActivity extends AppCompatActivity implements H
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
-                        String url = "http://192.168.0.107:8080/EncuestasFCM/infoNoticias/removeInfo?idInfo=" + infoNoticiasDto.get(i).getId();
+                        String url = getResources().getString(R.string.urlWS) + "/infoNoticias/removeInfo?idInfo=" + infoNoticiasDto.get(i).getId();
                         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.ELIMINAR_INFO.getCodigo());
                         httpAsyncTask.setHttpAsyncTaskInterface(InfoNoticiasEspecialActivity.this);
                         try {

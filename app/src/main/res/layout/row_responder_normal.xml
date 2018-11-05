@@ -48,6 +48,19 @@
             android:textColor="?android:attr/colorPressedHighlight"
             android:textSize="14dp" />
 
+        <TextView
+            android:id="@+id/row_restricciones_resolver_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/ic_restricciones"
+            android:gravity="center | right"
+            android:background="@color/impares"
+            android:layout_below="@id/row_geolocalizada_resolver_normal"
+            android:textStyle="italic"
+            android:textColor="?android:attr/colorPressedHighlight"
+            android:textSize="14dp" />
+
     </RelativeLayout>
 
 </LinearLayout>

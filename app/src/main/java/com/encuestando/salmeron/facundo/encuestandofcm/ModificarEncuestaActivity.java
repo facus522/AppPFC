@@ -13,6 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +56,16 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     private boolean isAlertOpen = false;
     private CheckBox respuestasGeolocalizadas;
     private Boolean geolocalizada;
+    private CheckBox restringir;
+    private CheckBox sexo_restringir;
+    private CheckBox edad_restringir;
+    private TextInputLayout mayoresDe;
+    private RadioGroup sexo_radioGroup;
+    private RadioButton sexo_radioButton;
+    private Integer isSexoRestriccion;
+    private Integer isEdadRestriccion;
+    private TextView errores;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +79,99 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         descripcionGuardar = (String) getIntent().getSerializableExtra("descripcionGuardar");
         usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
         geolocalizada = (Boolean) getIntent().getSerializableExtra("geolocalizada");
+        isSexoRestriccion = (Integer) getIntent().getSerializableExtra("isSexoRestriccion");
+        isEdadRestriccion = (Integer) getIntent().getSerializableExtra("isEdadRestriccion");
         cargandoModificar = findViewById(R.id.cargandoModificarEncuesta);
         cargandoModificar.setVisibility(View.GONE);
+        errores = findViewById(R.id.erroresRestricciones);
+        errores.setVisibility(View.GONE);
         respuestasGeolocalizadas = findViewById(R.id.checkbox_geolocalizada_modificar);
         respuestasGeolocalizadas.setChecked(geolocalizada);
+
+
+        restringir = findViewById(R.id.checkbox_restricciones);
+        sexo_restringir = findViewById(R.id.checkbox_restriccion_sexo);
+        edad_restringir = findViewById(R.id.checkbox_restriccion_edad);
+        mayoresDe = findViewById(R.id.restriccion_mayores_de);
+        sexo_radioGroup = findViewById(R.id.restriccion_sexo);
+
+        if (isSexoRestriccion != 0 || isEdadRestriccion != 0){
+            restringir.setChecked(true);
+            if (isSexoRestriccion != 0) {
+                sexo_restringir.setChecked(true);
+                if (isSexoRestriccion.equals(1)){
+                    sexo_radioButton = findViewById(R.id.sexo_masculino_encuestado_button);
+                } else {
+                    sexo_radioButton = findViewById(R.id.sexo_femenino_encuestado_button);
+                }
+                sexo_radioButton.setChecked(true);
+
+            }
+
+            if (isEdadRestriccion != 0){
+                edad_restringir.setChecked(true);
+                mayoresDe.getEditText().setText(isEdadRestriccion.toString());
+            }
+        }
+
+
+        verificarRestricciones();
+
+        sexo_radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                sexo_radioButton = findViewById(i);
+            }
+        });
+
+        restringir.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (restringir.isChecked()){
+                    sexo_restringir.setVisibility(View.VISIBLE);
+                    edad_restringir.setVisibility(View.VISIBLE);
+                    if (edad_restringir.isChecked()){
+                        mayoresDe.setVisibility(View.VISIBLE);
+                    } else {
+                        mayoresDe.setVisibility(View.GONE);
+                    }
+
+                    if (sexo_restringir.isChecked()){
+                        sexo_radioGroup.setVisibility(View.VISIBLE);
+                    } else {
+                        sexo_radioGroup.setVisibility(View.GONE);
+                    }
+                } else {
+                    sexo_restringir.setVisibility(View.GONE);
+                    edad_restringir.setVisibility(View.GONE);
+                    mayoresDe.setVisibility(View.GONE);
+                    sexo_radioGroup.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        sexo_restringir.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (sexo_restringir.isChecked()){
+                    sexo_radioGroup.setVisibility(View.VISIBLE);
+                } else {
+                    sexo_radioGroup.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        edad_restringir.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (edad_restringir.isChecked()){
+                    mayoresDe.setVisibility(View.VISIBLE);
+                } else {
+                    mayoresDe.setVisibility(View.GONE);
+                }
+            }
+        });
+
         toolbar = findViewById(R.id.titulo_modificar_encuesta);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -158,6 +260,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         if (savedInstanceState != null){
             String tituloNuevo = savedInstanceState.getString("tituloNuevo");
             String descripcionNuevo = savedInstanceState.getString("descripcionNuevo");
+            String edadRestriccion = savedInstanceState.getString("edadRestriccion");
             boolean estaAbierto = savedInstanceState.getBoolean("estaAbierto");
             if (tituloNuevo!= null){
                 titulo.getEditText().setText(tituloNuevo);
@@ -165,9 +268,35 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
             if (descripcionNuevo!=null){
                 descripcion.getEditText().setText(descripcionNuevo);
             }
+            if (edadRestriccion != null){
+                mayoresDe.getEditText().setText(edadRestriccion);
+            }
             if (estaAbierto){
                 showAlertDialog();
             }
+        }
+    }
+
+    private void verificarRestricciones(){
+        if (restringir.isChecked()){
+            sexo_restringir.setVisibility(View.VISIBLE);
+            edad_restringir.setVisibility(View.VISIBLE);
+            if (edad_restringir.isChecked()){
+                mayoresDe.setVisibility(View.VISIBLE);
+            } else {
+                mayoresDe.setVisibility(View.GONE);
+            }
+
+            if (sexo_restringir.isChecked()){
+                sexo_radioGroup.setVisibility(View.VISIBLE);
+            } else {
+                sexo_radioGroup.setVisibility(View.GONE);
+            }
+        } else {
+            sexo_restringir.setVisibility(View.GONE);
+            edad_restringir.setVisibility(View.GONE);
+            mayoresDe.setVisibility(View.GONE);
+            sexo_radioGroup.setVisibility(View.GONE);
         }
     }
 
@@ -218,6 +347,25 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
             return;
         }
 
+        if (restringir.isChecked() && (!edad_restringir.isChecked() && !sexo_restringir.isChecked())){
+            errores.setText("Si escogió restringir, debe tildar al menos una de las opciones");
+            errores.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (restringir.isChecked() && edad_restringir.isChecked() && mayoresDe.getEditText().getText().toString().isEmpty()){
+            errores.setText("Debe ingresar la edad de restricción");
+            errores.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (restringir.isChecked() && sexo_restringir.isChecked() && sexo_radioButton == null){
+            errores.setText("Debe ingresar el sexo de restricción");
+            errores.setVisibility(View.VISIBLE);
+            return;
+        }
+
+
         cargandoModificar.setVisibility(View.VISIBLE);
         new Thread(new Runnable() {
             @Override
@@ -226,10 +374,15 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
                     @Override
                     public void run() {
                         String geo = respuestasGeolocalizadas.isChecked() ? "true" : "false";
-                        String urlEncuesta = "http://192.168.0.107:8080/EncuestasFCM/encuestas/updateEncuesta?" + "idEncuesta=" + idEncuestaAsignado
+                        String isEdad = (restringir.isChecked() && edad_restringir.isChecked()) ? mayoresDe.getEditText().getText().toString() : "0";
+                        String isSexo = (restringir.isChecked() && sexo_restringir.isChecked()) ? (sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2") : "0";
+
+                        String urlEncuesta = getResources().getString(R.string.urlWS) + "/encuestas/updateEncuesta?" + "idEncuesta=" + idEncuestaAsignado
                                 + "&titulo=" + reemplazarEspacios(titulo.getEditText().getText().toString())
                                 + "&descripcion=" + reemplazarEspacios(descripcion.getEditText().getText().toString())
                                 + "&isGeolocalizada=" + geo
+                                + "&isSexo=" + isSexo
+                                + "&isEdad=" + isEdad
                                 + "&idUsuario=" + usuarioLogueado.getId();
                         httpAsyncTaskEncuesta = new HttpAsyncTask(WebServiceEnum.MODIFICAR_ENCUESTA.getCodigo());
                         httpAsyncTaskEncuesta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
@@ -283,7 +436,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
 
     private void updatePregunta(PreguntaDto pregunta){
         if (pregunta.getPreguntaModificada()){
-            String urlPregunta = "http://192.168.0.107:8080/EncuestasFCM/preguntas/updatePregunta?idPregunta=" + pregunta.getIdPersistido()
+            String urlPregunta = getResources().getString(R.string.urlWS) + "/preguntas/updatePregunta?idPregunta=" + pregunta.getIdPersistido()
                     + "&descripcion=" + reemplazarEspacios(pregunta.getDescripcion())
                     + "&numeroEscala=" + (pregunta.getMaximaEscala() != null ? pregunta.getMaximaEscala() : "")
                     + "&idUsuario=" + usuarioLogueado.getId();
@@ -309,7 +462,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
 
     private void updateRespuesta(RespuestaDto respuesta){
         if (respuesta.getRespuestaModificada()){
-            String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/updateRespuesta?idRespuesta=" + respuesta.getIdPersistido()
+            String urlRespuesta = getResources().getString(R.string.urlWS) + "/respuestas/updateRespuesta?idRespuesta=" + respuesta.getIdPersistido()
                     + "&descripcion=" + reemplazarEspacios(respuesta.getDescripcion())
                     + "&idUsuario=" + usuarioLogueado.getId();
             httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.MODIFICAR_RESPUESTA.getCodigo());
@@ -325,7 +478,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
 
     private void saveRespuesta(RespuestaDto respuesta, Integer idPreg, Integer idTipoRespuesta){
         String desc = respuesta != null ? respuesta.getDescripcion() : "";
-        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/saveRespuesta?descripcion=" + reemplazarEspacios(desc)
+        String urlRespuesta = getResources().getString(R.string.urlWS) + "/respuestas/saveRespuesta?descripcion=" + reemplazarEspacios(desc)
                 + "&idPregunta=" + idPreg + "&idTipoRespuesta=" + idTipoRespuesta
                 + "&idUsuario=" + usuarioLogueado.getId();
         httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.CREAR_RESPUESTA.getCodigo());
@@ -339,7 +492,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     }
 
     private void savePregunta(PreguntaDto pregunta){
-        String urlPregunta = "http://192.168.0.107:8080/EncuestasFCM/preguntas/savePregunta?descripcion=" + reemplazarEspacios(pregunta.getDescripcion())
+        String urlPregunta = getResources().getString(R.string.urlWS) + "/preguntas/savePregunta?descripcion=" + reemplazarEspacios(pregunta.getDescripcion())
                 + "&idEncuesta=" + idEncuestaAsignado + "&numeroEscala=" + (pregunta.getMaximaEscala() != null ? pregunta.getMaximaEscala() : "")
                 + "&idTipoRespuesta=" + pregunta.getTipoPregunta().getCodigo() + "&idUsuario=" + usuarioLogueado.getId();
         httpAsyncTaskPregunta = new HttpAsyncTask(WebServiceEnum.CREAR_PREGUNTA.getCodigo());
@@ -363,7 +516,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     }
 
     private void removeRespuesta(RespuestaDto respuesta){
-        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/deleteRespuesta?idRespuesta=" + respuesta.getIdPersistido()
+        String urlRespuesta = getResources().getString(R.string.urlWS) + "/respuestas/deleteRespuesta?idRespuesta=" + respuesta.getIdPersistido()
                 + "&idUsuario=" + usuarioLogueado.getId();
         httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.ELIMINAR_RESPUESTA.getCodigo());
         httpAsyncTaskRespuesta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
@@ -376,7 +529,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     }
 
     private void removePregunta(PreguntaDto pregunta){
-        String urlPregunta = "http://192.168.0.107:8080/EncuestasFCM/preguntas/deletePregunta?idPregunta=" + pregunta.getIdPersistido()
+        String urlPregunta = getResources().getString(R.string.urlWS) + "/preguntas/deletePregunta?idPregunta=" + pregunta.getIdPersistido()
                 + "&idUsuario=" + usuarioLogueado.getId();
         httpAsyncTaskPregunta = new HttpAsyncTask(WebServiceEnum.ELIMINAR_PREGUNTA.getCodigo());
         httpAsyncTaskPregunta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
@@ -412,6 +565,7 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         outState.putString("tituloNuevo", titulo.getEditText().getText().toString());
         outState.putString("descripcionNuevo", descripcion.getEditText().getText().toString());
         outState.putBoolean("estaAbierto", isAlertOpen);
+        outState.putString("edadRestriccion", mayoresDe.getEditText().getText().toString());
         super.onSaveInstanceState(outState);
     }
 

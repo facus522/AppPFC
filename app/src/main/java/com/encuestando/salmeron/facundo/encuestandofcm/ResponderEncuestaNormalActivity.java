@@ -72,7 +72,7 @@ public class ResponderEncuestaNormalActivity extends AppCompatActivity implement
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_responder_normal);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        String url = "http://192.168.0.107:8080/EncuestasFCM/encuestas/getAll";
+        String url = getResources().getString(R.string.urlWS) + "/encuestas/getAll";
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CARGAR_ENCUESTAS.getCodigo());
         httpAsyncTask.setHttpAsyncTaskInterface(ResponderEncuestaNormalActivity.this);
         try {
@@ -138,7 +138,41 @@ public class ResponderEncuestaNormalActivity extends AppCompatActivity implement
 
     @Override
     public void onItemClick(View view, int position) {
-        String urlAbrir = "http://192.168.0.107:8080/EncuestasFCM/encuestas/openEncuestaValidar?idEncuesta="
+        if (encuestas.get(position).getIsEdadRestriccion() != 0){
+            if (encuestas.get(position).getIsEdadRestriccion() > usuarioLogueado.getEdad()){
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResponderEncuestaNormalActivity.this, AlertDialog.THEME_HOLO_DARK);
+                alertDialog.setTitle("Error de validación");
+                alertDialog.setMessage("Usted no puede responder la siguient encuesta, ya que está restringida hacia personas mayores de " + encuestas.get(position).getIsEdadRestriccion() + " años de edad.");
+                alertDialog.setIcon(R.drawable.ic_action_error);
+                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
+                return;
+            }
+        }
+
+        if (encuestas.get(position).getIsSexoRestriccion() != 0){
+            if (!encuestas.get(position).getIsSexoRestriccion().equals(usuarioLogueado.getSexo())){
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResponderEncuestaNormalActivity.this, AlertDialog.THEME_HOLO_DARK);
+                alertDialog.setTitle("Error de validación");
+                alertDialog.setMessage("Usted no puede responder la siguiente encuesta, ya que está restringida hacia personas del sexo " + (encuestas.get(position).getIsSexoRestriccion().equals(1) ? "masculino." : "femenino."));
+                alertDialog.setIcon(R.drawable.ic_action_error);
+                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
+                return;
+            }
+        }
+
+        String urlAbrir = getResources().getString(R.string.urlWS) + "/encuestas/openEncuestaValidar?idEncuesta="
                 + encuestas.get(position).getId()
                 + "&idUsuario=" + usuarioLogueado.getId();
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.OPEN_ENCUESTA_VALIDAR.getCodigo());

@@ -230,7 +230,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
 
                                     String sexo = sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2";
                                     String tipoUsuario = tipoUsuario_checkbox.isChecked() ? "1" : "2";
-                                    String url = "http://192.168.0.107:8080/EncuestasFCM/usuarios/saveUser?nombre=" + reemplazarEspacios(nameUser) + "&apellido=" + reemplazarEspacios(surnameUser) + "&dni=" + doc + "&nombreUsuario="+reemplazarEspacios(nombre)+"&password="+reemplazarEspacios(contrasenia1)+"&fechaNacimiento="+nacimiento+"&mail="+reemplazarEspacios(mail)+"&activo=1&sexo="+sexo+"&tipoUsuario="+tipoUsuario+"&validar="+codigo;
+                                    String url = getResources().getString(R.string.urlWS) +"/usuarios/saveUser?nombre=" + reemplazarEspacios(nameUser) + "&apellido=" + reemplazarEspacios(surnameUser) + "&dni=" + doc + "&nombreUsuario="+reemplazarEspacios(nombre)+"&password="+reemplazarEspacios(contrasenia1)+"&fechaNacimiento="+nacimiento+"&mail="+reemplazarEspacios(mail)+"&activo=1&sexo="+sexo+"&tipoUsuario="+tipoUsuario+"&validar="+codigo;
                                     httpAsyncTask = new HttpAsyncTask(WebServiceEnum.REGISTER_USER.getCodigo());
                                     httpAsyncTask.setHttpAsyncTaskInterface(RegisterActivity.this);
                                     try{

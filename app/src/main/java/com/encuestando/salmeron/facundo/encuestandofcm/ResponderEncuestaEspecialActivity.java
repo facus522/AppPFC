@@ -70,7 +70,7 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_responder_especial);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        String url = "http://192.168.0.107:8080/EncuestasFCM/encuestas/getAll";
+        String url = getResources().getString(R.string.urlWS) + "/encuestas/getAll";
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CARGAR_ENCUESTAS.getCodigo());
         httpAsyncTask.setHttpAsyncTaskInterface(ResponderEncuestaEspecialActivity.this);
         try {
@@ -136,7 +136,7 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
 
     @Override
     public void onItemClick(View view, int position) {
-        String urlAbrir = "http://192.168.0.107:8080/EncuestasFCM/encuestas/openEncuesta?idEncuesta=" + encuestas.get(position).getId();
+        String urlAbrir = getResources().getString(R.string.urlWS) + "/encuestas/openEncuesta?idEncuesta=" + encuestas.get(position).getId();
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.OPEN_ENCUESTA.getCodigo());
         httpAsyncTask.setHttpAsyncTaskInterface(ResponderEncuestaEspecialActivity.this);
         try {

@@ -83,7 +83,7 @@ public class CrearInfoActivity extends AppCompatActivity implements HttpAsyncTas
                 descripcion.setError(null);
                 url.setError(null);
                 if (camposValidos()){
-                    String urlWS = "http://192.168.0.107:8080/EncuestasFCM/infoNoticias/addInfo?titulo="+reemplazarEspacios(titulo.getEditText().getText().toString())+
+                    String urlWS = getResources().getString(R.string.urlWS)+ "/infoNoticias/addInfo?titulo="+reemplazarEspacios(titulo.getEditText().getText().toString())+
                             "&descripcion="+reemplazarEspacios(descripcion.getEditText().getText().toString())+"&url="+url.getEditText().getText().toString()+
                             "&idUsuario="+usuarioLogueado.getId();
                     httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CREAR_INFO.getCodigo());

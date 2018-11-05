@@ -42,6 +42,27 @@ public class EncuestaNormalRecyclerViewAdapter extends RecyclerView.Adapter<Encu
         } else {
             holder.geo.setVisibility(View.GONE);
         }
+        if (encuestas.get(position).getIsEdadRestriccion() != 0 || encuestas.get(position).getIsSexoRestriccion() != 0){
+            holder.restriccion.setVisibility(View.VISIBLE);
+            String aux = "Encuesta para ";
+            String edad = "";
+            String sexo = "";
+            if (encuestas.get(position).getIsEdadRestriccion() != 0){
+                edad = "mayores de " + encuestas.get(position).getIsEdadRestriccion() + " años";
+            }
+            if (encuestas.get(position).getIsSexoRestriccion() != 0){
+                sexo = "personas de sexo " + (encuestas.get(position).getIsSexoRestriccion().equals(1) ? "masculino" : "femenino");
+            }
+
+            aux += edad;
+            if (!edad.isEmpty() && !sexo.isEmpty()){
+                aux+=" y ";
+            }
+            aux += sexo + ".";
+            holder.restriccion.setText(aux);
+        } else {
+            holder.restriccion.setVisibility(View.GONE);
+        }
 
         holder.titulo.setText(title);
         holder.descripcion.setText(description);
@@ -59,12 +80,14 @@ public class EncuestaNormalRecyclerViewAdapter extends RecyclerView.Adapter<Encu
         TextView titulo;
         TextView descripcion;
         TextView geo;
+        TextView restriccion;
 
         ViewHolder(View itemView) {
             super(itemView);
             titulo = itemView.findViewById(R.id.row_title_resolver_normal);
             descripcion = itemView.findViewById(R.id.row_descripcion_resolver_normal);
             geo = itemView.findViewById(R.id.row_geolocalizada_resolver_normal);
+            restriccion = itemView.findViewById(R.id.row_restricciones_resolver_normal);
             itemView.setOnClickListener(this);
         }
 

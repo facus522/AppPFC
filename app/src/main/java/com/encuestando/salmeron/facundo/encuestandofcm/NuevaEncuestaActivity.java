@@ -322,7 +322,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
                         String geo = respuestasGeolocalizadas.isChecked() ? "true" : "false";
                         String isEdad = (restringir.isChecked() && edad_restringir.isChecked()) ? mayoresDe.getEditText().getText().toString() : "";
                         String isSexo = (restringir.isChecked() && sexo_restringir.isChecked()) ? (sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2") : "";
-                        String urlEncuesta = "http://192.168.0.107:8080/EncuestasFCM/encuestas/saveEncuesta?titulo=" + reemplazarEspacios(titulo.getEditText().getText().toString())
+                        String urlEncuesta = getResources().getString(R.string.urlWS) + "/encuestas/saveEncuesta?titulo=" + reemplazarEspacios(titulo.getEditText().getText().toString())
                                 + "&descripcion=" + reemplazarEspacios(descripcion.getEditText().getText().toString())
                                 + "&isGeolocalizada=" + geo
                                 + "&isSexo=" + isSexo
@@ -351,7 +351,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
                             alertDialog.show();
                         } else {
                             for (PreguntaDto pregunta: preguntas){
-                                String urlPregunta = "http://192.168.0.107:8080/EncuestasFCM/preguntas/savePregunta?descripcion=" + reemplazarEspacios(pregunta.getDescripcion())
+                                String urlPregunta = getResources().getString(R.string.urlWS) + "/preguntas/savePregunta?descripcion=" + reemplazarEspacios(pregunta.getDescripcion())
                                         + "&idEncuesta=" + idEncuestaAsignado + "&numeroEscala=" + (pregunta.getMaximaEscala() != null ? pregunta.getMaximaEscala() : "")
                                         + "&idTipoRespuesta=" + pregunta.getTipoPregunta().getCodigo() + "&idUsuario=" + usuarioLogueado.getId();
                                 httpAsyncTaskPregunta = new HttpAsyncTask(WebServiceEnum.CREAR_PREGUNTA.getCodigo());
@@ -365,7 +365,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
 
                                 if (pregunta.getRespuestas() != null && !pregunta.getRespuestas().isEmpty() && idPreguntaAsignado != null){
                                     for (RespuestaDto rta : pregunta.getRespuestas()){
-                                        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/saveRespuesta?descripcion=" + reemplazarEspacios(rta.getDescripcion())
+                                        String urlRespuesta = getResources().getString(R.string.urlWS) + "/respuestas/saveRespuesta?descripcion=" + reemplazarEspacios(rta.getDescripcion())
                                                 + "&idPregunta=" + idPreguntaAsignado + "&idTipoRespuesta=" + pregunta.getTipoPregunta().getCodigo()
                                                 + "&idUsuario=" + usuarioLogueado.getId();
                                         httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.CREAR_RESPUESTA.getCodigo());
@@ -379,7 +379,7 @@ NuevaEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterfac
                                         idRespuestaAsignado = null;
                                     }
                                 } else {
-                                    String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/respuestas/saveRespuesta?descripcion="
+                                    String urlRespuesta = getResources().getString(R.string.urlWS) + "/respuestas/saveRespuesta?descripcion="
                                             + "&idPregunta=" + idPreguntaAsignado + "&idTipoRespuesta=" + pregunta.getTipoPregunta().getCodigo()
                                             + "&idUsuario=" + usuarioLogueado.getId();
                                     httpAsyncTaskRespuesta = new HttpAsyncTask(WebServiceEnum.CREAR_RESPUESTA.getCodigo());

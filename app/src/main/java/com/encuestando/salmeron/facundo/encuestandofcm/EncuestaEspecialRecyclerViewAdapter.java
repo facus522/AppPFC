@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
@@ -44,6 +46,29 @@ public class EncuestaEspecialRecyclerViewAdapter extends RecyclerView.Adapter<En
         } else {
             holder.geo.setVisibility(View.GONE);
         }
+
+        if (encuestas.get(position).getIsEdadRestriccion() != 0 || encuestas.get(position).getIsSexoRestriccion() != 0){
+            holder.restriccion.setVisibility(View.VISIBLE);
+            String aux = "Encuesta para ";
+            String edad = "";
+            String sexo = "";
+            if (encuestas.get(position).getIsEdadRestriccion() != 0){
+                edad = "mayores de " + encuestas.get(position).getIsEdadRestriccion() + " años";
+            }
+            if (encuestas.get(position).getIsSexoRestriccion() != 0){
+                sexo = "personas de sexo " + (encuestas.get(position).getIsSexoRestriccion().equals(1) ? "masculino" : "femenino");
+            }
+
+            aux += edad;
+            if (!edad.isEmpty() && !sexo.isEmpty()){
+                aux+=" y ";
+            }
+            aux += sexo + ".";
+            holder.restriccion.setText(aux);
+        } else {
+            holder.restriccion.setVisibility(View.GONE);
+        }
+
         holder.titulo.setText(title);
         holder.descripcion.setText(description);
         holder.fecha.setText(dateCreation);
@@ -64,6 +89,7 @@ public class EncuestaEspecialRecyclerViewAdapter extends RecyclerView.Adapter<En
         TextView fecha;
         TextView resoluciones;
         TextView geo;
+        TextView restriccion;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -72,6 +98,7 @@ public class EncuestaEspecialRecyclerViewAdapter extends RecyclerView.Adapter<En
             fecha = itemView.findViewById(R.id.row_fecha_resolver_especial);
             resoluciones = itemView.findViewById(R.id.row_resoluciones_resolver_especial);
             geo = itemView.findViewById(R.id.row_geolocalizada_resolver_especial);
+            restriccion = itemView.findViewById(R.id.row_restricciones_resolver_especial);
             itemView.setOnClickListener(this);
         }
 

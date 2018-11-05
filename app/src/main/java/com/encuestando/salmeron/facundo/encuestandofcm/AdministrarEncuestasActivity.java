@@ -95,7 +95,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
             }
         });
 
-        String url = "http://192.168.0.107:8080/EncuestasFCM/encuestas/getAll";
+        String url = getResources().getString(R.string.urlWS) + "/encuestas/getAll";
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CARGAR_ENCUESTAS.getCodigo());
         httpAsyncTask.setHttpAsyncTaskInterface(AdministrarEncuestasActivity.this);
         try {
@@ -144,7 +144,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i2) {
                         dialogInterface.cancel();
-                        String url = "http://192.168.0.107:8080/EncuestasFCM/encuestas/disableEncuesta?idEncuesta=" + listaEncuestas.get(i).getId() + "&idUsuario=" + usuarioLogueado.getId();
+                        String url = getResources().getString(R.string.urlWS) + "/encuestas/disableEncuesta?idEncuesta=" + listaEncuestas.get(i).getId() + "&idUsuario=" + usuarioLogueado.getId();
                         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.ELIMINAR_ENCUESTA.getCodigo());
                         httpAsyncTask.setHttpAsyncTaskInterface(AdministrarEncuestasActivity.this);
                         try {
@@ -166,7 +166,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
                 alertDialog.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i2) {
-                        String urlAbrir = "http://192.168.0.107:8080/EncuestasFCM/encuestas/openEncuesta?idEncuesta=" + listaEncuestas.get(i).getId();
+                        String urlAbrir = getResources().getString(R.string.urlWS) + "/encuestas/openEncuesta?idEncuesta=" + listaEncuestas.get(i).getId();
                         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.OPEN_ENCUESTA.getCodigo());
                         httpAsyncTask.setHttpAsyncTaskInterface(AdministrarEncuestasActivity.this);
                         try {
@@ -184,6 +184,8 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
                         modificar_intent.putExtra("tituloGuardar", listaEncuestas.get(i).getTitulo());
                         modificar_intent.putExtra("descripcionGuardar", listaEncuestas.get(i).getDescripcion());
                         modificar_intent.putExtra("geolocalizada", listaEncuestas.get(i).getGeolocalizada());
+                        modificar_intent.putExtra("isSexoRestriccion", listaEncuestas.get(i).getIsSexoRestriccion());
+                        modificar_intent.putExtra("isEdadRestriccion", listaEncuestas.get(i).getIsEdadRestriccion());
                         startActivityForResult(modificar_intent, 1);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }

@@ -253,7 +253,7 @@ public class ResolviendoEncuestaNormalActivity extends AppCompatActivity impleme
 
 
     private void incrementarResoluciones() {
-        String urlIncrementando = "http://192.168.0.107:8080/EncuestasFCM/encuestas/incrementarResolucion?idEncuesta=" + idEncuesta;
+        String urlIncrementando = getResources().getString(R.string.urlWS) + "/encuestas/incrementarResolucion?idEncuesta=" + idEncuesta;
         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.INCREMENTAR_RESULTADO.getCodigo());
         httpAsyncTask.setHttpAsyncTaskInterface(ResolviendoEncuestaNormalActivity.this);
         try {
@@ -295,7 +295,7 @@ public class ResolviendoEncuestaNormalActivity extends AppCompatActivity impleme
     }
 
     private void saveRespuesta(Integer id, String descripcion, String sexo) {
-        String urlRespuesta = "http://192.168.0.107:8080/EncuestasFCM/resultados/saveResultado?latitud=" + String.valueOf(latitud)
+        String urlRespuesta = getResources().getString(R.string.urlWS) + "/resultados/saveResultado?latitud=" + String.valueOf(latitud)
                 + "&longitud=" + String.valueOf(longitud)
                 + "&edadEncuestado=" + usuarioLogueado.getEdad().toString()
                 + "&sexoEncuestado=" + sexo

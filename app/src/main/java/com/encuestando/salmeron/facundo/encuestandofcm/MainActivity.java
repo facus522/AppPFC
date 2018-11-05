@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                                 public void run() {
                                     campo_usuario.setError(null);
                                     campo_password.setError(null);
-                                    String url = "http://192.168.0.107:8080/EncuestasFCM/usuarios/loginUser?nombre=" + reemplazarEspacios(campo_usuario.getEditText().getText().toString()) + "&password=" + reemplazarEspacios(campo_password.getEditText().getText().toString());
+                                    String url = getResources().getString(R.string.urlWS) + "/usuarios/loginUser?nombre=" + reemplazarEspacios(campo_usuario.getEditText().getText().toString()) + "&password=" + reemplazarEspacios(campo_password.getEditText().getText().toString());
                                     httpAsyncTask = new HttpAsyncTask(WebServiceEnum.LOGIN_USER.getCodigo());
                                     httpAsyncTask.setHttpAsyncTaskInterface(MainActivity.this);
                                     try{

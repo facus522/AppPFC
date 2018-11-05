@@ -15,6 +15,8 @@ public class ListaEncuestaDto implements Serializable{
     private String resoluciones;
     private String usuarioCreacion;
     private Boolean geolocalizada;
+    private Integer isSexoRestriccion;
+    private Integer isEdadRestriccion;
 
     public Integer getId() {
         return id;
@@ -70,5 +72,21 @@ public class ListaEncuestaDto implements Serializable{
 
     public void setGeolocalizada(Boolean geolocalizada) {
         this.geolocalizada = geolocalizada;
+    }
+
+    public Integer getIsSexoRestriccion() {
+        return isSexoRestriccion;
+    }
+
+    public void setIsSexoRestriccion(Integer isSexoRestriccion) {
+        this.isSexoRestriccion = isSexoRestriccion;
+    }
+
+    public Integer getIsEdadRestriccion() {
+        return isEdadRestriccion;
+    }
+
+    public void setIsEdadRestriccion(Integer isEdadRestriccion) {
+        this.isEdadRestriccion = isEdadRestriccion;
     }
 }
