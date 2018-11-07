@@ -2,12 +2,14 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
@@ -23,17 +25,34 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphicsActivity extends AppCompatActivity {
+public class GraphicsActivity extends AppCompatActivity implements GraphicsPreguntasRecyclerViewAdapter.ItemClickListener {
 
     private BarChart barChart;
     private XAxis xAxis;
     private Toolbar toolbar;
     private ImageButton ayuda;
+    private TextView titulo;
+    private TextView descripcion;
+    private String tituloEncuesta;
+    private String descripcionEncuesta;
+    private UsuarioDto usuarioLogueado;
+    private RecyclerView recyclerView;
+    private GraphicsPreguntasRecyclerViewAdapter adapter;
+    private ArrayList<PreguntaDto> preguntas;
+    private ArrayList<ResultadoDto> resultados;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.graphics_activity);
+
+        tituloEncuesta = (String) getIntent().getSerializableExtra("tituloEncuesta");
+        usuarioLogueado = (UsuarioDto) getIntent().getSerializableExtra("usuario");
+        descripcionEncuesta = (String) getIntent().getSerializableExtra("descripcionEncuesta");
+        preguntas = (ArrayList<PreguntaDto>) getIntent().getSerializableExtra("preguntas");
+        resultados = (ArrayList<ResultadoDto>) getIntent().getSerializableExtra("resultados");
+
+        divideResultadosPreguntas();
 
         toolbar = findViewById(R.id.title_graphics);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
@@ -63,8 +82,18 @@ public class GraphicsActivity extends AppCompatActivity {
             }
         });
 
+        titulo = findViewById(R.id.titulo_encuesta_graphics);
+        titulo.setText(tituloEncuesta);
+        descripcion = findViewById(R.id.descripcion_encuesta_graphics);
+        descripcion.setText(descripcionEncuesta);
 
+        recyclerView = findViewById(R.id.recycler_graphics);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new GraphicsPreguntasRecyclerViewAdapter(this, preguntas);
+        adapter.setClickListener(this);
+        recyclerView.setAdapter(adapter);
 
+        /*
         barChart = findViewById(R.id.graphics_barchart);
         barChart.getDescription().setEnabled(false);
         xAxis = barChart.getXAxis();
@@ -90,7 +119,26 @@ public class GraphicsActivity extends AppCompatActivity {
         YAxis ejeY = barChart.getAxisLeft();
         ejeY.setAxisMinimum(0);
         ejeY.setAxisMaximum(100);
+        */
 
+    }
+
+
+    @Override
+    public void onItemClick(View view, int position) {
+
+    }
+
+    private void divideResultadosPreguntas(){
+        for (PreguntaDto dto : preguntas){
+            for (RespuestaDto rta : dto.getRespuestas()){
+                for (ResultadoDto rtado : resultados){
+                    if (rta.getIdPersistido().equals(rtado.getIdRespuesta())){
+                        dto.getResultadoDtos().add(rtado);
+                    }
+                }
+            }
+        }
     }
 
     @Override

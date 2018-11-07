@@ -22,17 +22,80 @@
         app:titleTextColor="?android:attr/colorPressedHighlight">
 
         <ImageButton
+            android:id="@+id/ayuda_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ayuda_menu"
-            android:background="@drawable/ic_action_error"
-            android:layout_gravity="end" />
+            android:layout_gravity="end"
+            android:background="@drawable/ic_action_error" />
     </android.support.v7.widget.Toolbar>
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/graphics_barchart"
-        />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <TextView
+                    android:id="@+id/titulo_encuesta_graphics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="#46d49090"
+                    android:drawableLeft="@drawable/ic_action_title"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textSize="22dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/descripcion_encuesta_graphics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/titulo_encuesta_graphics"
+                    android:layout_marginTop="10dp"
+                    android:background="#46d49090"
+                    android:drawableLeft="@drawable/ic_action_description"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textSize="18dp"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/preguntas_graphic_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/descripcion_encuesta_graphics"
+                    android:layout_marginTop="15dp"
+                    android:background="#46000000"
+                    android:drawableLeft="@drawable/ic_preguntas"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="Preguntas:"
+                    android:textSize="20dp"
+                    android:textStyle="italic" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_graphics"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/preguntas_graphic_view"
+                    android:layout_marginTop="10dp" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

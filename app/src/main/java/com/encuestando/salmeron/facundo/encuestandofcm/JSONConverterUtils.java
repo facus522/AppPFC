@@ -151,6 +151,28 @@ public class JSONConverterUtils {
         return result;
     }
 
+    public static ArrayList<ResultadoDto> JSONTraerResultadosEncuestaConverter(String jsonString){
+        ArrayList<ResultadoDto> result = new ArrayList<>();
+
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray("response");
+            for (int i=0; i<jsonArray.length();i++){
+                ResultadoDto dto = new ResultadoDto();
+                dto.setLatitud((String) jsonArray.getJSONObject(i).get("latitud"));
+                dto.setLongitud((String) jsonArray.getJSONObject(i).get("longitud"));
+                dto.setIdRespuesta((Integer) jsonArray.getJSONObject(i).get("idRespuesta"));
+                dto.setDescripcion((String) jsonArray.getJSONObject(i).get("descripcion"));
+
+                result.add(dto);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     public static Map<Boolean,ArrayList<PreguntaDto>> JSONAbrirEncuestasValidarConverter(String jsonString){
         Map<Boolean, ArrayList<PreguntaDto>> mapa = new HashMap<>();
         ArrayList<PreguntaDto> result = new ArrayList<>();

@@ -73,6 +73,8 @@ public class HttpAsyncTask extends AsyncTask<String,Void,String> {
             httpAsyncTaskInterface.incrementarResultado(result);
         } else if (nroWebService.equals(WebServiceEnum.OPEN_ENCUESTA_VALIDAR.getCodigo())){
             httpAsyncTaskInterface.abrirEncuestaValidar(result);
+        } else if (nroWebService.equals(WebServiceEnum.RESULTADOS_ENCUESTA.getCodigo())){
+            httpAsyncTaskInterface.traerResultadosEncuesta(result);
         }
 
         try {

@@ -53,25 +53,6 @@ public class PreguntaResponderRecyclerViewAdapter extends RecyclerView.Adapter<R
         }
     }
 
-    public void getResultados(){
-        for (PreguntaDto dto : preguntas){
-            switch (dto.getTipoPregunta().getCodigo()){
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {

@@ -23,7 +23,8 @@ public enum WebServiceEnum {
     MODIFICAR_ENCUESTA(15, "Modificar Encuesta"),
     CONTESTAR_PREGUNTA(16, "Contestar Pregunta"),
     INCREMENTAR_RESULTADO(17, "Incrementar Resultado"),
-    OPEN_ENCUESTA_VALIDAR(18, "Abrir Encuesta y Validar");
+    OPEN_ENCUESTA_VALIDAR(18, "Abrir Encuesta y Validar"),
+    RESULTADOS_ENCUESTA(19, "Resultados Encuesta");
 
     private Integer codigo;
     private String descripcion;

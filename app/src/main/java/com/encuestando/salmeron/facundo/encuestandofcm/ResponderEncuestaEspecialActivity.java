@@ -29,6 +29,7 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
     private EncuestaEspecialRecyclerViewAdapter adapter;
     private ArrayList<ListaEncuestaDto> encuestas = new ArrayList<>();
     private ArrayList<PreguntaDto> preguntasAbrir = new ArrayList<>();
+    private ArrayList<ResultadoDto> resultados = new ArrayList<>();
     private HttpAsyncTask httpAsyncTask;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean scrollEnabled;
@@ -140,15 +141,43 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
         alertDialog.setMessage("¿Qué acción desea realizar?");
-        alertDialog.setNegativeButton("Ver Estadísticas", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i2) {
-                dialogInterface.cancel();
-                Intent responder_intent = new Intent(ResponderEncuestaEspecialActivity.this, GraphicsActivity.class).putExtra("usuario", usuarioLogueado);
-                startActivityForResult(responder_intent, 1);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
-        });
+        if (Integer.parseInt(encuestas.get(position).getResoluciones()) > 0){
+            alertDialog.setNegativeButton("Ver Estadísticas", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i2) {
+                    dialogInterface.cancel();
+
+                    String urlAbrirGraficos = getResources().getString(R.string.urlWS) + "/encuestas/openEncuesta?idEncuesta=" + encuestas.get(position).getId();
+                    httpAsyncTask = new HttpAsyncTask(WebServiceEnum.OPEN_ENCUESTA.getCodigo());
+                    httpAsyncTask.setHttpAsyncTaskInterface(ResponderEncuestaEspecialActivity.this);
+                    try {
+                        String receivedData = httpAsyncTask.execute(urlAbrirGraficos).get();
+                    } catch (ExecutionException | InterruptedException ei) {
+                        ei.printStackTrace();
+                    }
+
+                    String urlTraer = getResources().getString(R.string.urlWS) + "/resultados/getResultados?idEncuesta=" + encuestas.get(position).getId();
+                    httpAsyncTask = new HttpAsyncTask(WebServiceEnum.RESULTADOS_ENCUESTA.getCodigo());
+                    httpAsyncTask.setHttpAsyncTaskInterface(ResponderEncuestaEspecialActivity.this);
+                    try {
+                        String receivedData = httpAsyncTask.execute(urlTraer).get();
+                    } catch (ExecutionException | InterruptedException ei) {
+                        ei.printStackTrace();
+                    }
+
+                    Intent graphics_intent = new Intent(ResponderEncuestaEspecialActivity.this, GraphicsActivity.class).putExtra("usuario", usuarioLogueado);
+                    graphics_intent.putExtra("idEncuestaPersistida", encuestas.get(position).getId());
+                    graphics_intent.putExtra("preguntas", preguntasAbrir);
+                    graphics_intent.putExtra("resultados", resultados);
+                    graphics_intent.putExtra("tituloEncuesta", encuestas.get(position).getTitulo());
+                    graphics_intent.putExtra("descripcionEncuesta", encuestas.get(position).getDescripcion());
+                    graphics_intent.putExtra("isGeolocalizada", encuestas.get(position).getGeolocalizada());
+                    startActivityForResult(graphics_intent, 1);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                }
+            });
+        }
+
         alertDialog.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -202,6 +231,14 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
         String encuestasJSON = result;
         if (encuestasJSON != null && !encuestasJSON.isEmpty()) {
             preguntasAbrir = JSONConverterUtils.JSONAbrirEncuestasConverter(result);
+        }
+    }
+
+    @Override
+    public void traerResultadosEncuesta(String result) {
+        String encuestasJSON = result;
+        if (encuestasJSON != null && !encuestasJSON.isEmpty()) {
+            resultados = JSONConverterUtils.JSONTraerResultadosEncuestaConverter(result);
         }
     }
 
