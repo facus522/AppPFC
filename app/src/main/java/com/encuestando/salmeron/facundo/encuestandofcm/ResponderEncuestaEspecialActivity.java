@@ -136,23 +136,48 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
 
     @Override
     public void onItemClick(View view, int position) {
-        String urlAbrir = getResources().getString(R.string.urlWS) + "/encuestas/openEncuesta?idEncuesta=" + encuestas.get(position).getId();
-        httpAsyncTask = new HttpAsyncTask(WebServiceEnum.OPEN_ENCUESTA.getCodigo());
-        httpAsyncTask.setHttpAsyncTaskInterface(ResponderEncuestaEspecialActivity.this);
-        try {
-            String receivedData = httpAsyncTask.execute(urlAbrir).get();
-        } catch (ExecutionException | InterruptedException ei) {
-            ei.printStackTrace();
-        }
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResponderEncuestaEspecialActivity.this);
+        alertDialog.setTitle("Atención");
+        alertDialog.setIcon(R.drawable.ic_action_error);
+        alertDialog.setMessage("¿Qué acción desea realizar?");
+        alertDialog.setNegativeButton("Ver Estadísticas", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i2) {
+                dialogInterface.cancel();
+                Intent responder_intent = new Intent(ResponderEncuestaEspecialActivity.this, GraphicsActivity.class).putExtra("usuario", usuarioLogueado);
+                startActivityForResult(responder_intent, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        alertDialog.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        alertDialog.setPositiveButton("Responder", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i2) {
+                String urlAbrir = getResources().getString(R.string.urlWS) + "/encuestas/openEncuesta?idEncuesta=" + encuestas.get(position).getId();
+                httpAsyncTask = new HttpAsyncTask(WebServiceEnum.OPEN_ENCUESTA.getCodigo());
+                httpAsyncTask.setHttpAsyncTaskInterface(ResponderEncuestaEspecialActivity.this);
+                try {
+                    String receivedData = httpAsyncTask.execute(urlAbrir).get();
+                } catch (ExecutionException | InterruptedException ei) {
+                    ei.printStackTrace();
+                }
 
-        Intent responder_intent = new Intent(ResponderEncuestaEspecialActivity.this, ResolviendoEncuestaEspecialActivity.class).putExtra("usuario", usuarioLogueado);
-        responder_intent.putExtra("idEncuestaPersistida", encuestas.get(position).getId());
-        responder_intent.putExtra("preguntas", preguntasAbrir);
-        responder_intent.putExtra("tituloEncuesta", encuestas.get(position).getTitulo());
-        responder_intent.putExtra("descripcionEncuesta", encuestas.get(position).getDescripcion());
-        responder_intent.putExtra("isGeolocalizada", encuestas.get(position).getGeolocalizada());
-        startActivityForResult(responder_intent, 1);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                Intent responder_intent = new Intent(ResponderEncuestaEspecialActivity.this, ResolviendoEncuestaEspecialActivity.class).putExtra("usuario", usuarioLogueado);
+                responder_intent.putExtra("idEncuestaPersistida", encuestas.get(position).getId());
+                responder_intent.putExtra("preguntas", preguntasAbrir);
+                responder_intent.putExtra("tituloEncuesta", encuestas.get(position).getTitulo());
+                responder_intent.putExtra("descripcionEncuesta", encuestas.get(position).getDescripcion());
+                responder_intent.putExtra("isGeolocalizada", encuestas.get(position).getGeolocalizada());
+                startActivityForResult(responder_intent, 1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        alertDialog.show();
     }
 
     @Override
