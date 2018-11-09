@@ -19,13 +19,13 @@
             android:textSize="17dp"
             android:textColor="#ffffff"
             android:textStyle="bold"
-            android:text="TASAS"
             android:paddingLeft="10dp"/>
 
         <com.github.mikephil.charting.charts.BarChart
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:id="@+id/barchart_unica"
+            android:background="@color/graficos"
             android:layout_marginTop="5dp"
             android:layout_below="@id/titulo_grafico_unica">
 

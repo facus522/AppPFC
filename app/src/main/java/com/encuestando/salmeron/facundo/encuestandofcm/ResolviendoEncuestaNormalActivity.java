@@ -268,15 +268,15 @@ public class ResolviendoEncuestaNormalActivity extends AppCompatActivity impleme
             switch (vh.getItemViewType()) {
                 case 1:
                     PreguntaResponderRecyclerViewAdapter.ViewHolder2 viewHolderChoicer = (PreguntaResponderRecyclerViewAdapter.ViewHolder2) vh;
-                    ArrayList<Integer> respuestasChecked = getRespuestasChecked(viewHolderChoicer.getListaCheckbox());
-                    for (Integer i : respuestasChecked) {
-                        saveRespuesta(i, "", sexo);
+                    ArrayList<RespuestaTildadaDto> respuestasChecked = getRespuestasChecked(viewHolderChoicer.getListaCheckbox());
+                    for (RespuestaTildadaDto i : respuestasChecked) {
+                        saveRespuesta(i.getId(), i.getDescripcion(), sexo);
                     }
                     break;
                 case 2:
                     PreguntaResponderRecyclerViewAdapter.ViewHolder2 viewHolderUnica = (PreguntaResponderRecyclerViewAdapter.ViewHolder2) vh;
-                    Integer respuestaTildada = getRespuestaTildada(viewHolderUnica.getListaRadios());
-                    saveRespuesta(respuestaTildada, "", sexo);
+                    RespuestaTildadaDto respuestaTildada = getRespuestaTildada(viewHolderUnica.getListaRadios());
+                    saveRespuesta(respuestaTildada.getId(), respuestaTildada.getDescripcion(), sexo);
                     break;
                 case 5:
                     PreguntaResponderRecyclerViewAdapter.ViewHolder viewHolderScale = (PreguntaResponderRecyclerViewAdapter.ViewHolder) vh;
@@ -319,21 +319,25 @@ public class ResolviendoEncuestaNormalActivity extends AppCompatActivity impleme
         return aux;
     }
 
-    private ArrayList<Integer> getRespuestasChecked(ArrayList<CheckBox> checkBoxes) {
-        ArrayList<Integer> rtas = new ArrayList<>();
+    private ArrayList<RespuestaTildadaDto> getRespuestasChecked(ArrayList<CheckBox> checkBoxes) {
+        ArrayList<RespuestaTildadaDto> rtas = new ArrayList<>();
         for (CheckBox cb : checkBoxes) {
             if (cb.isChecked()) {
-                rtas.add(cb.getId());
+                RespuestaTildadaDto rta = new RespuestaTildadaDto();
+                rta.setId(cb.getId());
+                rta.setDescripcion(cb.getText().toString());
+                rtas.add(rta);
             }
         }
         return rtas;
     }
 
-    private Integer getRespuestaTildada(ArrayList<RadioButton> radioButtons) {
-        Integer rta = null;
+    private RespuestaTildadaDto getRespuestaTildada(ArrayList<RadioButton> radioButtons) {
+        RespuestaTildadaDto rta = new RespuestaTildadaDto();
         for (RadioButton rb : radioButtons) {
             if (rb.isChecked()) {
-                rta = rb.getId();
+                rta.setId(rb.getId());
+                rta.setDescripcion(rb.getText().toString());
                 break;
             }
         }

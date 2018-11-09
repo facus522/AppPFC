@@ -21,6 +21,13 @@
             android:textStyle="bold"
             android:paddingLeft="10dp"/>
 
+        <com.github.mikephil.charting.charts.PieChart
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/piechart_unica"
+            android:background="@color/graficos"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/titulo_grafico_choice"/>
 
 
     </RelativeLayout>

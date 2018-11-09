@@ -71,10 +71,38 @@
                     android:textStyle="italic" />
 
                 <TextView
-                    android:id="@+id/preguntas_graphic_view"
+                    android:id="@+id/edad_promedio_encuesta_graphics"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/descripcion_encuesta_graphics"
+                    android:layout_marginTop="10dp"
+                    android:background="#46d49090"
+                    android:drawableLeft="@drawable/ic_action_user"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textSize="18dp"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/sexo_promedio_encuesta_graphics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edad_promedio_encuesta_graphics"
+                    android:layout_marginTop="10dp"
+                    android:background="#46d49090"
+                    android:drawableLeft="@drawable/ic_action_user"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textSize="18dp"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/preguntas_graphic_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sexo_promedio_encuesta_graphics"
                     android:layout_marginTop="15dp"
                     android:background="#46000000"
                     android:drawableLeft="@drawable/ic_preguntas"
@@ -91,6 +119,34 @@
                     android:layout_height="match_parent"
                     android:layout_below="@+id/preguntas_graphic_view"
                     android:layout_marginTop="10dp" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/volver_graphics"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/recycler_graphics"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="7dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="Volver"
+                            android:textColor="#fff"
+                            android:textSize="24sp" />
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
 
             </RelativeLayout>
 

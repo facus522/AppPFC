@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
     private ArrayList<PreguntaDto> preguntasAbrir = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean scrollEnabled;
+    private ImageButton ayuda;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,24 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
                 agregar_intent.putExtra("preguntas", new ArrayList<PreguntaDto>());
                 startActivityForResult(agregar_intent, 1);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+
+        ayuda = findViewById(R.id.ayuda_menu);
+        ayuda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(AdministrarEncuestasActivity.this, AlertDialog.THEME_HOLO_DARK);
+                alertDialog.setTitle("Información");
+                alertDialog.setMessage("Solamente se podrán modificar aquellas encuestas que todavía no hayan sido respondidas, para mantener mejor consitencia de los datos.\nPor ello, es muy importante verificar todos los datos de la misma antes de habilitarla.\nPara que la encuesta se encuestre disponible para su resolución debe elegir la opción 'Habilitar Encuesta'");
+                alertDialog.setIcon(R.drawable.ic_action_error);
+                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
             }
         });
 
@@ -163,33 +183,35 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
                         dialogInterface.cancel();
                     }
                 });
-                alertDialog.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i2) {
-                        String urlAbrir = getResources().getString(R.string.urlWS) + "/encuestas/openEncuesta?idEncuesta=" + listaEncuestas.get(i).getId();
-                        httpAsyncTask = new HttpAsyncTask(WebServiceEnum.OPEN_ENCUESTA.getCodigo());
-                        httpAsyncTask.setHttpAsyncTaskInterface(AdministrarEncuestasActivity.this);
-                        try {
-                            String receivedData = httpAsyncTask.execute(urlAbrir).get();
-                        } catch (ExecutionException | InterruptedException ei) {
-                            ei.printStackTrace();
+                if (Integer.valueOf(listaEncuestas.get(i).getResoluciones()) == 0) {
+                    alertDialog.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i2) {
+                            String urlAbrir = getResources().getString(R.string.urlWS) + "/encuestas/openEncuesta?idEncuesta=" + listaEncuestas.get(i).getId();
+                            httpAsyncTask = new HttpAsyncTask(WebServiceEnum.OPEN_ENCUESTA.getCodigo());
+                            httpAsyncTask.setHttpAsyncTaskInterface(AdministrarEncuestasActivity.this);
+                            try {
+                                String receivedData = httpAsyncTask.execute(urlAbrir).get();
+                            } catch (ExecutionException | InterruptedException ei) {
+                                ei.printStackTrace();
+                            }
+
+
+                            Intent modificar_intent = new Intent(AdministrarEncuestasActivity.this, ModificarEncuestaActivity.class).putExtra("usuario", usuarioLogueado);
+                            modificar_intent.putExtra("idEncuestaPersistida", listaEncuestas.get(i).getId());
+                            modificar_intent.putExtra("preguntas", preguntasAbrir);
+                            modificar_intent.putExtra("preguntasEliminar", new ArrayList<PreguntaDto>());
+                            modificar_intent.putExtra("respuestasEliminar", new ArrayList<RespuestaDto>());
+                            modificar_intent.putExtra("tituloGuardar", listaEncuestas.get(i).getTitulo());
+                            modificar_intent.putExtra("descripcionGuardar", listaEncuestas.get(i).getDescripcion());
+                            modificar_intent.putExtra("geolocalizada", listaEncuestas.get(i).getGeolocalizada());
+                            modificar_intent.putExtra("isSexoRestriccion", listaEncuestas.get(i).getIsSexoRestriccion());
+                            modificar_intent.putExtra("isEdadRestriccion", listaEncuestas.get(i).getIsEdadRestriccion());
+                            startActivityForResult(modificar_intent, 1);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         }
-
-
-                        Intent modificar_intent = new Intent(AdministrarEncuestasActivity.this, ModificarEncuestaActivity.class).putExtra("usuario", usuarioLogueado);
-                        modificar_intent.putExtra("idEncuestaPersistida", listaEncuestas.get(i).getId());
-                        modificar_intent.putExtra("preguntas", preguntasAbrir);
-                        modificar_intent.putExtra("preguntasEliminar", new ArrayList<PreguntaDto>());
-                        modificar_intent.putExtra("respuestasEliminar", new ArrayList<RespuestaDto>());
-                        modificar_intent.putExtra("tituloGuardar", listaEncuestas.get(i).getTitulo());
-                        modificar_intent.putExtra("descripcionGuardar", listaEncuestas.get(i).getDescripcion());
-                        modificar_intent.putExtra("geolocalizada", listaEncuestas.get(i).getGeolocalizada());
-                        modificar_intent.putExtra("isSexoRestriccion", listaEncuestas.get(i).getIsSexoRestriccion());
-                        modificar_intent.putExtra("isEdadRestriccion", listaEncuestas.get(i).getIsEdadRestriccion());
-                        startActivityForResult(modificar_intent, 1);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    }
-                });
+                    });
+                }
                 alertDialog.show();
             }
         });

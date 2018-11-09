@@ -1,23 +1,27 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.NumberPicker;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Facundo Salmerón on 07/11/2018.
@@ -61,9 +65,59 @@ public class GraphicsPreguntasRecyclerViewAdapter extends RecyclerView.Adapter<R
 
         switch (holder.getItemViewType()){
             case 1:
-                //ViewHolderChoice viewHolderChoice = (ViewHolder2) holder;
+                ViewHolderChoice viewHolderChoice = (ViewHolderChoice) holder;
+                PreguntaDto preguntaRecyclerChoice = preguntas.get(position);
+                viewHolderChoice.textViewTitle.setText(preguntaRecyclerChoice.getId() + ". " + preguntaRecyclerChoice.getDescripcion());
+                viewHolderChoice.pieChart.getDescription().setText("Promedio de respuestas");
+                List<CargarGraficosDto> datosChoice = obtenerDatosGrafico(preguntaRecyclerChoice.getRespuestas(), preguntaRecyclerChoice.getResultadoDtos());
+                List<String> listaChoice = new ArrayList<>();
+                ArrayList<PieEntry> entriesChoice = new ArrayList<>();
+
+                for (int i=0; i<datosChoice.size(); i++){
+                    entriesChoice.add(new PieEntry(datosChoice.get(i).getPorcentaje(), datosChoice.get(i).getDescripcion()));
+                    listaChoice.add(datosChoice.get(i).getDescripcion());
+                }
+
+                PieDataSet pieDataSet = new PieDataSet(entriesChoice, "");
+                pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                PieData pieData = new PieData(pieDataSet);
+                viewHolderChoice.pieChart.setData(pieData);
+                viewHolderChoice.pieChart.animateY(2000);
+
                 break;
             case 2:
+                ViewHolderUnica viewHolderUnica = (ViewHolderUnica) holder;
+                PreguntaDto preguntaRecyclerUnica = preguntas.get(position);
+                viewHolderUnica.textViewTitle.setText(preguntaRecyclerUnica.getId() + ". " + preguntaRecyclerUnica.getDescripcion());
+                viewHolderUnica.barChart.getDescription().setEnabled(false);
+                viewHolderUnica.xAxis = viewHolderUnica.barChart.getXAxis();
+
+                List<CargarGraficosDto> datos = obtenerDatosGrafico(preguntaRecyclerUnica.getRespuestas(), preguntaRecyclerUnica.getResultadoDtos());
+
+                List<String> lista = new ArrayList<>();
+
+                ArrayList<BarEntry> entries = new ArrayList<>();
+
+                for (int i=0; i<datos.size(); i++){
+                    entries.add(new BarEntry(i, datos.get(i).getPorcentaje(), datos.get(i).getDescripcion()));
+                    lista.add(datos.get(i).getDescripcion());
+                }
+
+                viewHolderUnica.xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                viewHolderUnica.xAxis.setLabelCount(entries.size());
+                viewHolderUnica.xAxis.setValueFormatter(new IndexAxisValueFormatter(lista));
+
+                BarDataSet dataSet = new BarDataSet(entries, "Promedio de respuestas");
+                dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+
+                BarData data = new BarData(dataSet);
+
+                viewHolderUnica.barChart.setData(data);
+                viewHolderUnica.barChart.animateY(2000);
+
+                YAxis ejeY = viewHolderUnica.barChart.getAxisLeft();
+                ejeY.setAxisMinimum(0);
+                ejeY.setAxisMaximum(100);
                 break;
             case 3:
                 ViewHolderNumerica viewHolderNumerica = (ViewHolderNumerica) holder;
@@ -81,12 +135,33 @@ public class GraphicsPreguntasRecyclerViewAdapter extends RecyclerView.Adapter<R
                 ViewHolderEscala viewHolderEscala = (ViewHolderEscala) holder;
                 PreguntaDto preguntaRecyclerEscala = preguntas.get(position);
                 Float promedioEscala = calcularPromedios(preguntaRecyclerEscala.getResultadoDtos());
+                if (promedioEscala < (preguntas.get(position).getMaximaEscala() / 2.0f)) {
+                    viewHolderEscala.promedio.setBackground(viewHolderEscala.itemView.getResources().getDrawable(R.drawable.escala_baja_circle));
+                }
                 viewHolderEscala.textViewTitle.setText(preguntaRecyclerEscala.getId() + ". " + preguntaRecyclerEscala.getDescripcion());
                 viewHolderEscala.promedio.setText(String.format("%.2f", promedioEscala) + "/" + preguntaRecyclerEscala.getMaximaEscala());
                 break;
             default: break;
         }
 
+    }
+
+    private List<CargarGraficosDto> obtenerDatosGrafico(ArrayList<RespuestaDto> respuestas, ArrayList<ResultadoDto> resultados){
+        List<CargarGraficosDto> cargas = new ArrayList<>();
+        for (RespuestaDto rta : respuestas) {
+            CargarGraficosDto carga = new CargarGraficosDto();
+            Integer totalRespuestas = 0;
+            for (ResultadoDto rdo : resultados) {
+                if (rta.getIdPersistido().equals(rdo.getIdRespuesta())){
+                    totalRespuestas++;
+                }
+            }
+            carga.setIdRespuesta(rta.getIdPersistido());
+            carga.setDescripcion(rta.getDescripcion());
+            carga.setPorcentaje(totalRespuestas * 100.00f / resultados.size());
+            cargas.add(carga);
+        }
+        return cargas;
     }
 
     // total number of rows
@@ -108,10 +183,12 @@ public class GraphicsPreguntasRecyclerViewAdapter extends RecyclerView.Adapter<R
     // stores and recycles views as they are scrolled off screen
     public class ViewHolderChoice extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView textViewTitle;
+        private PieChart pieChart;
 
         public ViewHolderChoice(View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.titulo_grafico_choice);
+            pieChart = itemView.findViewById(R.id.piechart_unica);
             itemView.setOnClickListener(this);
 
 
@@ -126,6 +203,7 @@ public class GraphicsPreguntasRecyclerViewAdapter extends RecyclerView.Adapter<R
     public class ViewHolderUnica extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView textViewTitle;
         private BarChart barChart;
+        private XAxis xAxis;
 
         public ViewHolderUnica(View itemView) {
             super(itemView);

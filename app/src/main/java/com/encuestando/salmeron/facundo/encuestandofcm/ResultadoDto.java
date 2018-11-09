@@ -9,11 +9,13 @@ import java.io.Serializable;
  * Created by Facundo Salmerón on 7/11/2018.
  */
 
-public class ResultadoDto implements Serializable, Parcelable {
+public class ResultadoDto implements Serializable {
     private String latitud;
     private String longitud;
     private Integer idRespuesta;
     private String descripcion;
+    private Integer edad;
+    private Integer sexo;
 
     public String getLatitud() {
         return latitud;
@@ -47,53 +49,19 @@ public class ResultadoDto implements Serializable, Parcelable {
         this.descripcion = descripcion;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public Integer getEdad() {
+        return edad;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        if (latitud != null){
-            parcel.writeString(latitud);
-        }
-
-        if (longitud != null){
-            parcel.writeString(longitud);
-        }
-
-        if (idRespuesta != null){
-            parcel.writeInt(idRespuesta.intValue());
-        } else {
-            parcel.writeInt(-1);
-        }
-
-        if (descripcion != null){
-            parcel.writeString(descripcion);
-        }
+    public void setEdad(Integer edad) {
+        this.edad = edad;
     }
 
-    private ResultadoDto(Parcel in) {
-        latitud = in.readString();
-        longitud = in.readString();
-        idRespuesta = in.readInt();
-        descripcion = in.readString();
+    public Integer getSexo() {
+        return sexo;
     }
 
-    public ResultadoDto() {
-        // Normal actions performed by class, since this is still a normal object!
+    public void setSexo(Integer sexo) {
+        this.sexo = sexo;
     }
-
-    public static final Parcelable.Creator<ResultadoDto> CREATOR = new Parcelable.Creator<ResultadoDto>(){
-        @Override
-        public ResultadoDto createFromParcel(Parcel in) {
-            return new ResultadoDto(in);
-        }
-
-        // We just need to copy this and change the type to match our class.
-        @Override
-        public ResultadoDto[] newArray(int size) {
-            return new ResultadoDto[size];
-        }
-    };
 }

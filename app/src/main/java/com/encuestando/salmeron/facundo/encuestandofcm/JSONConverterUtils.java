@@ -163,6 +163,8 @@ public class JSONConverterUtils {
                 dto.setLongitud((String) jsonArray.getJSONObject(i).get("longitud"));
                 dto.setIdRespuesta((Integer) jsonArray.getJSONObject(i).get("idRespuesta"));
                 dto.setDescripcion((String) jsonArray.getJSONObject(i).get("descripcion"));
+                dto.setEdad((Integer) jsonArray.getJSONObject(i).get("edad"));
+                dto.setSexo((Integer) jsonArray.getJSONObject(i).get("sexo"));
 
                 result.add(dto);
             }

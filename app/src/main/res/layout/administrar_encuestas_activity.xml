@@ -17,9 +17,19 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:title="Administración de Encuestas"
-            app:titleTextColor="?android:attr/colorPressedHighlight"
-            app:popupTheme="@style/PopupOverlay" />
+            app:titleTextColor="?android:attr/colorPressedHighlight">
 
+
+            app:popupTheme="@style/PopupOverlay"
+
+            <ImageButton
+                android:id="@+id/ayuda_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:background="@drawable/ic_action_error" />
+            />
+        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_admin_encuestas" />
@@ -30,10 +40,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:tint="@color/cardview_light_background"
-        android:elevation="10dp"
         android:clickable="true"
+        android:elevation="10dp"
         android:scaleType="center"
+        android:tint="@color/cardview_light_background"
         app:backgroundTint="@android:color/holo_red_dark"
         app:fabSize="normal"
         app:srcCompat="@android:drawable/ic_input_add" />
