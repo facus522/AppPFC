@@ -103,7 +103,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
             public void onClick(View view) {
                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(AdministrarEncuestasActivity.this, AlertDialog.THEME_HOLO_DARK);
                 alertDialog.setTitle("Información");
-                alertDialog.setMessage("Solamente se podrán modificar aquellas encuestas que todavía no hayan sido respondidas, para mantener mejor consitencia de los datos.\nPor ello, es muy importante verificar todos los datos de la misma antes de habilitarla.\nPara que la encuesta se encuestre disponible para su resolución debe elegir la opción 'Habilitar Encuesta'");
+                alertDialog.setMessage("Solamente se podrán modificar aquellas encuestas que todavía no hayan sido respondidas, para evitar inconsitencia en los datos.\nPor ello, es muy importante verificar todos los datos de la misma antes de habilitarla.\nPara que la encuesta se encuestre disponible para su resolución debe elegir la opción 'Habilitar Encuesta', caso contrario 'Inhabilitar Encuesta'.");
                 alertDialog.setIcon(R.drawable.ic_action_error);
                 alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -164,7 +164,7 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i2) {
                         dialogInterface.cancel();
-                        String url = getResources().getString(R.string.urlWS) + "/encuestas/disableEncuesta?idEncuesta=" + listaEncuestas.get(i).getId() + "&idUsuario=" + usuarioLogueado.getId();
+                        String url = getResources().getString(R.string.urlWS) + "/encuestas/removeEncuesta?idEncuesta=" + listaEncuestas.get(i).getId() + "&idUsuario=" + usuarioLogueado.getId();
                         httpAsyncTask = new HttpAsyncTask(WebServiceEnum.ELIMINAR_ENCUESTA.getCodigo());
                         httpAsyncTask.setHttpAsyncTaskInterface(AdministrarEncuestasActivity.this);
                         try {
@@ -177,12 +177,44 @@ public class AdministrarEncuestasActivity extends AppCompatActivity implements H
                         Toast.makeText(AdministrarEncuestasActivity.this, "Encuesta eliminada correctamente!", Toast.LENGTH_LONG).show();
                     }
                 });
-                alertDialog.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
+                if (listaEncuestas.get(i).getHabilitada()){
+                    alertDialog.setNeutralButton("Inhabilitar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i2) {
+                            dialogInterface.cancel();
+                            String url = getResources().getString(R.string.urlWS) + "/encuestas/disableEncuesta?idEncuesta=" + listaEncuestas.get(i).getId() + "&idUsuario=" + usuarioLogueado.getId();
+                            httpAsyncTask = new HttpAsyncTask(WebServiceEnum.INHABILITAR_ENCUESTA.getCodigo());
+                            httpAsyncTask.setHttpAsyncTaskInterface(AdministrarEncuestasActivity.this);
+                            try {
+                                String receivedData = httpAsyncTask.execute(url).get();
+                            } catch (ExecutionException | InterruptedException ei) {
+                                ei.printStackTrace();
+                            }
+                            finish();
+                            startActivity(getIntent());
+                            Toast.makeText(AdministrarEncuestasActivity.this, "La encuesta ha sido INHABILITADA para responder!", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    alertDialog.setNeutralButton("Habilitar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i2) {
+                            dialogInterface.cancel();
+                            String url = getResources().getString(R.string.urlWS) + "/encuestas/enableEncuesta?idEncuesta=" + listaEncuestas.get(i).getId() + "&idUsuario=" + usuarioLogueado.getId();
+                            httpAsyncTask = new HttpAsyncTask(WebServiceEnum.HABILITAR_ENCUESTA.getCodigo());
+                            httpAsyncTask.setHttpAsyncTaskInterface(AdministrarEncuestasActivity.this);
+                            try {
+                                String receivedData = httpAsyncTask.execute(url).get();
+                            } catch (ExecutionException | InterruptedException ei) {
+                                ei.printStackTrace();
+                            }
+                            finish();
+                            startActivity(getIntent());
+                            Toast.makeText(AdministrarEncuestasActivity.this, "La encuesta ha sido HABILITADA para responder!", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+
                 if (Integer.valueOf(listaEncuestas.get(i).getResoluciones()) == 0) {
                     alertDialog.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
                         @Override

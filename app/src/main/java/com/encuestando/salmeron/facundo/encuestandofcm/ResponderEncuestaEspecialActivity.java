@@ -71,8 +71,8 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_responder_especial);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        String url = getResources().getString(R.string.urlWS) + "/encuestas/getAll";
-        httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CARGAR_ENCUESTAS.getCodigo());
+        String url = getResources().getString(R.string.urlWS) + "/encuestas/getAllHabilitadas";
+        httpAsyncTask = new HttpAsyncTask(WebServiceEnum.CARGAR_ENCUESTAS_HABILITADAS.getCodigo());
         httpAsyncTask.setHttpAsyncTaskInterface(ResponderEncuestaEspecialActivity.this);
         try {
             String receivedData = httpAsyncTask.execute(url).get();
@@ -84,7 +84,7 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResponderEncuestaEspecialActivity.this);
             alertDialog.setTitle("Sin Datos");
             alertDialog.setCancelable(false);
-            alertDialog.setMessage("Actualmente no se encuentran cargadas Encuestas.");
+            alertDialog.setMessage("Actualmente no se encuentran habilitadas Encuestas para responder.");
             alertDialog.setIcon(R.drawable.ic_action_error);
             alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override

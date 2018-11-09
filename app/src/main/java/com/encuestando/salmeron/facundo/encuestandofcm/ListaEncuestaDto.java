@@ -17,6 +17,7 @@ public class ListaEncuestaDto implements Serializable{
     private Boolean geolocalizada;
     private Integer isSexoRestriccion;
     private Integer isEdadRestriccion;
+    private Boolean habilitada;
 
     public Integer getId() {
         return id;
@@ -88,5 +89,13 @@ public class ListaEncuestaDto implements Serializable{
 
     public void setIsEdadRestriccion(Integer isEdadRestriccion) {
         this.isEdadRestriccion = isEdadRestriccion;
+    }
+
+    public Boolean getHabilitada() {
+        return habilitada;
+    }
+
+    public void setHabilitada(Boolean habilitada) {
+        this.habilitada = habilitada;
     }
 }

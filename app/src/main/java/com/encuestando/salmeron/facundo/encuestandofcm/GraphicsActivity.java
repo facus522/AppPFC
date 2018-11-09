@@ -76,7 +76,7 @@ public class GraphicsActivity extends AppCompatActivity implements GraphicsPregu
             public void onClick(View view) {
                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(GraphicsActivity.this, AlertDialog.THEME_HOLO_DARK);
                 alertDialog.setTitle("Información");
-                alertDialog.setMessage("En esta sección podrá encontrar estadísticas acerca de los resultados de la encuesta.\nSe proporcionan gráficos para todas las preguntas, excepto las de tipo 'Textual' ya que éstas son de libre desarrollo.\nPuede ampliar o reducir los graficos presionando sobre los mismos.");
+                alertDialog.setMessage("En esta sección encontrará estadísticas relacionadas a los resultados de la encuesta, así como tambien el promedio de edad y sexo de los encuestados.\nPara preguntas tipo 'Múltiple Choice' se presenta un gráfico de torta con los promedios.\nPara preguntas de tipo 'Respuesta Única' se presenta un gráfico de barras con los promedios.\nAquellas preguntas de tipo 'Textual' no contarán con estadísticas.\nLas preguntas 'Numéricas' y de tipo 'Escala' presentan un número promedio de los resultados.");
                 alertDialog.setIcon(R.drawable.ic_action_error);
                 alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override

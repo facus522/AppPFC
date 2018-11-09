@@ -25,4 +25,6 @@ public interface HttpAsyncTaskInterface {
     default void incrementarResultado(String result){} //nroWebService = 17;
     default void abrirEncuestaValidar(String result){} //nroWebService = 18;
     default void traerResultadosEncuesta(String result){} //nroWebService = 19;
+    default void habilitarEncuesta(String result){} //nroWebService = 20;
+    default void inhabilitarEncuesta(String result){} //nroWebService = 21;
 }

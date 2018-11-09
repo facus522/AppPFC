@@ -109,6 +109,7 @@ public class JSONConverterUtils {
                 dto.setGeolocalizada(Boolean.valueOf(aux.getString("geolocalizada")));
                 dto.setIsSexoRestriccion(Integer.parseInt(aux.getString("isSexoRestriccion")));
                 dto.setIsEdadRestriccion(Integer.parseInt(aux.getString("isEdadRestriccion")));
+                dto.setHabilitada(Boolean.valueOf(aux.getString("habilitada")));
                 result.add(dto);
             }
         } catch (JSONException e) {
