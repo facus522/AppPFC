@@ -48,7 +48,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_place_API" />
 
-        <activity android:name=".GraphicsActivity"></activity>
+        <activity android:name=".GraphicsActivity" />
+        <activity
+            android:name=".ResultMapsActivity"
+            android:label="@string/title_activity_result_maps"></activity>
     </application>
 
 </manifest>

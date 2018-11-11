@@ -12,6 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:background="@drawable/shape_responder_encuesta"
+        android:foreground="?android:attr/selectableItemBackground"
         android:layout_height="wrap_content">
 
         <TextView

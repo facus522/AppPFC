@@ -2,6 +2,7 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -12,24 +13,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class GraphicsActivity extends AppCompatActivity implements GraphicsPreguntasRecyclerViewAdapter.ItemClickListener {
 
-    private BarChart barChart;
-    private XAxis xAxis;
     private Toolbar toolbar;
     private ImageButton ayuda;
     private TextView titulo;
@@ -46,6 +33,7 @@ public class GraphicsActivity extends AppCompatActivity implements GraphicsPregu
     private TextView edad;
     private TextView sexo;
     private CardView volver;
+    private Boolean isGeolocalizada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +45,7 @@ public class GraphicsActivity extends AppCompatActivity implements GraphicsPregu
         descripcionEncuesta = (String) getIntent().getSerializableExtra("descripcionEncuesta");
         preguntas = (ArrayList<PreguntaDto>) getIntent().getSerializableExtra("preguntas");
         resultados = (ArrayList<ResultadoDto>) getIntent().getSerializableExtra("resultados");
+        isGeolocalizada = (Boolean) getIntent().getSerializableExtra("isGeolocalizada");
 
         divideResultadosPreguntas();
 
@@ -76,7 +65,7 @@ public class GraphicsActivity extends AppCompatActivity implements GraphicsPregu
             public void onClick(View view) {
                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(GraphicsActivity.this, AlertDialog.THEME_HOLO_DARK);
                 alertDialog.setTitle("Información");
-                alertDialog.setMessage("En esta sección encontrará estadísticas relacionadas a los resultados de la encuesta, así como tambien el promedio de edad y sexo de los encuestados.\nPara preguntas tipo 'Múltiple Choice' se presenta un gráfico de torta con los promedios.\nPara preguntas de tipo 'Respuesta Única' se presenta un gráfico de barras con los promedios.\nAquellas preguntas de tipo 'Textual' no contarán con estadísticas.\nLas preguntas 'Numéricas' y de tipo 'Escala' presentan un número promedio de los resultados.");
+                alertDialog.setMessage("En esta sección encontrará estadísticas relacionadas a los resultados de la encuesta, así como tambien el promedio de edad y sexo de los encuestados.\nPara preguntas tipo 'Múltiple Choice' se presenta un gráfico de torta con los promedios.\nPara preguntas de tipo 'Respuesta Única' se presenta un gráfico de barras con los promedios.\nAquellas preguntas de tipo 'Textual' no contarán con estadísticas.\nLas preguntas 'Numéricas' y de tipo 'Escala' presentan un número promedio de los resultados.\nSi la encuesta es Geolocalizada al presionar la misma se mostrará un mapa con las respuestas.");
                 alertDialog.setIcon(R.drawable.ic_action_error);
                 alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -112,40 +101,18 @@ public class GraphicsActivity extends AppCompatActivity implements GraphicsPregu
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
-        /*
-        barChart = findViewById(R.id.graphics_barchart);
-        barChart.getDescription().setEnabled(false);
-        xAxis = barChart.getXAxis();
-        List<String> lista = new ArrayList<>();
-
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0, 40, "Si"));
-        lista.add("Si");
-        entries.add(new BarEntry(1, 60, "No"));
-        lista.add("No");
-
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setLabelCount(2);
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(lista));
-
-        BarDataSet dataSet = new BarDataSet(entries, "Respuestas");
-        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-
-        BarData data = new BarData(dataSet);
-        barChart.setData(data);
-        barChart.animateY(3000);
-
-        YAxis ejeY = barChart.getAxisLeft();
-        ejeY.setAxisMinimum(0);
-        ejeY.setAxisMaximum(100);
-        */
-
     }
 
 
     @Override
     public void onItemClick(View view, int position) {
-
+        if (isGeolocalizada){
+            Intent maps_intent = new Intent(GraphicsActivity.this, ResultMapsActivity.class);
+            maps_intent.putExtra("resultados", preguntas.get(position).getResultadoDtos());
+            maps_intent.putExtra("respuestas", preguntas.get(position).getRespuestas());
+            startActivityForResult(maps_intent, 1);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
     }
 
     private void promedioEdad() {
