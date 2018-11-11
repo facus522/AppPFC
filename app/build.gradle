@@ -39,4 +39,5 @@ dependencies {
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.google.android.gms:play-services:12.0.1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation files('libs/opencsv-2.4.jar')
 }
