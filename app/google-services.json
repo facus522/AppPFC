@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "767708647412",
+    "firebase_url": "https://efcm-1541105981375.firebaseio.com",
+    "project_id": "efcm-1541105981375",
+    "storage_bucket": "efcm-1541105981375.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767708647412:android:8c030be7fae4135a",
+        "android_client_info": {
+          "package_name": "com.encuestando.salmeron.facundo.encuestandofcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "767708647412-biqtnfaap3no137bqfh94sjqa1tpu03b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqjhbYiNb4-uxW1EY5kcJB6ooPMs_0Boc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
