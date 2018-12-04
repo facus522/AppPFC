@@ -2,6 +2,7 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
@@ -9,10 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import java.io.Serializable;
-import java.util.concurrent.ExecutionException;
+import java.util.HashMap;
 
 /**
  * Created by Facundo Salmerón on 14/6/2018.
@@ -25,29 +27,20 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
     private TextInputLayout campo_usuario;
     private TextInputLayout campo_password;
     private UsuarioDto usuarioDto;
-    private HttpAsyncTask httpAsyncTask;
-    private TextView cargandoLogin;
-    private StringBuilder nombreUsuario;
-    private StringBuilder contraseniaUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         usuarioDto = new UsuarioDto();
         setContentView(R.layout.login_activity);
-        cargandoLogin = findViewById(R.id.cargandoLogin);
-        cargandoLogin.setVisibility(View.GONE);
         campo_usuario = findViewById(R.id.usuario_texto);
         campo_password = findViewById(R.id.password_texto);
         boton_registrar = findViewById(R.id.register_button);
-        boton_registrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent register_intent = new Intent(MainActivity.this, RegisterActivity.class);
-                startActivityForResult(register_intent, 1);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        boton_registrar.setOnClickListener(view -> {
+            Intent register_intent = new Intent(MainActivity.this, RegisterActivity.class);
+            startActivityForResult(register_intent, 1);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-            }
         });
 
         boton_login = findViewById(R.id.login_button);
@@ -69,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                 }
 
                 if (!(usuario.isEmpty() || contrasenia.isEmpty())){
-                    cargandoLogin.setVisibility(View.VISIBLE);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -78,46 +70,66 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
                                 public void run() {
                                     campo_usuario.setError(null);
                                     campo_password.setError(null);
-                                    String url = getResources().getString(R.string.urlWS) + "/usuarios/loginUser?nombre=" + reemplazarEspacios(campo_usuario.getEditText().getText().toString()) + "&password=" + reemplazarEspacios(campo_password.getEditText().getText().toString());
-                                    httpAsyncTask = new HttpAsyncTask(WebServiceEnum.LOGIN_USER.getCodigo());
-                                    httpAsyncTask.setHttpAsyncTaskInterface(MainActivity.this);
-                                    try{
-                                        String receivedData = httpAsyncTask.execute(url).get();
-                                    }
-                                    catch (ExecutionException | InterruptedException ei){
-                                        ei.printStackTrace();
-                                    }
-                                    if (usuarioDto != null && usuarioDto.getExito() != null){
-                                        if (usuarioDto.getExito()){
-                                            if (usuarioDto.getTipoUsuario().equals(TipoUsuarioEnum.USUARIO_ESPECIAL.getCodigo())){
-                                                Intent userEspecial_intent = new Intent(MainActivity.this, MenuEspecialActivity.class).putExtra("usuario", usuarioDto);
-                                                startActivityForResult(userEspecial_intent, 1);
-                                            } else if(usuarioDto.getTipoUsuario().equals(TipoUsuarioEnum.USUARIO_NORMAL.getCodigo())){
-                                                Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class).putExtra("usuario", usuarioDto);
-                                                startActivityForResult(userNormal_intent, 1);
+                                    usuarioDto = null;
+
+                                    ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+                                    progressDialog.setTitle("Verificando sus datos");
+                                    progressDialog.setMessage("Espere por favor...");
+                                    progressDialog.setIndeterminate(false);
+                                    progressDialog.setCancelable(false);
+                                    progressDialog.setCanceledOnTouchOutside(false);
+                                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                    progressDialog.setCancelable(true);
+                                    progressDialog.show();
+
+
+                                    HttpCall httpCall = new HttpCall();
+                                    httpCall.setMethodType(HttpCall.GET);
+                                    String url = getResources().getString(R.string.urlWS) + "/usuarios/loginUser";
+                                    httpCall.setUrl(url);
+                                    HashMap<String,String> params = new HashMap<>();
+                                    params.put("nombre", campo_usuario.getEditText().getText().toString());
+                                    params.put("password", campo_password.getEditText().getText().toString());
+                                    httpCall.setParams(params);
+                                    new HttpRequest(WebServiceEnum.LOGIN_USER.getCodigo(), MainActivity.this){
+                                        @Override
+                                        public void onResponse(String response) {
+                                            super.onResponse(response);
+                                            progressDialog.dismiss();
+
+                                            if (usuarioDto != null && usuarioDto.getExito() != null){
+                                                if (usuarioDto.getExito()){
+                                                    if (usuarioDto.getTipoUsuario().equals(TipoUsuarioEnum.USUARIO_ESPECIAL.getCodigo())){
+                                                        Intent userEspecial_intent = new Intent(MainActivity.this, MenuEspecialActivity.class).putExtra("usuario", usuarioDto);
+                                                        startActivityForResult(userEspecial_intent, 1);
+                                                    } else if(usuarioDto.getTipoUsuario().equals(TipoUsuarioEnum.USUARIO_NORMAL.getCodigo())){
+                                                        Intent userNormal_intent = new Intent(MainActivity.this, MenuNormalActivity.class).putExtra("usuario", usuarioDto);
+                                                        startActivityForResult(userNormal_intent, 1);
+                                                    }
+
+                                                } else{
+                                                    if (usuarioDto.getNroError().equals(ErrorLoginEnum.ERROR_USUARIO.getCodigo())){
+                                                        campo_usuario.setError(usuarioDto.getError());
+                                                    } else if (usuarioDto.getNroError().equals(ErrorLoginEnum.ERROR_PASSWORD.getCodigo())){
+                                                        campo_password.setError(usuarioDto.getError());
+                                                    }
+                                                }
+                                            } else{
+                                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_DARK);
+                                                alertDialog.setTitle("Error de Conexión");
+                                                alertDialog.setMessage("Verifique su conexión a Internet! \n\nSi el problema persiste se trata de un error interno en la base de datos.");
+                                                alertDialog.setIcon(R.drawable.ic_action_error);
+                                                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                                alertDialog.show();
                                             }
 
-                                        } else{
-                                            if (usuarioDto.getNroError().equals(ErrorLoginEnum.ERROR_USUARIO.getCodigo())){
-                                                campo_usuario.setError(usuarioDto.getError());
-                                            } else if (usuarioDto.getNroError().equals(ErrorLoginEnum.ERROR_PASSWORD.getCodigo())){
-                                                campo_password.setError(usuarioDto.getError());
-                                            }
                                         }
-                                    } else{
-                                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_DARK);
-                                        alertDialog.setTitle("Error de Conexión");
-                                        alertDialog.setMessage("Verifique su conexión a Internet! \n\nSi el problema persiste se trata de un error interno en la base de datos.");
-                                        alertDialog.setIcon(R.drawable.ic_action_error);
-                                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
-                                            }
-                                        });
-                                        alertDialog.show();
-                                    }
-                                    cargandoLogin.setVisibility(View.GONE);
+                                    }.execute(httpCall);
                                 }
                             });
 
@@ -162,17 +174,5 @@ public class MainActivity extends AppCompatActivity implements HttpAsyncTaskInte
             usuarioDto = JSONConverterUtils.JSONUsuarioLoginConverter(result);
 
         }
-    }
-
-    private String reemplazarEspacios(String valor){
-        return valor.replace(" ", "%20");
-    }
-
-    public UsuarioDto getUsuarioDto() {
-        return usuarioDto;
-    }
-
-    public void setUsuarioDto(UsuarioDto usuarioDto) {
-        this.usuarioDto = usuarioDto;
     }
 }

@@ -16,45 +16,44 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".MainActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".MenuNormalActivity" />
-        <activity android:name=".MenuEspecialActivity" />
-        <activity android:name=".InfoNoticiasNormalActivity" />
-        <activity android:name=".WebViewNormalActivity" />
+        <activity android:name=".RegisterActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".MenuNormalActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".MenuEspecialActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".InfoNoticiasNormalActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".WebViewNormalActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".InfoNoticiasEspecialActivity"
             android:label="@string/title_activity_info_noticias_especial"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".CrearInfoActivity" />
-        <activity android:name=".AdministrarEncuestasActivity" />
-        <activity android:name=".NuevaEncuestaActivity" />
-        <activity android:name=".PreguntaNumericaActivity" />
-        <activity android:name=".PreguntaTextualActivity" />
-        <activity android:name=".PreguntaEscalaActivity" />
-        <activity android:name=".PreguntaMultipleChoiceActivity" />
-        <activity android:name=".PreguntaUnicaOpcionActivity" />
-        <activity android:name=".ModificarEncuestaActivity" />
-        <activity android:name=".ResponderEncuestaEspecialActivity" />
-        <activity android:name=".ResolviendoEncuestaEspecialActivity" />
-        <activity android:name=".ResponderEncuestaNormalActivity" />
-        <activity android:name=".ResolviendoEncuestaNormalActivity" />
+            android:theme="@style/Theme.AppCompat.NoActionBar" android:screenOrientation="portrait"/>
+        <activity android:name=".CrearInfoActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".AdministrarEncuestasActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".NuevaEncuestaActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".PreguntaNumericaActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".PreguntaTextualActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".PreguntaEscalaActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".PreguntaMultipleChoiceActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".PreguntaUnicaOpcionActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ModificarEncuestaActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ResponderEncuestaEspecialActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ResolviendoEncuestaEspecialActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ResponderEncuestaNormalActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ResolviendoEncuestaNormalActivity" android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_place_API" />
 
-        <activity android:name=".GraphicsActivity" />
+        <activity android:name=".GraphicsActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".ResultMapsActivity"
-            android:label="@string/title_activity_result_maps"></activity>
+            android:label="@string/title_activity_result_maps" android:screenOrientation="portrait"></activity>
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>

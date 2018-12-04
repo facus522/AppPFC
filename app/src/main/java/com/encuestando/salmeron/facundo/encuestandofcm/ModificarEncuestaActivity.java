@@ -2,6 +2,7 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
@@ -21,9 +22,11 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class ModificarEncuestaActivity extends AppCompatActivity implements HttpAsyncTaskInterface, Serializable, PreguntaNuevaRecyclerViewAdapter.ItemClickListener {
@@ -51,7 +54,6 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
     private HttpAsyncTask httpAsyncTaskPregunta;
     private HttpAsyncTask httpAsyncTaskRespuesta;
     private Integer idEncuestaAsignado;
-    private TextView cargandoModificar;
     private Integer idPreguntaAsignado;
     private boolean isAlertOpen = false;
     private CheckBox respuestasGeolocalizadas;
@@ -81,8 +83,6 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         geolocalizada = (Boolean) getIntent().getSerializableExtra("geolocalizada");
         isSexoRestriccion = (Integer) getIntent().getSerializableExtra("isSexoRestriccion");
         isEdadRestriccion = (Integer) getIntent().getSerializableExtra("isEdadRestriccion");
-        cargandoModificar = findViewById(R.id.cargandoModificarEncuesta);
-        cargandoModificar.setVisibility(View.GONE);
         errores = findViewById(R.id.erroresRestricciones);
         errores.setVisibility(View.GONE);
         respuestasGeolocalizadas = findViewById(R.id.checkbox_geolocalizada_modificar);
@@ -117,70 +117,57 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
 
         verificarRestricciones();
 
-        sexo_radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                sexo_radioButton = findViewById(i);
-            }
-        });
+        sexo_radioGroup.setOnCheckedChangeListener((radioGroup, i) -> sexo_radioButton = findViewById(i));
 
-        restringir.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (restringir.isChecked()){
-                    sexo_restringir.setVisibility(View.VISIBLE);
-                    edad_restringir.setVisibility(View.VISIBLE);
-                    if (edad_restringir.isChecked()){
-                        mayoresDe.setVisibility(View.VISIBLE);
-                    } else {
-                        mayoresDe.setVisibility(View.GONE);
-                    }
-
-                    if (sexo_restringir.isChecked()){
-                        sexo_radioGroup.setVisibility(View.VISIBLE);
-                    } else {
-                        sexo_radioGroup.setVisibility(View.GONE);
-                    }
-                } else {
-                    sexo_restringir.setVisibility(View.GONE);
-                    edad_restringir.setVisibility(View.GONE);
-                    mayoresDe.setVisibility(View.GONE);
-                    sexo_radioGroup.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        sexo_restringir.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (sexo_restringir.isChecked()){
-                    sexo_radioGroup.setVisibility(View.VISIBLE);
-                } else {
-                    sexo_radioGroup.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        edad_restringir.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        restringir.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (restringir.isChecked()){
+                sexo_restringir.setVisibility(View.VISIBLE);
+                edad_restringir.setVisibility(View.VISIBLE);
                 if (edad_restringir.isChecked()){
                     mayoresDe.setVisibility(View.VISIBLE);
                 } else {
                     mayoresDe.setVisibility(View.GONE);
                 }
+
+                if (sexo_restringir.isChecked()){
+                    sexo_radioGroup.setVisibility(View.VISIBLE);
+                } else {
+                    sexo_radioGroup.setVisibility(View.GONE);
+                }
+            } else {
+                sexo_restringir.setVisibility(View.GONE);
+                sexo_restringir.setChecked(Boolean.FALSE);
+                edad_restringir.setVisibility(View.GONE);
+                edad_restringir.setChecked(Boolean.FALSE);
+                mayoresDe.setVisibility(View.GONE);
+                mayoresDe.getEditText().setText("");
+                sexo_radioGroup.setVisibility(View.GONE);
+                sexo_radioGroup.clearCheck();
+            }
+        });
+
+        sexo_restringir.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (sexo_restringir.isChecked()){
+                sexo_radioGroup.setVisibility(View.VISIBLE);
+            } else {
+                sexo_radioGroup.setVisibility(View.GONE);
+            }
+        });
+
+        edad_restringir.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (edad_restringir.isChecked()){
+                mayoresDe.setVisibility(View.VISIBLE);
+            } else {
+                mayoresDe.setVisibility(View.GONE);
             }
         });
 
         toolbar = findViewById(R.id.titulo_modificar_encuesta);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setResult(RESULT_FIRST_USER);
-                ModificarEncuestaActivity.this.finish();
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-            }
+        toolbar.setNavigationOnClickListener(view -> {
+            setResult(RESULT_FIRST_USER);
+            ModificarEncuestaActivity.this.finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
         modificar = findViewById(R.id.modificar_encuesta_button);
         volver = findViewById(R.id.volver_modificar_encuesta_button);
@@ -188,18 +175,8 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         descripcion = findViewById(R.id.descripcion_encuesta_modificar);
         titulo.getEditText().setText(tituloGuardar);
         descripcion.getEditText().setText(descripcionGuardar);
-        volver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                posibleSalida();
-            }
-        });
-        modificar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickModificarEncuesta();
-            }
-        });
+        volver.setOnClickListener(view -> posibleSalida());
+        modificar.setOnClickListener(view -> onClickModificarEncuesta());
         recyclerView = findViewById(R.id.recycler_encuesta_modificar);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new PreguntaNuevaRecyclerViewAdapter(this, preguntas);
@@ -207,54 +184,39 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         recyclerView.setAdapter(adapter);
         actionMenu = findViewById(R.id.boton_agregar_pregunta);
         multipleChoiceButton = findViewById(R.id.multiple_choice_button);
-        multipleChoiceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionMenu.close(true);
-                Intent agregar_multiple_choice = new Intent(ModificarEncuestaActivity.this, PreguntaMultipleChoiceActivity.class).putExtra("modificando", false);
-                startActivityForResult(agregar_multiple_choice, 1);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
+        multipleChoiceButton.setOnClickListener(view -> {
+            actionMenu.close(true);
+            Intent agregar_multiple_choice = new Intent(ModificarEncuestaActivity.this, PreguntaMultipleChoiceActivity.class).putExtra("modificando", false);
+            startActivityForResult(agregar_multiple_choice, 1);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
         unicaButton = findViewById(R.id.unica_button);
-        unicaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionMenu.close(true);
-                Intent agregar_unica_opcion = new Intent(ModificarEncuestaActivity.this, PreguntaUnicaOpcionActivity.class).putExtra("modificando", false);
-                startActivityForResult(agregar_unica_opcion, 1);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
+        unicaButton.setOnClickListener(view -> {
+            actionMenu.close(true);
+            Intent agregar_unica_opcion = new Intent(ModificarEncuestaActivity.this, PreguntaUnicaOpcionActivity.class).putExtra("modificando", false);
+            startActivityForResult(agregar_unica_opcion, 1);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
         numericaButton = findViewById(R.id.numerica_button);
-        numericaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionMenu.close(true);
-                Intent agregar_numerica = new Intent(ModificarEncuestaActivity.this, PreguntaNumericaActivity.class).putExtra("modificando", false);
-                startActivityForResult(agregar_numerica, 1);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
+        numericaButton.setOnClickListener(view -> {
+            actionMenu.close(true);
+            Intent agregar_numerica = new Intent(ModificarEncuestaActivity.this, PreguntaNumericaActivity.class).putExtra("modificando", false);
+            startActivityForResult(agregar_numerica, 1);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
         textualButton = findViewById(R.id.textual_button);
-        textualButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionMenu.close(true);
-                Intent agregar_textual = new Intent(ModificarEncuestaActivity.this, PreguntaTextualActivity.class).putExtra("modificando", false);
-                startActivityForResult(agregar_textual, 1);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
+        textualButton.setOnClickListener(view -> {
+            actionMenu.close(true);
+            Intent agregar_textual = new Intent(ModificarEncuestaActivity.this, PreguntaTextualActivity.class).putExtra("modificando", false);
+            startActivityForResult(agregar_textual, 1);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
         escalaButton = findViewById(R.id.escala_button);
-        escalaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionMenu.close(true);
-                Intent agregar_escala = new Intent(ModificarEncuestaActivity.this, PreguntaEscalaActivity.class).putExtra("modificando", false);
-                startActivityForResult(agregar_escala, 1);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
+        escalaButton.setOnClickListener(view -> {
+            actionMenu.close(true);
+            Intent agregar_escala = new Intent(ModificarEncuestaActivity.this, PreguntaEscalaActivity.class).putExtra("modificando", false);
+            startActivityForResult(agregar_escala, 1);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         if (savedInstanceState != null){
@@ -317,6 +279,11 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
             getIntent().putExtra("preguntas", preguntas);
             getIntent().putExtra("tituloGuardar", titulo.getEditText().getText().toString());
             getIntent().putExtra("descripcionGuardar", descripcion.getEditText().getText().toString());
+
+            getIntent().putExtra("geolocalizada", respuestasGeolocalizadas.isChecked());
+            getIntent().putExtra("isSexoRestriccion", sexo_restringir.isChecked() ? (sexo_radioButton != null && sexo_radioButton.getHint().toString().equals("Masculino") ? 1 : 2) : 0);
+            getIntent().putExtra("isEdadRestriccion", edad_restringir.isChecked() ? (!mayoresDe.getEditText().getText().toString().isEmpty() ? Integer.valueOf(mayoresDe.getEditText().getText().toString()) : 0) : 0);
+
             startActivity(getIntent());
             if (dto.getPreguntaModificada()){
                 Toast.makeText(ModificarEncuestaActivity.this, "La pregunta ha sido modificada correctamente!", Toast.LENGTH_LONG).show();
@@ -366,69 +333,208 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         }
 
 
-        cargandoModificar.setVisibility(View.VISIBLE);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String geo = respuestasGeolocalizadas.isChecked() ? "true" : "false";
-                        String isEdad = (restringir.isChecked() && edad_restringir.isChecked()) ? mayoresDe.getEditText().getText().toString() : "0";
-                        String isSexo = (restringir.isChecked() && sexo_restringir.isChecked()) ? (sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2") : "0";
+        new Thread(() -> runOnUiThread(() -> {
+            String geo = respuestasGeolocalizadas.isChecked() ? "true" : "false";
+            String isEdad = (restringir.isChecked() && edad_restringir.isChecked()) ? mayoresDe.getEditText().getText().toString() : "0";
+            String isSexo = (restringir.isChecked() && sexo_restringir.isChecked()) ? (sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2") : "0";
 
-                        String urlEncuesta = getResources().getString(R.string.urlWS) + "/encuestas/updateEncuesta?" + "idEncuesta=" + idEncuestaAsignado
-                                + "&titulo=" + reemplazarEspacios(titulo.getEditText().getText().toString())
-                                + "&descripcion=" + reemplazarEspacios(descripcion.getEditText().getText().toString())
-                                + "&isGeolocalizada=" + geo
-                                + "&isSexo=" + isSexo
-                                + "&isEdad=" + isEdad
-                                + "&idUsuario=" + usuarioLogueado.getId();
-                        httpAsyncTaskEncuesta = new HttpAsyncTask(WebServiceEnum.MODIFICAR_ENCUESTA.getCodigo());
-                        httpAsyncTaskEncuesta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
-                        try{
-                            String receivedDataEncuesta = httpAsyncTaskEncuesta.execute(urlEncuesta).get();
-                        }
-                        catch (ExecutionException | InterruptedException ei){
-                            ei.printStackTrace();
-                        }
+            ProgressDialog progressDialog = new ProgressDialog(ModificarEncuestaActivity.this);
+            progressDialog.setTitle("Modificar Encuesta");
+            progressDialog.setMessage("Espere por favor...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(true);
+            progressDialog.show();
 
-                        for (PreguntaDto preg : preguntas){
-                            if (preg.getIdPersistido() != null){
-                                updatePregunta(preg);
-                            } else {
-                                savePregunta(preg);
-                            }
-                        }
-                        for (RespuestaDto rta : respuestasEliminar){
-                            removeRespuesta(rta);
-                        }
+            EncuestaJson encuesta = getEncuestaPersistir(geo, isSexo, isEdad);
+            Gson gson = new Gson();
+            String body = gson.toJson(encuesta);
 
-                        for (PreguntaDto preg : preguntasEliminar){
-                            removePregunta(preg);
-                        }
-
+            HttpCall httpCall = new HttpCall();
+            httpCall.setMethodType(HttpCall.POST);
+            String url = getResources().getString(R.string.urlWS) + "/encuestas/modificarEncuesta";
+            httpCall.setUrl(url);
+            HashMap<String, String> params = new HashMap<>();
+            httpCall.setParams(params);
+            httpCall.setBody(body);
+            new HttpRequest(WebServiceEnum.MODIFICAR_ENCUESTA.getCodigo(), ModificarEncuestaActivity.this) {
+                @Override
+                public void onResponse(String response) {
+                    super.onResponse(response);
+                    progressDialog.dismiss();
+                    if (idEncuestaAsignado == null) {
+                        progressDialog.dismiss();
+                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ModificarEncuestaActivity.this, AlertDialog.THEME_HOLO_DARK);
+                        alertDialog.setTitle("Error de Conexión");
+                        alertDialog.setMessage("Verifique su conexión a Internet! \n\nSi el problema persiste se trata de un error interno en la base de datos.");
+                        alertDialog.setIcon(R.drawable.ic_action_error);
+                        alertDialog.setPositiveButton("OK", (dialog, which) -> dialog.cancel());
+                        alertDialog.show();
+                    } else {
                         showAlertDialog();
-                        cargandoModificar.setVisibility(View.GONE);
                     }
-                });
+                }
+            }.execute(httpCall);
+
+
+
+
+            /*String urlEncuesta = getResources().getString(R.string.urlWS) + "/encuestas/updateEncuesta?" + "idEncuesta=" + idEncuestaAsignado
+                    + "&titulo=" + reemplazarEspacios(titulo.getEditText().getText().toString())
+                    + "&descripcion=" + reemplazarEspacios(descripcion.getEditText().getText().toString())
+                    + "&isGeolocalizada=" + geo
+                    + "&isSexo=" + isSexo
+                    + "&isEdad=" + isEdad
+                    + "&idUsuario=" + usuarioLogueado.getId();
+            httpAsyncTaskEncuesta = new HttpAsyncTask(WebServiceEnum.MODIFICAR_ENCUESTA.getCodigo());
+            httpAsyncTaskEncuesta.setHttpAsyncTaskInterface(ModificarEncuestaActivity.this);
+            try{
+                String receivedDataEncuesta = httpAsyncTaskEncuesta.execute(urlEncuesta).get();
             }
-        }).start();
+            catch (ExecutionException | InterruptedException ei){
+                ei.printStackTrace();
+            }
+
+            for (PreguntaDto preg : preguntas){
+                if (preg.getIdPersistido() != null){
+                    updatePregunta(preg);
+                } else {
+                    savePregunta(preg);
+                }
+            }
+            for (RespuestaDto rta : respuestasEliminar){
+                removeRespuesta(rta);
+            }
+
+            for (PreguntaDto preg : preguntasEliminar){
+                removePregunta(preg);
+            }
+
+            showAlertDialog();
+            cargandoModificar.setVisibility(View.GONE);*/
+        })).start();
 
 
+    }
+
+    private EncuestaJson getEncuestaPersistir(String geo, String isSexo, String isEdad) {
+        EncuestaJson encuesta = new EncuestaJson();
+        encuesta.setId(idEncuestaAsignado);
+        encuesta.setTitulo(titulo.getEditText().getText().toString());
+        encuesta.setDescripcion(descripcion.getEditText().getText().toString());
+        encuesta.setGeolicalizada(geo.equals("true") ? Boolean.TRUE : Boolean.FALSE);
+        encuesta.setIsSexoRestriction(isSexo.isEmpty() ? null : Integer.valueOf(isSexo));
+        encuesta.setIsEdadRestriction(isEdad.isEmpty() ? null : Integer.valueOf(isEdad));
+        encuesta.setIdUsuarioModificacion(usuarioLogueado.getId());
+        for (PreguntaDto pregunta : preguntas) {
+            PreguntaJson p = new PreguntaJson();
+            p.setId(pregunta.getIdPersistido());
+            p.setDescripcion(pregunta.getDescripcion());
+            p.setNumeroEscala(pregunta.getMaximaEscala());
+            p.setTipoRespuesta(new TipoRespuestaJson(pregunta.getTipoPregunta().getDescripcion(), pregunta.getTipoPregunta().getCodigo()));
+            if (pregunta.getRespuestas() != null && !pregunta.getRespuestas().isEmpty()) {
+                for (RespuestaDto rta : pregunta.getRespuestas()) {
+                    RespuestaJson r = new RespuestaJson();
+                    r.setId(rta.getIdPersistido());
+                    r.setDescripcion(rta.getDescripcion());
+                    r.setTipoRespuesta(new TipoRespuestaJson(pregunta.getTipoPregunta().getDescripcion(), pregunta.getTipoPregunta().getCodigo()));
+                    p.getRespuestas().add(r);
+                }
+            } else {
+                RespuestaJson r = new RespuestaJson();
+                r.setDescripcion("");
+                r.setTipoRespuesta(new TipoRespuestaJson(pregunta.getTipoPregunta().getDescripcion(), pregunta.getTipoPregunta().getCodigo()));
+                p.getRespuestas().add(r);
+            }
+            encuesta.getPreguntas().add(p);
+
+        }
+        return encuesta;
+    }
+
+    private PreguntaJson getRespuestasRemover() {
+        PreguntaJson pregunta = new PreguntaJson();
+        for (RespuestaDto rta : respuestasEliminar){
+            RespuestaJson respuestaJson = new RespuestaJson();
+            respuestaJson.setId(rta.getIdPersistido());
+            pregunta.getRespuestas().add(respuestaJson);
+        }
+        return pregunta;
+    }
+
+    private EncuestaJson getPreguntasRemover() {
+        EncuestaJson encuesta = new EncuestaJson();
+        for (PreguntaDto pta : preguntasEliminar){
+            PreguntaJson preguntaJson = new PreguntaJson();
+            preguntaJson.setId(pta.getIdPersistido());
+            for (RespuestaDto rta : pta.getRespuestas()){
+                RespuestaJson respuestaJson = new RespuestaJson();
+                respuestaJson.setId(rta.getIdPersistido());
+                preguntaJson.getRespuestas().add(respuestaJson);
+            }
+            encuesta.getPreguntas().add(preguntaJson);
+        }
+        return encuesta;
     }
 
     private void showAlertDialog(){
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ModificarEncuestaActivity.this, AlertDialog.THEME_HOLO_DARK);
         alertDialog.setMessage("¡La encuesta ha sido modificada correctamente!");
         alertDialog.setCancelable(false);
-        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-                finish();
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-            }
+        alertDialog.setPositiveButton("OK", (dialog, which) -> {
+            dialog.cancel();
+
+            ProgressDialog progressDialog = new ProgressDialog(ModificarEncuestaActivity.this);
+            progressDialog.setTitle("Regresando");
+            progressDialog.setMessage("Espere por favor...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setCancelable(true);
+            progressDialog.show();
+
+            PreguntaJson preguntaJson = getRespuestasRemover();
+            Gson gson = new Gson();
+            String body = gson.toJson(preguntaJson);
+
+            HttpCall httpCall = new HttpCall();
+            httpCall.setMethodType(HttpCall.POST);
+            String url = getResources().getString(R.string.urlWS) + "/preguntas/removeRespuestas";
+            httpCall.setUrl(url);
+            HashMap<String, String> params = new HashMap<>();
+            httpCall.setParams(params);
+            httpCall.setBody(body);
+            new HttpRequest(WebServiceEnum.ELIMINAR_RESPUESTA.getCodigo(), ModificarEncuestaActivity.this) {
+                @Override
+                public void onResponse(String response) {
+                    super.onResponse(response);
+                    EncuestaJson encuestaJson = getPreguntasRemover();
+                    Gson gson2 = new Gson();
+                    String body2 = gson2.toJson(encuestaJson);
+
+                    HttpCall httpCall2 = new HttpCall();
+                    httpCall2.setMethodType(HttpCall.POST);
+                    String url2 = getResources().getString(R.string.urlWS) + "/encuestas/removePreguntas";
+                    httpCall2.setUrl(url2);
+                    HashMap<String, String> params2 = new HashMap<>();
+                    httpCall2.setParams(params2);
+                    httpCall2.setBody(body2);
+                    new HttpRequest(WebServiceEnum.ELIMINAR_PREGUNTA.getCodigo(), ModificarEncuestaActivity.this) {
+                        @Override
+                        public void onResponse(String response) {
+                            super.onResponse(response);
+                            progressDialog.dismiss();
+                            finish();
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+                        }
+                    }.execute(httpCall2);
+
+                }
+            }.execute(httpCall);
         });
         alertDialog.show();
         isAlertOpen = true;
@@ -591,24 +697,9 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
         alertDialog.setMessage("¿Qué acción desea realizar?");
-        alertDialog.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                deletePregunta(adapter.getItem(position));
-            }
-        });
-        alertDialog.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        alertDialog.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                openModificacionPregunta(adapter.getItem(position));
-            }
-        });
+        alertDialog.setNegativeButton("Eliminar", (dialogInterface, i) -> deletePregunta(adapter.getItem(position)));
+        alertDialog.setNeutralButton("Cancelar", (dialogInterface, i) -> dialogInterface.cancel());
+        alertDialog.setPositiveButton("Modificar", (dialogInterface, i) -> openModificacionPregunta(adapter.getItem(position)));
         alertDialog.show();
     }
 
@@ -700,21 +791,13 @@ public class ModificarEncuestaActivity extends AppCompatActivity implements Http
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
         alertDialog.setMessage("Si sale de la pantalla se perderán todos los datos modificados!\n ¿Desea salir?");
-        alertDialog.setNegativeButton("Aceptar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-                setResult(RESULT_FIRST_USER);
-                ModificarEncuestaActivity.this.finish();
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-            }
+        alertDialog.setNegativeButton("Aceptar", (dialog, which) -> {
+            dialog.cancel();
+            setResult(RESULT_FIRST_USER);
+            ModificarEncuestaActivity.this.finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
-        alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        alertDialog.setPositiveButton("Cancelar", (dialog, which) -> dialog.cancel());
         alertDialog.show();
     }
 }

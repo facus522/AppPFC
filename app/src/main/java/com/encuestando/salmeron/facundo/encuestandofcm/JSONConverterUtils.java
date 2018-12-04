@@ -57,8 +57,8 @@ public class JSONConverterUtils {
         return resultado;
     }
 
-    public static List<InfoNoticiaDto> JSONInfoNoticiasConverter(String jsonString){
-        List<InfoNoticiaDto> result = new ArrayList<>();
+    public static ArrayList<InfoNoticiaDto> JSONInfoNoticiasConverter(String jsonString){
+        ArrayList<InfoNoticiaDto> result = new ArrayList<>();
 
         try {
             JSONObject jsonObject = new JSONObject(jsonString);

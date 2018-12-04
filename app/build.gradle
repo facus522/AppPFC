@@ -44,5 +44,6 @@ dependencies {
     implementation files('libs/opencsv-2.4.jar')
     implementation 'com.google.firebase:firebase-core:12.0.1'
     implementation 'com.google.firebase:firebase-messaging:12.0.1'
+    implementation 'com.google.code.gson:gson:2.8.2'
 }
 apply plugin: 'com.google.gms.google-services'

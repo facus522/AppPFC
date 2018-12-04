@@ -8,7 +8,7 @@ public enum TipoPreguntaEnum {
     MULTIPLE_CHOICE(1, "Multiple Choice"),
     RESPUESTA_UNICA(2, "Unica"),
     RESPUESTA_NUMERICA(3, "Numerica"),
-    RESPUESTA_TEXTUAL(4, "Textual"),
+    RESPUESTA_TEXTUAL(4, "Texto"),
     ESCALA(5, "Escala");
 
     private Integer codigo;

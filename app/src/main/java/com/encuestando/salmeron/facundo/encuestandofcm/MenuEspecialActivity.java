@@ -36,31 +36,22 @@ public class MenuEspecialActivity extends AppCompatActivity implements Serializa
         informacionNoticias = findViewById(R.id.informacionNoticiasEspecial);
         administrarEncuestas = findViewById(R.id.administrarEncuestas);
 
-        informacionNoticias.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent info_intent = new Intent(MenuEspecialActivity.this, InfoNoticiasEspecialActivity.class).putExtra("usuario", usuarioLogueado);
-                MenuEspecialActivity.this.startActivity(info_intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
+        informacionNoticias.setOnClickListener(view -> {
+            Intent info_intent = new Intent(MenuEspecialActivity.this, InfoNoticiasEspecialActivity.class).putExtra("usuario", usuarioLogueado);
+            MenuEspecialActivity.this.startActivity(info_intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
-        encuestasDisponibles.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent admin_intent = new Intent(MenuEspecialActivity.this, ResponderEncuestaEspecialActivity.class).putExtra("usuario", usuarioLogueado);
-                MenuEspecialActivity.this.startActivity(admin_intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
+        encuestasDisponibles.setOnClickListener(view -> {
+            Intent admin_intent = new Intent(MenuEspecialActivity.this, ResponderEncuestaEspecialActivity.class).putExtra("usuario", usuarioLogueado);
+            MenuEspecialActivity.this.startActivity(admin_intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
-        administrarEncuestas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent admin_intent = new Intent(MenuEspecialActivity.this, AdministrarEncuestasActivity.class).putExtra("usuario", usuarioLogueado);
-                MenuEspecialActivity.this.startActivity(admin_intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
+        administrarEncuestas.setOnClickListener(view -> {
+            Intent admin_intent = new Intent(MenuEspecialActivity.this, AdministrarEncuestasActivity.class).putExtra("usuario", usuarioLogueado);
+            MenuEspecialActivity.this.startActivity(admin_intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
     }
 
@@ -71,21 +62,13 @@ public class MenuEspecialActivity extends AppCompatActivity implements Serializa
         alertDialog.setTitle("Atención");
         alertDialog.setIcon(R.drawable.ic_action_error);
         alertDialog.setMessage("¿Desea cerrar su sesión?");
-        alertDialog.setNegativeButton("Aceptar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-                Intent returnIntent = new Intent();
-                setResult(Activity.RESULT_OK, returnIntent);
-                finish();
-            }
+        alertDialog.setNegativeButton("Aceptar", (dialog, which) -> {
+            dialog.cancel();
+            Intent returnIntent = new Intent();
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
         });
-        alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        alertDialog.setPositiveButton("Cancelar", (dialog, which) -> dialog.cancel());
         alertDialog.show();
     }
 }

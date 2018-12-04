@@ -3,6 +3,7 @@ package com.encuestando.salmeron.facundo.encuestandofcm;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,16 +15,14 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Facundo Salmerón on 14/6/2018.
@@ -48,7 +47,6 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
     private TextView errores;
     private RadioGroup sexo_radioGroup;
     private RadioButton sexo_radioButton;
-    private HttpAsyncTask httpAsyncTask;
     private Map<Integer, String> erroresRegister = null;
     private Toolbar toolbar;
 
@@ -58,12 +56,9 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
         setContentView(R.layout.register_activity);
         toolbar = findViewById(R.id.registro_titulo);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RegisterActivity.this.finish();
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-            }
+        toolbar.setNavigationOnClickListener(view -> {
+            RegisterActivity.this.finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
         errores = findViewById(R.id.errores_registro);
         errores.setVisibility(View.GONE);
@@ -79,40 +74,9 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
         codigoValidacion = findViewById(R.id.tipo_usuario_validator);
         codigoValidacion.setVisibility(View.GONE);
         sexo_radioGroup = findViewById(R.id.sexo_radio_group);
-        sexo_radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                sexo_radioButton = findViewById(i);
-            }
-        });
-        fechaNacimiento.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    Calendar cal = Calendar.getInstance();
-                    int year, month, day;
-                    if (fechaNacimiento.getEditText().getText().toString().isEmpty()){
-                        year = cal.get(Calendar.YEAR);
-                        month = cal.get(Calendar.MONTH);
-                        day = cal.get(Calendar.DAY_OF_MONTH);
-                    } else {
-                        year = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(6,10));
-                        month = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(3,5)) -1;
-                        day = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(0,2));
-                    }
-                    DatePickerDialog dialog = new DatePickerDialog(RegisterActivity.this,
-                            android.R.style.Theme_Holo_Dialog_MinWidth,
-                            mDateSetListener,
-                            year, month, day);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
-                }
-            }
-        });
-
-        fechaNacimiento.getEditText().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        sexo_radioGroup.setOnCheckedChangeListener((radioGroup, i) -> sexo_radioButton = findViewById(i));
+        fechaNacimiento.getEditText().setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
                 Calendar cal = Calendar.getInstance();
                 int year, month, day;
                 if (fechaNacimiento.getEditText().getText().toString().isEmpty()){
@@ -121,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                     day = cal.get(Calendar.DAY_OF_MONTH);
                 } else {
                     year = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(6,10));
-                    month = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(3,5)) - 1;
+                    month = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(3,5)) -1;
                     day = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(0,2));
                 }
                 DatePickerDialog dialog = new DatePickerDialog(RegisterActivity.this,
@@ -133,63 +97,66 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
             }
         });
 
-        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month += 1;
-                String date = "";
-
-                if (day < 10)
-                    date += "0" + day + "/";
-                else
-                    date += day + "/";
-
-                if (month < 10)
-                    date += "0" + month;
-                else
-                    date += month;
-                date += "/" + year;
-                fechaNacimiento.getEditText().setText(date);
+        fechaNacimiento.getEditText().setOnClickListener(view -> {
+            Calendar cal = Calendar.getInstance();
+            int year, month, day;
+            if (fechaNacimiento.getEditText().getText().toString().isEmpty()){
+                year = cal.get(Calendar.YEAR);
+                month = cal.get(Calendar.MONTH);
+                day = cal.get(Calendar.DAY_OF_MONTH);
+            } else {
+                year = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(6,10));
+                month = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(3,5)) - 1;
+                day = Integer.parseInt(fechaNacimiento.getEditText().getText().toString().substring(0,2));
             }
+            DatePickerDialog dialog = new DatePickerDialog(RegisterActivity.this,
+                    android.R.style.Theme_Holo_Dialog_MinWidth,
+                    mDateSetListener,
+                    year, month, day);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+        });
+
+        mDateSetListener = (datePicker, year, month, day) -> {
+            month += 1;
+            String date = "";
+
+            if (day < 10)
+                date += "0" + day + "/";
+            else
+                date += day + "/";
+
+            if (month < 10)
+                date += "0" + month;
+            else
+                date += month;
+            date += "/" + year;
+            fechaNacimiento.getEditText().setText(date);
         };
 
-        tipoUsuario_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    codigoValidacion.setVisibility(View.VISIBLE);
-                } else {
-                    codigoValidacion.setVisibility(View.GONE);
-                }
+        tipoUsuario_checkbox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (isChecked) {
+                codigoValidacion.setVisibility(View.VISIBLE);
+            } else {
+                codigoValidacion.setVisibility(View.GONE);
             }
         });
 
         boton_volver = findViewById(R.id.volver_button);
-        boton_volver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this);
-                alertDialog.setTitle("Atención");
-                alertDialog.setIcon(R.drawable.ic_action_error);
-                alertDialog.setMessage("Si sale de la pantalla se perderán todos los datos ingresados!\n¿Desea salir?");
-                alertDialog.setNegativeButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        Intent returnIntent = new Intent();
-                        setResult(Activity.RESULT_OK, returnIntent);
-                        finish();
-                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                    }
-                });
-                alertDialog.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                alertDialog.show();
-            }
+        boton_volver.setOnClickListener(view -> {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this);
+            alertDialog.setTitle("Atención");
+            alertDialog.setIcon(R.drawable.ic_action_error);
+            alertDialog.setMessage("Si sale de la pantalla se perderán todos los datos ingresados!\n¿Desea salir?");
+            alertDialog.setNegativeButton("Aceptar", (dialog, which) -> {
+                dialog.cancel();
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            });
+            alertDialog.setPositiveButton("Cancelar", (dialog, which) -> dialog.cancel());
+            alertDialog.show();
         });
 
         boton_guardar = findViewById(R.id.guardar_button);
@@ -218,64 +185,80 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
                     errores.setText("Las contraseñas no coinciden. Revisar!");
                     errores.setVisibility(View.VISIBLE);
                 } else {
-                    errores.setVisibility(View.VISIBLE);
-                    errores.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
-                    errores.setText("Cargando...");
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
+                    new Thread(() -> runOnUiThread(() -> {
+                        errores.setVisibility(View.GONE);
+                        String sexo = sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2";
+                        String tipoUsuario = tipoUsuario_checkbox.isChecked() ? "1" : "2";
 
-                                    String sexo = sexo_radioButton.getHint().toString().equals("Masculino") ? "1" : "2";
-                                    String tipoUsuario = tipoUsuario_checkbox.isChecked() ? "1" : "2";
-                                    String url = getResources().getString(R.string.urlWS) +"/usuarios/saveUser?nombre=" + reemplazarEspacios(nameUser) + "&apellido=" + reemplazarEspacios(surnameUser) + "&dni=" + doc + "&nombreUsuario="+reemplazarEspacios(nombre)+"&password="+reemplazarEspacios(contrasenia1)+"&fechaNacimiento="+nacimiento+"&mail="+reemplazarEspacios(mail)+"&activo=1&sexo="+sexo+"&tipoUsuario="+tipoUsuario+"&validar="+codigo;
-                                    httpAsyncTask = new HttpAsyncTask(WebServiceEnum.REGISTER_USER.getCodigo());
-                                    httpAsyncTask.setHttpAsyncTaskInterface(RegisterActivity.this);
-                                    try{
-                                        String receivedData = httpAsyncTask.execute(url).get();
-                                    }
-                                    catch (ExecutionException | InterruptedException ei){
-                                        ei.printStackTrace();
-                                    }
-                                    if (erroresRegister != null && erroresRegister.size() < 1){
-                                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
-                                        alertDialog.setTitle("Éxito");
-                                        alertDialog.setIcon(R.drawable.ic_validar_usuario);
-                                        alertDialog.setMessage("El usuario ha sido registrado correctamente!");
-                                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
-                                                RegisterActivity.this.finish();
-                                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                                            }
-                                        });
-                                        errores.setVisibility(View.GONE);
-                                        alertDialog.show();
+                        ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
+                        progressDialog.setTitle("Creando usuario");
+                        progressDialog.setMessage("Espere por favor...");
+                        progressDialog.setIndeterminate(false);
+                        progressDialog.setCancelable(false);
+                        progressDialog.setInverseBackgroundForced(false);
+                        progressDialog.setCanceledOnTouchOutside(false);
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progressDialog.setCancelable(true);
+                        progressDialog.show();
 
-                                    } else if (erroresRegister == null){
-                                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
-                                        alertDialog.setTitle("Error al Registrar");
-                                        alertDialog.setMessage("Verifique su conexión a Internet! \n\nSi el problema persiste se trata de un error interno en la base de datos.");
-                                        alertDialog.setIcon(R.drawable.ic_action_error);
-                                        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
-                                            }
-                                        });
-                                        errores.setVisibility(View.GONE);
-                                        alertDialog.show();
-                                    } else{
-                                        insertarErrores(erroresRegister);
-                                        errores.setVisibility(View.GONE);
-                                    }
+                        HttpCall httpCall = new HttpCall();
+                        httpCall.setMethodType(HttpCall.GET);
+                        String url = getResources().getString(R.string.urlWS) + "/usuarios/saveUser";
+                        httpCall.setUrl(url);
+                        HashMap<String,String> params = new HashMap<>();
+                        params.put("nombre", nameUser);
+                        params.put("apellido", surnameUser);
+                        params.put("dni", doc);
+                        params.put("nombreUsuario", nombre);
+                        params.put("password", contrasenia1);
+                        params.put("fechaNacimiento", nacimiento);
+                        params.put("mail", mail);
+                        params.put("activo", "1");
+                        params.put("sexo", sexo);
+                        params.put("tipoUsuario", tipoUsuario);
+                        params.put("validar", codigo);
+                        httpCall.setParams(params);
+                        new HttpRequest(WebServiceEnum.REGISTER_USER.getCodigo(), RegisterActivity.this){
+                            @Override
+                            public void onResponse(String response) {
+                                super.onResponse(response);
+                                progressDialog.dismiss();
+                                if (erroresRegister != null && erroresRegister.size() < 1){
+                                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
+                                    alertDialog.setTitle("Éxito");
+                                    alertDialog.setCancelable(false);
+                                    alertDialog.setIcon(R.drawable.ic_validar_usuario);
+                                    alertDialog.setMessage("El usuario ha sido registrado correctamente!");
+                                    alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                            RegisterActivity.this.finish();
+                                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                        }
+                                    });
+                                    errores.setVisibility(View.GONE);
+                                    alertDialog.show();
+
+                                } else if (erroresRegister == null){
+                                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this, AlertDialog.THEME_HOLO_DARK);
+                                    alertDialog.setTitle("Error al Registrar");
+                                    alertDialog.setMessage("Verifique su conexión a Internet! \n\nSi el problema persiste se trata de un error interno en la base de datos.");
+                                    alertDialog.setIcon(R.drawable.ic_action_error);
+                                    alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                                    errores.setVisibility(View.GONE);
+                                    alertDialog.show();
+                                } else{
+                                    insertarErrores(erroresRegister);
                                 }
-                            });
-                        }
-                    }).start();
+                            }
+                        }.execute(httpCall);
+                    })).start();
 
                 }
 
@@ -389,7 +372,4 @@ public class RegisterActivity extends AppCompatActivity implements HttpAsyncTask
         }
     }
 
-    private String reemplazarEspacios(String valor) {
-        return valor.replace(" ", "%20");
-    }
 }
