@@ -367,7 +367,7 @@ public class ResponderEncuestaEspecialActivity extends AppCompatActivity impleme
                         for (ResultadoDto rdo : resultados) {
                             if (rta.getIdPersistido().equals(rdo.getIdRespuesta())) {
                                 csvWrite.writeNext(rdo.getEdad().toString(),
-                                        rdo.getSexo().equals(SexoEnum.MASCULINO) ? "Masculino" : "Femenino",
+                                        rdo.getSexo().equals(SexoEnum.MASCULINO.getCodigo()) ? "Masculino" : "Femenino",
                                         rdo.getDescripcion(),
                                         rdo.getLatitud(),
                                         rdo.getLongitud());

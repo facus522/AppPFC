@@ -67,7 +67,7 @@ public class ResultMapsActivity extends FragmentActivity implements OnMapReadyCa
                 if (rta.getIdPersistido().equals(rdo.getIdRespuesta())){
                     ubicacion = new LatLng(Double.valueOf(rdo.getLatitud()), Double.valueOf(rdo.getLongitud()));
                     mMap.addMarker(new MarkerOptions().position(ubicacion)
-                            .title("Sexo: " + (rdo.getSexo().equals(SexoEnum.MASCULINO) ? "Masculino" : "Femenino") + " - Edad: " + rdo.getEdad())
+                            .title("Sexo: " + (rdo.getSexo().equals(SexoEnum.MASCULINO.getCodigo()) ? "Masculino" : "Femenino") + " - Edad: " + rdo.getEdad())
                             .snippet("Respuesta: " + rdo.getDescripcion())
                             .icon(iconoRespuesta(contador)));
                 }
