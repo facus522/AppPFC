@@ -1,6 +1,7 @@
 package com.encuestando.salmeron.facundo.encuestandofcm;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +10,20 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.IMarker;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -82,6 +88,27 @@ public class GraphicsPreguntasRecyclerViewAdapter extends RecyclerView.Adapter<R
                 pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
                 PieData pieData = new PieData(pieDataSet);
                 viewHolderChoice.pieChart.setData(pieData);
+                viewHolderChoice.pieChart.setDrawSliceText(false);
+                viewHolderChoice.pieChart.getLegend().setEnabled(false);
+
+                viewHolderChoice.pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                    @Override
+                    public void onValueSelected(Entry e, Highlight h) {
+                        if (e == null) {
+                            return;
+                        } else {
+                            IMarker marker = new CustomMarkerView(mInflater.getContext(), R.layout.marker);
+                            viewHolderChoice.pieChart.setMarker(marker);
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected() {
+
+                    }
+                });
+
                 viewHolderChoice.pieChart.animateY(2000);
 
                 break;
@@ -105,12 +132,31 @@ public class GraphicsPreguntasRecyclerViewAdapter extends RecyclerView.Adapter<R
 
                 viewHolderUnica.xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
                 viewHolderUnica.xAxis.setLabelCount(entries.size());
-                viewHolderUnica.xAxis.setValueFormatter(new IndexAxisValueFormatter(lista));
+                //viewHolderUnica.xAxis.setValueFormatter(new IndexAxisValueFormatter(lista));
+                viewHolderUnica.barChart.getLegend().setEnabled(false);
 
-                BarDataSet dataSet = new BarDataSet(entries, "Promedio de respuestas");
+                BarDataSet dataSet = new BarDataSet(entries, "");
                 dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
                 BarData data = new BarData(dataSet);
+
+                viewHolderUnica.barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                    @Override
+                    public void onValueSelected(Entry e, Highlight h) {
+                        if (e == null) {
+                            return;
+                        } else {
+                            IMarker marker = new CustomMarkerView(mInflater.getContext(), R.layout.marker);
+                            viewHolderUnica.barChart.setMarker(marker);
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected() {
+
+                    }
+                });
 
                 viewHolderUnica.barChart.setData(data);
                 viewHolderUnica.barChart.animateY(2000);
